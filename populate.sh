@@ -3,8 +3,8 @@
 set -e
 declare -A IMAGES
 
-IMAGES[fresh]="fresh/debian	62	6.2.0-1~stretch	6.2.0-1 6.2.0 6.2 6 latest "
-IMAGES[stable]="stable/debian	60lts	6.0.3-1~stretch	6.0.3-1 6.0.3 6.0 stable"
+IMAGES[6.2]="fresh/debian	62	6.2.0-1~stretch	6.2.0-1 6.2.0 6.2 6 latest fresh"
+IMAGES[6.0]="stable/debian	60lts	6.0.3-1~stretch	6.0.3-1 6.0.3 6.0 stable"
 
 update_dockerfiles() {
 	workdir=$1
