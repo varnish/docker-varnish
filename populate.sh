@@ -56,13 +56,14 @@ populate_dockerfiles() {
 }
 
 update_library(){
-	workdir=$1
-	shift 3
+	name=$1
+	workdir=$2
+	shift 4
 	tags="$@"
 
 	cat >> library.varnish <<- EOF
 
-		Tags: `echo $tags | sed 's/ +/, /g'`
+		Tags: `echo $name $tags | sed 's/ \+/, /g'`
 		Architectures: amd64
 		Directory: $workdir
 		GitCommit: `git log -n1 --pretty=oneline $workdir | cut -f1 -d" "`
@@ -71,12 +72,13 @@ update_library(){
 
 populate_library() {
 	cat > library.varnish <<- EOF
+		# this file was generated using https://github.com/varnish/docker-varnish/blob/`git rev-parse HEAD`/populate.sh
 		Maintainers: Guillaume Quintard <guillaume@varni.sh> (@gquintard)
 		GitRepo: https://github.com/varnish/docker-varnish.git
 	EOF
 
 	for i in ${!IMAGES[@]}; do
-		update_library ${IMAGES[$i]}
+		update_library $i ${IMAGES[$i]}
 	done
 }
 
