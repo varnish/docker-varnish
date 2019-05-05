@@ -6,7 +6,7 @@ declare -A IMAGES
 IMAGES[fresh]="fresh/debian	62	6.2.0-1~stretch	6.2.0-1 6.2.0 6.2 6 latest "
 IMAGES[stable]="stable/debian	60lts	6.0.3-1~stretch	6.0.3-1 6.0.3 6.0 stable"
 
-update_image() {
+update_dockerfiles() {
 	workdir=$1
 	repo=$2
 	package=$3
@@ -49,7 +49,13 @@ CMD ["varnishd", "-F", "-f", "/etc/varnish/default.vcl"]
 EOF
 }
 
-update_lib_file(){
+populate_dockerfiles() {
+	for i in ${!IMAGES[@]}; do
+		update_dockerfiles ${IMAGES[$i]}
+	done
+}
+
+update_library(){
 	workdir=$1
 	shift 3
 	tags="$@"
@@ -59,20 +65,30 @@ update_lib_file(){
 		Tags: `echo $tags | sed 's/ +/, /g'`
 		Architectures: amd64
 		Directory: $workdir
+		GitCommit: `git log -n1 --pretty=oneline $workdir | cut -f1 -d" "`
 	EOF
 }
 
-init_lib_file() {
+populate_library() {
 	cat > library.varnish <<- EOF
 		Maintainers: Guillaume Quintard <guillaume@varni.sh> (@gquintard)
 		GitRepo: https://github.com/varnish/docker-varnish.git
-		GitCommit: `git log -n1 --pretty=oneline $workdir | cut -f1 -d" "`
 	EOF
 
+	for i in ${!IMAGES[@]}; do
+		update_library ${IMAGES[$i]}
+	done
 }
 
-init_lib_file
-for i in ${!IMAGES[@]}; do
-	update_image ${IMAGES[$i]}
-	update_lib_file ${IMAGES[$i]}
-done
+case "$1" in
+	dockerfiles)
+		populate_dockerfiles
+		;;
+	library)
+		populate_library
+		;;
+	*)
+		echo invalid choice
+		exit 1
+		;;
+esac
