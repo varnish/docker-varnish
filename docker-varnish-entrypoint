@@ -7,6 +7,6 @@ set -e
 # -v; -SL; -f arg; etc will work, but not arg1 arg2
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
     set -- varnishd "$@"
-fi 
+fi
 
 exec "$@"

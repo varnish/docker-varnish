@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 set -e
 declare -A IMAGES
@@ -15,29 +15,31 @@ update_dockerfiles() {
 
 	cp docker-varnish-entrypoint $workdir
 
-	curl -L https://packagecloud.io/varnishcache/varnish$repo/gpgkey -o $workdir/gpgkey
+	curl -fL https://packagecloud.io/varnishcache/varnish$repo/gpgkey -o $workdir/gpgkey
 
 	cat > $workdir/Dockerfile << EOF
 FROM debian:stretch-slim
 
 COPY gpgkey /tmp
 
-RUN apt-get update && \\
-    apt-get install -y \\
-	curl \\
-	gnupg \\
-	apt-transport-https && \\
-    apt-key add /tmp/gpgkey && \\
-    echo deb https://packagecloud.io/varnishcache/varnish$repo/debian/ stretch main > /etc/apt/sources.list.d/varnish.list && \\
-    apt-get update && \\
-    apt-get install -y varnish=$package && \\
-    apt-get remove -y \\
-	curl \\
-	gnupg \\
-	apt-transport-https && \\
-    apt-get clean -y && \\
-    apt-get autoremove -y && \\
-    rm -rf /var/lib/apt/lists/* /tmp/gpgkey
+ENV VARNISH_VERSION $package
+
+RUN set -ex; \\
+	fetchDeps=" \\
+		apt-transport-https \\
+		ca-certificates \\
+		dirmngr \\
+		gnupg \\
+	"; \\
+	apt-get update; \\
+	apt-get install -y --no-install-recommends \$fetchDeps; \\
+	apt-key add /tmp/gpgkey; \\
+	rm /tmp/gpgkey; \\
+	echo deb https://packagecloud.io/varnishcache/varnish$repo/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \\
+	apt-get update; \\
+	apt-get install -y --no-install-recommends varnish=\$VARNISH_VERSION; \\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \$fetchDeps; \\
+	rm -rf /var/lib/apt/lists/*
 
 WORKDIR /etc/varnish
 
@@ -83,11 +85,11 @@ populate_library() {
 }
 
 update_travis() {
-	echo "  - NAME=$1 WORKDIR=$2" >> .travis.yaml
+	echo "  - NAME=$1 WORKDIR=$2" >> .travis.yml
 }
 
 populate_travis(){
-	cat > .travis.yaml << EOF
+	cat > .travis.yml << EOF
 language: bash
 services: docker
 
@@ -98,7 +100,7 @@ EOF
 		update_travis $i ${IMAGES[$i]}
 	done
 
-	cat >> .travis.yaml << EOF
+	cat >> .travis.yml << EOF
 install:
   - git clone https://github.com/docker-library/official-images.git ~/official-images
 
