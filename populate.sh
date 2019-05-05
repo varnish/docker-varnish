@@ -82,9 +82,44 @@ populate_library() {
 	done
 }
 
+update_travis() {
+	echo "  - NAME=$1 WORKDIR=$2" >> .travis.yaml
+}
+
+populate_travis(){
+	cat > .travis.yaml << EOF
+language: bash
+services: docker
+
+env:
+EOF
+
+	for i in ${!IMAGES[@]}; do
+		update_travis $i ${IMAGES[$i]}
+	done
+
+	cat >> .travis.yaml << EOF
+install:
+  - git clone https://github.com/docker-library/official-images.git ~/official-images
+
+before_script:
+  - env | sort
+  - cd "\${WORKDIR}"
+  - image="varnish:\${NAME}"
+
+script:
+  - travis_retry docker build -t "\$image" .
+  - ~/official-images/test/run.sh "\$image"
+
+after_script:
+  - docker images
+EOF
+}
+
 case "$1" in
 	dockerfiles)
 		populate_dockerfiles
+		populate_travis
 		;;
 	library)
 		populate_library
