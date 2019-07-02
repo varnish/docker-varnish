@@ -2,14 +2,19 @@
 
 set -e
 declare -A IMAGES
+declare -A KEYS
 
 IMAGES[6.2]="fresh/debian	62	6.2.0-1~stretch	6.2.0-1 6.2.0 6 latest fresh"
 IMAGES[6.0]="stable/debian	60lts	6.0.3-1~stretch	6.0.3-1 6.0.3 stable"
 
+KEYS[6.2]=0D42823DD1135F8E
+KEYS[6.0]=3AEAFFBB82FBBA5F
+
 update_dockerfiles() {
-	workdir=$1
-	repo=$2
-	package=$3
+	key=$1
+	workdir=$2
+	repo=$3
+	package=$4
 
 	mkdir -p $workdir
 
@@ -19,8 +24,6 @@ update_dockerfiles() {
 
 	cat > $workdir/Dockerfile << EOF
 FROM debian:stretch-slim
-
-COPY gpgkey /tmp
 
 ENV VARNISH_VERSION $package
 
@@ -33,8 +36,11 @@ RUN set -ex; \\
 	"; \\
 	apt-get update; \\
 	apt-get install -y --no-install-recommends \$fetchDeps; \\
-	apt-key add /tmp/gpgkey; \\
-	rm /tmp/gpgkey; \\
+	key=$key; \\
+	export GNUPGHOME="\$(mktemp -d)"; \\
+	gpg --batch --recv-keys \$key; \\
+	gpg --batch --export export \$key > /etc/apt/trusted.gpg.d/varnish.gpg; \\
+	gpgconf --kill all; \\
 	echo deb https://packagecloud.io/varnishcache/varnish$repo/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \\
 	apt-get update; \\
 	apt-get install -y --no-install-recommends varnish=\$VARNISH_VERSION; \\
@@ -53,7 +59,7 @@ EOF
 
 populate_dockerfiles() {
 	for i in ${!IMAGES[@]}; do
-		update_dockerfiles ${IMAGES[$i]}
+		update_dockerfiles ${KEYS[$i]} ${IMAGES[$i]}
 	done
 }
 

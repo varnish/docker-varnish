@@ -1,7 +1,5 @@
 FROM debian:stretch-slim
 
-COPY gpgkey /tmp
-
 ENV VARNISH_VERSION 6.2.0-1~stretch
 
 RUN set -ex; \
@@ -13,8 +11,11 @@ RUN set -ex; \
 	"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends $fetchDeps; \
-	apt-key add /tmp/gpgkey; \
-	rm /tmp/gpgkey; \
+	key=0D42823DD1135F8E; \
+	export GNUPGHOME="$(mktemp -d)"; \
+	gpg --batch --recv-keys $key; \
+	gpg --batch --export export $key > /etc/apt/trusted.gpg.d/varnish.gpg; \
+	gpgconf --kill all; \
 	echo deb https://packagecloud.io/varnishcache/varnish62/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends varnish=$VARNISH_VERSION; \
