@@ -4,16 +4,15 @@ ENV VARNISH_VERSION 6.2.0-1~stretch
 
 RUN set -ex; \
 	fetchDeps=" \
-		apt-transport-https \
 		ca-certificates \
 		dirmngr \
 		gnupg \
 	"; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends $fetchDeps; \
-	key=0D42823DD1135F8E; \
+	apt-get install -y --no-install-recommends apt-transport-https $fetchDeps; \
+	key=B54813B54CA95257D3590B3F1B0096460868C7A9; \
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --recv-keys $key; \
+	gpg --batch --keyserver http://ha.pool.sks-keyservers.net/ --recv-keys $key; \
 	gpg --batch --export export $key > /etc/apt/trusted.gpg.d/varnish.gpg; \
 	gpgconf --kill all; \
 	echo deb https://packagecloud.io/varnishcache/varnish62/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \

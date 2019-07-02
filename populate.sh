@@ -7,8 +7,8 @@ declare -A KEYS
 IMAGES[6.2]="fresh/debian	62	6.2.0-1~stretch	6.2.0-1 6.2.0 6 latest fresh"
 IMAGES[6.0]="stable/debian	60lts	6.0.3-1~stretch	6.0.3-1 6.0.3 stable"
 
-KEYS[6.2]=0D42823DD1135F8E
-KEYS[6.0]=3AEAFFBB82FBBA5F
+KEYS[6.2]=B54813B54CA95257D3590B3F1B0096460868C7A9
+KEYS[6.0]=48D81A24CB0456F5D59431D94CFCFD6BA750EDCD
 
 update_dockerfiles() {
 	key=$1
@@ -29,16 +29,15 @@ ENV VARNISH_VERSION $package
 
 RUN set -ex; \\
 	fetchDeps=" \\
-		apt-transport-https \\
 		ca-certificates \\
 		dirmngr \\
 		gnupg \\
 	"; \\
 	apt-get update; \\
-	apt-get install -y --no-install-recommends \$fetchDeps; \\
+	apt-get install -y --no-install-recommends apt-transport-https \$fetchDeps; \\
 	key=$key; \\
 	export GNUPGHOME="\$(mktemp -d)"; \\
-	gpg --batch --recv-keys \$key; \\
+	gpg --batch --keyserver http://ha.pool.sks-keyservers.net/ --recv-keys \$key; \\
 	gpg --batch --export export \$key > /etc/apt/trusted.gpg.d/varnish.gpg; \\
 	gpgconf --kill all; \\
 	echo deb https://packagecloud.io/varnishcache/varnish$repo/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \\
