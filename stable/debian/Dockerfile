@@ -15,6 +15,7 @@ RUN set -ex; \
 	gpg --batch --keyserver http://ha.pool.sks-keyservers.net/ --recv-keys $key; \
 	gpg --batch --export export $key > /etc/apt/trusted.gpg.d/varnish.gpg; \
 	gpgconf --kill all; \
+	rm -rf $GNUPGHOME; \
 	echo deb https://packagecloud.io/varnishcache/varnish60lts/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends varnish=$VARNISH_VERSION; \
