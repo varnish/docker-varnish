@@ -29,12 +29,11 @@ ENV VARNISH_VERSION $package
 
 RUN set -ex; \\
 	fetchDeps=" \\
-		ca-certificates \\
 		dirmngr \\
 		gnupg \\
 	"; \\
 	apt-get update; \\
-	apt-get install -y --no-install-recommends apt-transport-https \$fetchDeps; \\
+	apt-get install -y --no-install-recommends apt-transport-https ca-certificates \$fetchDeps; \\
 	key=$key; \\
 	export GNUPGHOME="\$(mktemp -d)"; \\
 	gpg --batch --keyserver http://ha.pool.sks-keyservers.net/ --recv-keys \$key; \\

@@ -4,12 +4,11 @@ ENV VARNISH_VERSION 6.0.3-1~stretch
 
 RUN set -ex; \
 	fetchDeps=" \
-		ca-certificates \
 		dirmngr \
 		gnupg \
 	"; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends apt-transport-https $fetchDeps; \
+	apt-get install -y --no-install-recommends apt-transport-https ca-certificates $fetchDeps; \
 	key=48D81A24CB0456F5D59431D94CFCFD6BA750EDCD; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	gpg --batch --keyserver http://ha.pool.sks-keyservers.net/ --recv-keys $key; \
