@@ -4,10 +4,10 @@ set -e
 declare -A IMAGES
 declare -A KEYS
 
-IMAGES[6.2]="fresh/debian	62	6.2.1-1~stretch	6.2.1-1 6.2.1 6 latest fresh"
+IMAGES[6.3]="fresh/debian	63	6.3.0-1~stretch	6.3.0-1 6.3.0 6 latest fresh"
 IMAGES[6.0]="stable/debian	60lts	6.0.4-1~stretch	6.0.4-1 6.0.4 stable"
 
-KEYS[6.2]=B54813B54CA95257D3590B3F1B0096460868C7A9
+KEYS[6.3]=920A8A7AA7120A8604BCCD294A42CD6EB810E55D
 KEYS[6.0]=48D81A24CB0456F5D59431D94CFCFD6BA750EDCD
 
 update_dockerfiles() {

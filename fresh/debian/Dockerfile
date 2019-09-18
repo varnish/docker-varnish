@@ -1,6 +1,6 @@
 FROM debian:stretch-slim
 
-ENV VARNISH_VERSION 6.2.1-1~stretch
+ENV VARNISH_VERSION 6.3.0-1~stretch
 
 RUN set -ex; \
 	fetchDeps=" \
@@ -9,13 +9,13 @@ RUN set -ex; \
 	"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends apt-transport-https ca-certificates $fetchDeps; \
-	key=B54813B54CA95257D3590B3F1B0096460868C7A9; \
+	key=920A8A7AA7120A8604BCCD294A42CD6EB810E55D; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	gpg --batch --keyserver http://ha.pool.sks-keyservers.net/ --recv-keys $key; \
 	gpg --batch --export export $key > /etc/apt/trusted.gpg.d/varnish.gpg; \
 	gpgconf --kill all; \
 	rm -rf $GNUPGHOME; \
-	echo deb https://packagecloud.io/varnishcache/varnish62/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \
+	echo deb https://packagecloud.io/varnishcache/varnish63/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends varnish=$VARNISH_VERSION; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
