@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/varnish/docker-varnish.svg?branch=master)](https://travis-ci.org/varnish/docker-varnish)
+
 This is the source repository use to build the official [Varnish Docker image](https://hub.docker.com/_/varnish).
 
 # Versions
