@@ -1,6 +1,6 @@
 FROM debian:stretch-slim
 
-ENV VARNISH_VERSION 6.0.4-1~stretch
+ENV VARNISH_VERSION 6.0.5-1~stretch
 
 RUN set -ex; \
 	fetchDeps=" \
