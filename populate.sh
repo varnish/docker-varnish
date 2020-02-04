@@ -4,8 +4,8 @@ set -e
 declare -A IMAGES
 declare -A KEYS
 
-IMAGES[6.3]="fresh/debian	63	6.3.1-1~stretch	6.3.1-1 6.3.1 6 latest fresh"
-IMAGES[6.0]="stable/debian	60lts	6.0.5-1~stretch	6.0.5-1 6.0.5 stable"
+IMAGES[6.3]="fresh/debian	63	6.3.2-1~stretch	6.3.2-1 6.3.2 6 latest fresh"
+IMAGES[6.0]="stable/debian	60lts	6.0.6-1~stretch	6.0.6-1 6.0.6 stable"
 
 KEYS[6.3]=920A8A7AA7120A8604BCCD294A42CD6EB810E55D
 KEYS[6.0]=48D81A24CB0456F5D59431D94CFCFD6BA750EDCD
