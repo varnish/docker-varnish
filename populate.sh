@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 declare -A IMAGES
@@ -26,6 +26,7 @@ update_dockerfiles() {
 FROM debian:stretch-slim
 
 ENV VARNISH_VERSION $package
+ENV SIZE 100M
 
 RUN set -ex; \\
 	fetchDeps=" \\
@@ -51,8 +52,8 @@ WORKDIR /etc/varnish
 COPY docker-varnish-entrypoint /usr/local/bin/
 ENTRYPOINT ["docker-varnish-entrypoint"]
 
-EXPOSE 80
-CMD ["varnishd", "-F", "-f", "/etc/varnish/default.vcl"]
+EXPOSE 80 8443
+CMD varnishd -F -f /etc/varnish/default.vcl -a http=:80,HTTP -a proxy=:8443,PROXY -s malloc,\$SIZE
 EOF
 }
 

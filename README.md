@@ -28,6 +28,16 @@ To generate the file that will become https://github.com/docker-library/official
 # commit your changes first!
 ./populate.sh library
 ```
+# Running
+
+When running the Varnish image, a `varnishd` process will be started that listens on the following ports:
+
+* port `80` for *plain HTTP*
+* port `8443` for the *PROXY protocol*
+
+If the Varnish container sits behind a loadbalancer or proxy server that speaks the [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt), you can connect to Varnish on port `8843`. Under all other circumstances, a connection must be made on port `80`.
+
+Varnish will run with a default memory storage size of `100M`. The `SIZE` *environment variable* can be used to extend the size.
 
 # Image documentation
 
