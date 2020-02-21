@@ -35,15 +35,17 @@ When running the Varnish image, a `varnishd` process will be started that listen
 * port `80` for *plain HTTP*
 * port `8443` for the *PROXY protocol*
 
-If the Varnish container sits behind a loadbalancer or proxy server that speaks the [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt), you can connect to Varnish on port `8843`. Under all other circumstances, a connection must be made on port `80`.
+> See [TLS section](#tls) for more information about the primary *PROXY protocol* use case.
 
 Varnish will run with a default memory storage size of `100M`. The `SIZE` *environment variable* can be used to extend the size.
 
 # TLS
 
-If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers, but the Varnish ecosystem also provides *a purpose-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
+If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers or proxy servers, but the Varnish ecosystem also provides *a purpose-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
 
-Hitch supports the *PROXY protocol* and is transparent to Varnish. The *PROXY protocol* has the ability to keep track of *the original client IP address*. Varnish also supports this, and will automatically take this IP address and assign it to the `X-Forwarded-For` request header.
+Hitch supports the [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) and is transparent to Varnish. The *PROXY protocol* has the ability to keep track of *the original client IP address*.
+
+> Hitch, or any other TLS terminator that supports the *PROXY protocol* will connect to Varnish on port `8443`.
 
 # Image documentation
 
