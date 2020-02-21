@@ -41,7 +41,7 @@ Varnish will run with a default memory storage size of `100M`. The `SIZE` *envir
 
 # TLS
 
-If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers, but the Varnish ecosystem also provides *a purpous-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
+If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers, but the Varnish ecosystem also provides *a purpose-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
 
 Hitch supports the *PROXY protocol* and is transparent to Varnish. The *PROXY protocol* has the ability to keep track of *the original client IP address*. Varnish also supports this, and will automatically take this IP address and assign it to the `X-Forwarded-For` request header.
 
