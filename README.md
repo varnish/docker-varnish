@@ -39,6 +39,12 @@ If the Varnish container sits behind a loadbalancer or proxy server that speaks 
 
 Varnish will run with a default memory storage size of `100M`. The `SIZE` *environment variable* can be used to extend the size.
 
+# TLS
+
+If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers, but the Varnish ecosystem also provides *a purpous-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
+
+Hitch supports the *PROXY protocol* and is transparent to Varnish. The *PROXY protocol* has the ability to keep track of *the original client IP address*. Varnish also supports this, and will automatically take this IP address and assign it to the `X-Forwarded-For` request header.
+
 # Image documentation
 
 Please see https://github.com/docker-library/docs/tree/master/varnish
