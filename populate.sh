@@ -19,7 +19,7 @@ CONFIG='
 		"repo": "64",
 		"pkg": "6.4.0-1~buster",
 		"tags": "6.4.0-1 6.4.0 6 latest fresh",
-		"key": "920A8A7AA7120A8604BCCD294A42CD6EB810E55D"
+		"key": "A9897320C397E3A60C03E8BF821AD320F71BFF3D"
 	}
 }'
 
