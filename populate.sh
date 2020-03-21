@@ -2,19 +2,33 @@
 
 set -e
 declare -A IMAGES
-declare -A KEYS
 
-IMAGES[6.3]="fresh/debian	63	6.3.2-1~stretch	6.3.2-1 6.3.2 6 latest fresh"
-IMAGES[6.0]="stable/debian	60lts	6.0.6-1~stretch	6.0.6-1 6.0.6 stable"
-
-KEYS[6.3]=920A8A7AA7120A8604BCCD294A42CD6EB810E55D
-KEYS[6.0]=48D81A24CB0456F5D59431D94CFCFD6BA750EDCD
+CONFIG='
+{
+	"6.0": {
+		"dist": "stretch",
+		"workdir": "stable/debian",
+		"repo": "60lts",
+		"pkg": "6.0.6-1~stretch",
+		"tags": "6.0.6-1 6.0.6 stable",
+		"key": "48D81A24CB0456F5D59431D94CFCFD6BA750EDCD"
+	},
+	"6.4": {
+		"dist": "buster",
+		"workdir": "fresh/debian",
+		"repo": "64",
+		"pkg": "6.4.0-1~buster",
+		"tags": "6.4.0-1 6.4.0 6 latest fresh",
+		"key": "920A8A7AA7120A8604BCCD294A42CD6EB810E55D"
+	}
+}'
 
 update_dockerfiles() {
-	key=$1
-	workdir=$2
-	repo=$3
-	package=$4
+	key=`echo $CONFIG | jq -r ".[\"$1\"][\"key\"]"`
+	workdir=`echo $CONFIG | jq -r ".[\"$1\"][\"workdir\"]"`
+	repo=`echo $CONFIG | jq -r ".[\"$1\"][\"repo\"]"`
+	package=`echo $CONFIG | jq -r ".[\"$1\"][\"pkg\"]"`
+	dist=`echo $CONFIG | jq -r ".[\"$1\"][\"dist\"]"`
 
 	mkdir -p $workdir
 
@@ -23,7 +37,7 @@ update_dockerfiles() {
 	curl -fL https://packagecloud.io/varnishcache/varnish$repo/gpgkey -o $workdir/gpgkey
 
 	cat > $workdir/Dockerfile << EOF
-FROM debian:stretch-slim
+FROM debian:$dist-slim
 
 ENV VARNISH_VERSION $package
 ENV SIZE 100M
@@ -41,7 +55,7 @@ RUN set -ex; \\
 	gpg --batch --export export \$key > /etc/apt/trusted.gpg.d/varnish.gpg; \\
 	gpgconf --kill all; \\
 	rm -rf \$GNUPGHOME; \\
-	echo deb https://packagecloud.io/varnishcache/varnish$repo/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \\
+	echo deb https://packagecloud.io/varnishcache/varnish$repo/debian/ $dist main > /etc/apt/sources.list.d/varnish.list; \\
 	apt-get update; \\
 	apt-get install -y --no-install-recommends varnish=\$VARNISH_VERSION; \\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \$fetchDeps; \\
@@ -58,16 +72,15 @@ EOF
 }
 
 populate_dockerfiles() {
-	for i in ${!IMAGES[@]}; do
-		update_dockerfiles ${KEYS[$i]} ${IMAGES[$i]}
+	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
+		update_dockerfiles $i
 	done
 }
 
 update_library(){
 	name=$1
-	workdir=$2
-	shift 4
-	tags="$@"
+	workdir=`echo $CONFIG | jq -r ".[\"$1\"][\"workdir\"]"`
+	tags=`echo $CONFIG | jq -r ".[\"$1\"][\"tags\"]"`
 
 	cat >> library.varnish <<- EOF
 
@@ -85,13 +98,15 @@ populate_library() {
 		GitRepo: https://github.com/varnish/docker-varnish.git
 	EOF
 
-	for i in ${!IMAGES[@]}; do
-		update_library $i ${IMAGES[$i]}
+	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
+		update_library $i
 	done
 }
 
 update_travis() {
-	echo "  - NAME=$1 WORKDIR=$2" >> .travis.yml
+	name=$1
+	workdir=`echo $CONFIG | jq -r ".[\"$1\"][\"workdir\"]"`
+	echo "  - NAME=$name WORKDIR=$workdir" >> .travis.yml
 }
 
 populate_travis(){
@@ -102,8 +117,8 @@ services: docker
 env:
 EOF
 
-	for i in ${!IMAGES[@]}; do
-		update_travis $i ${IMAGES[$i]}
+	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
+		update_travis $i
 	done
 
 	cat >> .travis.yml << EOF

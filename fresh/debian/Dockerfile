@@ -1,6 +1,6 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
-ENV VARNISH_VERSION 6.3.2-1~stretch
+ENV VARNISH_VERSION 6.4.0-1~buster
 ENV SIZE 100M
 
 RUN set -ex; \
@@ -16,7 +16,7 @@ RUN set -ex; \
 	gpg --batch --export export $key > /etc/apt/trusted.gpg.d/varnish.gpg; \
 	gpgconf --kill all; \
 	rm -rf $GNUPGHOME; \
-	echo deb https://packagecloud.io/varnishcache/varnish63/debian/ stretch main > /etc/apt/sources.list.d/varnish.list; \
+	echo deb https://packagecloud.io/varnishcache/varnish64/debian/ buster main > /etc/apt/sources.list.d/varnish.list; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends varnish=$VARNISH_VERSION; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
