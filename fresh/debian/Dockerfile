@@ -10,9 +10,9 @@ RUN set -ex; \
 	"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends apt-transport-https ca-certificates $fetchDeps; \
-	key=920A8A7AA7120A8604BCCD294A42CD6EB810E55D; \
+	key=A9897320C397E3A60C03E8BF821AD320F71BFF3D; \
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --keyserver http://ha.pool.sks-keyservers.net/ --recv-keys $key; \
+	gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --recv-keys $key; \
 	gpg --batch --export export $key > /etc/apt/trusted.gpg.d/varnish.gpg; \
 	gpgconf --kill all; \
 	rm -rf $GNUPGHOME; \
