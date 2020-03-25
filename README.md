@@ -37,7 +37,7 @@ When running the Varnish image, a `varnishd` process will be started that listen
 
 > See [TLS section](#tls) for more information about the primary *PROXY protocol* use case.
 
-Varnish will run with a default memory storage size of `100M`. The `SIZE` *environment variable* can be used to extend the size.
+Varnish will run with a default memory storage size of `100M`. The `VARNISH_SIZE` *environment variable* can be used to extend the size.
 
 # TLS
 

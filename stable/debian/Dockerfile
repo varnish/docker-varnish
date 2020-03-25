@@ -1,7 +1,7 @@
 FROM debian:stretch-slim
 
 ENV VARNISH_VERSION 6.0.6-1~stretch
-ENV SIZE 100M
+ENV VARNISH_SIZE 100M
 
 RUN set -ex; \
 	fetchDeps=" \
@@ -28,4 +28,4 @@ COPY docker-varnish-entrypoint /usr/local/bin/
 ENTRYPOINT ["docker-varnish-entrypoint"]
 
 EXPOSE 80 8443
-CMD varnishd -F -f /etc/varnish/default.vcl -a http=:80,HTTP -a proxy=:8443,PROXY -s malloc,$SIZE
+CMD []

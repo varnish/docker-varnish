@@ -6,7 +6,7 @@ set -e
 # but only works if all arguments require a hyphenated flag
 # -v; -SL; -f arg; etc will work, but not arg1 arg2
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
-    set -- varnishd "$@"
+    set -- varnishd -F -f /etc/varnish/default.vcl -a http=:80,HTTP -a proxy=:8443,PROXY -s malloc,$VARNISH_SIZE "$@"
 fi
 
 exec "$@"
