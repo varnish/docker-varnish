@@ -22,8 +22,7 @@ jobs:
         name: Generate Jobs
         run: |
           git clone --depth 1 https://github.com/docker-library/bashbrew.git -b master ~/bashbrew
-          strategy="$(~/bashbrew/scripts/github-actions/generate.sh)"
-          strategy="$(~/bashbrew/scripts/github-actions/munge-i386.sh -c <<<"$strategy")"
+          strategy="$(GITHUB_REPOSITORY=varnish ~/bashbrew/scripts/github-actions/generate.sh)"
           jq . <<<"$strategy" # sanity check / debugging aid
           echo "::set-output name=strategy::$strategy"
 
