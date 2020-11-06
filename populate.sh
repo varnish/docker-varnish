@@ -103,46 +103,9 @@ populate_library() {
 	done
 }
 
-update_travis() {
-	name=$1
-	workdir=`echo $CONFIG | jq -r ".[\"$1\"][\"workdir\"]"`
-	echo "  - NAME=$name WORKDIR=$workdir" >> .travis.yml
-}
-
-populate_travis(){
-	cat > .travis.yml << EOF
-language: bash
-services: docker
-
-env:
-EOF
-
-	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
-		update_travis $i
-	done
-
-	cat >> .travis.yml << EOF
-install:
-  - git clone https://github.com/docker-library/official-images.git ~/official-images
-
-before_script:
-  - env | sort
-  - cd "\${WORKDIR}"
-  - image="varnish:\${NAME}"
-
-script:
-  - travis_retry docker build -t "\$image" .
-  - ~/official-images/test/run.sh "\$image"
-
-after_script:
-  - docker images
-EOF
-}
-
 case "$1" in
 	dockerfiles)
 		populate_dockerfiles
-		populate_travis
 		;;
 	library)
 		populate_library
