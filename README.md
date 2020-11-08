@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/_/varnish.svg?branch=master)](https://travis-ci.org/_/varnish)
 [![Docker Pulls](https://img.shields.io/docker/pulls/_/varnish.svg)](https://hub.docker.com/r/_/varnish)
 [![Docker Stars](https://img.shields.io/docker/stars/_/varnish.svg)](https://hub.docker.com/r/_/varnish)
 [![GitHub CI build status badge](https://github.com/varnish/docker-varnish/workflows/GitHub%20CI/badge.svg)](https://github.com/varnish/docker-varnish/actions?query=workflow%3A%22GitHub+CI%22)
