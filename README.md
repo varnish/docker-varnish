@@ -12,9 +12,11 @@
 [![ppc64le build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/multiarch/job/ppc64le/job/varnish.svg?label=ppc64le)](https://doi-janky.infosiftr.net/job/multiarch/job/ppc64le/job/varnish)
 [![s390x build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/multiarch/job/s390x/job/varnish.svg?label=s390x)](https://doi-janky.infosiftr.net/job/multiarch/job/s390x/job/varnish)-->
 
-This is the source repository use to build the official [Varnish Docker image](https://hub.docker.com/_/varnish).
+# Official Varnish Docker image
 
-# Versions
+This is the source repository useid to build the official [Varnish Docker image](https://hub.docker.com/_/varnish).
+
+## Versions
 
 This repository tracks two Varnish versions:
 
@@ -23,7 +25,7 @@ This repository tracks two Varnish versions:
 
 New major/minor versions are release on the 15th of March and of September, this is when the `fresh` and `stable` labels are reevaluated.
 
-# Building
+## Building
 
 The docker build directories are under `fresh/` and `stable/`. Dockerfiles are generated all at once using:
 
@@ -40,7 +42,7 @@ To generate the file that will become https://github.com/docker-library/official
 # commit your changes first!
 ./populate.sh library
 ```
-# Running
+## Running
 
 When running the Varnish image, a `varnishd` process will be started that listens on the following ports:
 
@@ -51,7 +53,7 @@ When running the Varnish image, a `varnishd` process will be started that listen
 
 Varnish will run with a default memory storage size of `100M`. The `VARNISH_SIZE` *environment variable* can be used to extend the size.
 
-# TLS
+## TLS
 
 If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers or proxy servers, but the Varnish ecosystem also provides *a purpose-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
 
@@ -59,6 +61,6 @@ Hitch supports the [PROXY protocol](https://www.haproxy.org/download/1.8/doc/pro
 
 > Hitch, or any other TLS terminator that supports the *PROXY protocol* will connect to Varnish on port `8443`.
 
-# Image documentation
+## Image documentation
 
 Please see https://github.com/docker-library/docs/tree/master/varnish
