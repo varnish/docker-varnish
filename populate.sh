@@ -6,11 +6,11 @@ declare -A IMAGES
 CONFIG='
 {
 	"6.0": {
-		"dist": "stretch",
+		"dist": "buster",
 		"workdir": "stable/debian",
 		"repo": "60lts",
-		"pkg": "6.0.6-1~stretch",
-		"tags": "6.0.6-1 6.0.6 stable",
+		"pkg": "6.0.7-1~buster",
+		"tags": "6.0.7-1 6.0.7 stable",
 		"key": "48D81A24CB0456F5D59431D94CFCFD6BA750EDCD"
 	},
 	"6.5": {
