@@ -16,10 +16,10 @@ CONFIG='
 	"6.5": {
 		"dist": "buster",
 		"workdir": "fresh/debian",
-		"repo": "65",
-		"pkg": "6.5.1~buster-1",
-		"tags": "6.5.1-1 6.5.1 6 latest fresh",
-		"key": "A487F9BE81D9DF5121488CFE1C7B4E9FF149D65B"
+		"repo": "66",
+		"pkg": "6.6.0-1~buster",
+		"tags": "6.6.0-1 6.6.0 6.6 6 latest fresh",
+		"key": "A0378A38E4EACA3660789E570BAC19E3F6C90CD5"
 	}
 }'
 
