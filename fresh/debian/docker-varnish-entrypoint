@@ -7,13 +7,24 @@ set -e
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
     set -- varnishd \
 	    -F \
-	    -n /var/lib/varnish \
 	    -f /etc/varnish/default.vcl \
 	    -a http=:80,HTTP \
 	    -a proxy=:8443,PROXY \
 	    -p feature=+http2 \
 	    -s malloc,$VARNISH_SIZE \
 	    "$@"
+fi
+
+# varnish binaries used /var/lib/varnish/$HOSTNAME as default wordir to
+# read and write logs, metrics, secrets, etc. . It causes issues with sidecars
+# who have a different $HOSTNAME, so if we recognize the binary,
+# we inject '-n /var/lib/varnish' immediately after it so everyone agree on the
+# same directory. When multiple -n arguments are specified, the last one wines.
+# so we can still be overridden by the user
+if echo "$1" | grep -qE '^varnish(d|adm|hist|log|ncsa|reload|stat|top)$'; then
+	SAVED_CMD="$1"
+	shift
+	set -- "$SAVED_CMD" -n /var/lib/varnish "$@"
 fi
 
 exec "$@"
