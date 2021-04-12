@@ -30,9 +30,9 @@ update_dockerfiles() {
 	package=`echo $CONFIG | jq -r ".[\"$1\"][\"pkg\"]"`
 	dist=`echo $CONFIG | jq -r ".[\"$1\"][\"dist\"]"`
 
-	mkdir -p $workdir
+	mkdir -p $workdir/scripts
 
-	cp docker-varnish-entrypoint $workdir
+	cp -d scripts/* $workdir/scripts
 
 	curl -fL https://packagecloud.io/varnishcache/varnish$repo/gpgkey -o $workdir/gpgkey
 
@@ -63,8 +63,8 @@ RUN set -ex; \\
 
 WORKDIR /etc/varnish
 
-COPY docker-varnish-entrypoint /usr/local/bin/
-ENTRYPOINT ["docker-varnish-entrypoint"]
+COPY scripts/ /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
 EXPOSE 80 8443
 CMD []

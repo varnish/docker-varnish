@@ -1,0 +1,5 @@
+#!/bin/sh -e
+bin="$(basename $0)"
+[ -x "/usr/sbin/$bin" ] && bin="/usr/sbin/$bin" || bin="/usr/bin/$bin"
+set -- "$bin" -n /var/lib/varnish "$@"
+exec "$@"

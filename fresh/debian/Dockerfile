@@ -24,8 +24,8 @@ RUN set -ex; \
 
 WORKDIR /etc/varnish
 
-COPY docker-varnish-entrypoint /usr/local/bin/
-ENTRYPOINT ["docker-varnish-entrypoint"]
+COPY scripts/ /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
 EXPOSE 80 8443
 CMD []
