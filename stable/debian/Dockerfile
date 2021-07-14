@@ -1,6 +1,6 @@
 FROM debian:buster-slim
 
-ENV VARNISH_VERSION 6.0.7-1~buster
+ENV VARNISH_VERSION 6.0.8-1~buster
 ENV VARNISH_SIZE 100M
 
 RUN set -ex; \
