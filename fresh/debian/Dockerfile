@@ -12,7 +12,7 @@ RUN set -ex; \
 	apt-get install -y --no-install-recommends apt-transport-https ca-certificates $fetchDeps; \
 	key=A0378A38E4EACA3660789E570BAC19E3F6C90CD5; \
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys $key; \
+	gpg --batch --keyserver keys.openpgp.org --recv-keys $key; \
 	gpg --batch --export export $key > /etc/apt/trusted.gpg.d/varnish.gpg; \
 	gpgconf --kill all; \
 	rm -rf $GNUPGHOME; \
