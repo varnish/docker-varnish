@@ -8,14 +8,14 @@ CONFIG='
 	"stable": {
 		"debian": "buster",
 		"version": "6.0.8",
-		"tags": "6.0 stable",
+		"tags": "6.0",
 		"pkg-commit": "6890e35e3fd95fe2db068f8899dfff0855c354be",
 		"dist-sha512": "73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f"
 	},
 	"fresh": {
 		"debian": "buster",
 		"version": "6.6.1",
-		"tags": "6.6 latest fresh",
+		"tags": "6.6 latest",
 		"pkg-commit": "1f139121b5bce0b5b8f5d104224e14880a921b6b",
 		"dist-sha512": "af3ee1743af2ede2d3efbb73e5aa9b42c7bbd5f86163ec338c8afd1989c3e51ff3e1b40bed6b72224b5d339a74f22d6e5f3c3faf2fedee8ab4715307ed5d871b"
 	}
