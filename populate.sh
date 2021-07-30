@@ -47,12 +47,17 @@ populate_dockerfiles() {
 }
 
 update_library(){
-	name=$1
+	version=`echo $CONFIG | jq -r ".[\"$1\"][\"version\"]"`
 	tags=`echo $CONFIG | jq -r ".[\"$1\"][\"tags\"]"`
+	tags="$1 $version $tags"
+
+	if [ "$2" != "debian" ]; then
+		tags=`echo "$tags" | sed "s/\( \|$\)/-$2\1/g"`
+	fi
 
 	cat >> library.varnish <<- EOF
 
-		Tags: `echo $name $tags | sed 's/ \+/, /g'`
+		Tags: `echo $tags | sed 's/ \+/, /g'`
 		Architectures: amd64
 		Directory: $1/$2
 		GitCommit: `git log -n1 --pretty=oneline $1/$2 | cut -f1 -d" "`
@@ -68,7 +73,9 @@ populate_library() {
 
 	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
 		update_library $i debian
-		[ "$i" != "stable" ] && update_library $i alpine
+		if [ "$i" != "stable" ]; then
+			update_library $i alpine
+		fi
 	done
 }
 
