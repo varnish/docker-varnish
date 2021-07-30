@@ -5,89 +5,57 @@ declare -A IMAGES
 
 CONFIG='
 {
-	"6.0": {
-		"dist": "buster",
-		"workdir": "stable/debian",
-		"repo": "60lts",
-		"pkg": "6.0.8-1~buster",
-		"tags": "6.0.8-1 6.0.8 stable",
-		"key": "48D81A24CB0456F5D59431D94CFCFD6BA750EDCD"
+	"stable": {
+		"debian": "buster",
+		"version": "6.0.8",
+		"tags": "6.0 stable",
+		"pkg-commit": "6890e35e3fd95fe2db068f8899dfff0855c354be",
+		"dist-sha512": "73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f"
 	},
-	"6.6": {
-		"dist": "buster",
-		"workdir": "fresh/debian",
-		"repo": "66",
-		"pkg": "6.6.1-1~buster",
-		"tags": "6.6.1-1 6.6.1 6 latest fresh",
-		"key": "A0378A38E4EACA3660789E570BAC19E3F6C90CD5"
+	"fresh": {
+		"debian": "buster",
+		"version": "6.6.1",
+		"tags": "6.6 latest fresh",
+		"pkg-commit": "1f139121b5bce0b5b8f5d104224e14880a921b6b",
+		"dist-sha512": "af3ee1743af2ede2d3efbb73e5aa9b42c7bbd5f86163ec338c8afd1989c3e51ff3e1b40bed6b72224b5d339a74f22d6e5f3c3faf2fedee8ab4715307ed5d871b"
 	}
 }'
 
 update_dockerfiles() {
-	key=`echo $CONFIG | jq -r ".[\"$1\"][\"key\"]"`
-	workdir=`echo $CONFIG | jq -r ".[\"$1\"][\"workdir\"]"`
-	repo=`echo $CONFIG | jq -r ".[\"$1\"][\"repo\"]"`
-	package=`echo $CONFIG | jq -r ".[\"$1\"][\"pkg\"]"`
-	dist=`echo $CONFIG | jq -r ".[\"$1\"][\"dist\"]"`
+	DEBIAN=`echo $CONFIG | jq -r ".[\"$1\"][\"debian\"]"`
+	VARNISH_VERSION=`echo $CONFIG | jq -r ".[\"$1\"][\"version\"]"`
+	DIST_SHA512=`echo $CONFIG | jq -r ".[\"$1\"][\"dist-sha512\"]"`
+	PKG_COMMIT=`echo $CONFIG | jq -r ".[\"$1\"][\"pkg-commit\"]"`
 
-	mkdir -p $workdir/scripts
+	mkdir -p $1/$2/scripts
 
-	cp -d scripts/* $workdir/scripts
+	cp -d scripts/* $1/$2/scripts
 
-	curl -fL https://packagecloud.io/varnishcache/varnish$repo/gpgkey -o $workdir/gpgkey
-
-	cat > $workdir/Dockerfile << EOF
-FROM debian:$dist-slim
-
-ENV VARNISH_VERSION $package
-ENV VARNISH_SIZE 100M
-
-RUN set -ex; \\
-	fetchDeps=" \\
-		dirmngr \\
-		gnupg \\
-	"; \\
-	apt-get update; \\
-	apt-get install -y --no-install-recommends apt-transport-https ca-certificates \$fetchDeps; \\
-	key=$key; \\
-	export GNUPGHOME="\$(mktemp -d)"; \\
-	gpg --batch --keyserver keyserver.ubuntu.com --recv-keys \$key; \\
-	gpg --batch --export export \$key > /etc/apt/trusted.gpg.d/varnish.gpg; \\
-	gpgconf --kill all; \\
-	rm -rf \$GNUPGHOME; \\
-	echo deb https://packagecloud.io/varnishcache/varnish$repo/debian/ $dist main > /etc/apt/sources.list.d/varnish.list; \\
-	apt-get update; \\
-	apt-get install -y --no-install-recommends varnish=\$VARNISH_VERSION; \\
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \$fetchDeps; \\
-	rm -rf /var/lib/apt/lists/*
-
-WORKDIR /etc/varnish
-
-COPY scripts/ /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
-
-EXPOSE 80 8443
-CMD []
-EOF
+	sed Dockerfile.$2 \
+		-e "s/@DEBIAN@/$DEBIAN/" \
+		-e "s/@VARNISH_VERSION@/$VARNISH_VERSION/" \
+		-e "s/@DIST_SHA512@/$DIST_SHA512/" \
+		-e "s/@PKG_COMMIT@/$PKG_COMMIT/" \
+		> $1/$2/Dockerfile
 }
 
 populate_dockerfiles() {
 	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
-		update_dockerfiles $i
+		update_dockerfiles $i debian
+		[ "$i" != "stable" ] && update_dockerfiles $i alpine
 	done
 }
 
 update_library(){
 	name=$1
-	workdir=`echo $CONFIG | jq -r ".[\"$1\"][\"workdir\"]"`
 	tags=`echo $CONFIG | jq -r ".[\"$1\"][\"tags\"]"`
 
 	cat >> library.varnish <<- EOF
 
 		Tags: `echo $name $tags | sed 's/ \+/, /g'`
 		Architectures: amd64
-		Directory: $workdir
-		GitCommit: `git log -n1 --pretty=oneline $workdir | cut -f1 -d" "`
+		Directory: $1/$2
+		GitCommit: `git log -n1 --pretty=oneline $1/$2 | cut -f1 -d" "`
 	EOF
 }
 
@@ -99,7 +67,8 @@ populate_library() {
 	EOF
 
 	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
-		update_library $i
+		update_library $i debian
+		[ "$i" != "stable" ] && update_library $i alpine
 	done
 }
 
