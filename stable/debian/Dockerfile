@@ -1,6 +1,4 @@
-ARG DEBIAN=buster
-
-FROM debian:$DEBIAN-slim
+FROM debian:buster-slim
 
 ARG VARNISH_VERSION=6.0.8
 ARG DIST_SHA512=73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f
@@ -14,7 +12,6 @@ RUN set -e; \
      git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout $PKG_COMMIT; \
-    rm -rf .git; \
     sha512sum /tmp/orig.tgz; \
     [ "`sha512sum /tmp/orig.tgz`" = "$DIST_SHA512  /tmp/orig.tgz" ]; \
     echo sha is ok; \
