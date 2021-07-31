@@ -1,17 +1,15 @@
 FROM debian:buster-slim
 
-ADD http://varnish-cache.org/_downloads/varnish-6.0.8.tgz /tmp/orig.tgz
-
 RUN set -e; \
     apt-get update; \
     apt-get install -y curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot; \
-     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
+    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout 6890e35e3fd95fe2db068f8899dfff0855c354be; \
     rm -rf .git; \
+    curl http://varnish-cache.org/_downloads/varnish-6.0.8.tgz -o /tmp/orig.tgz; \
     sha512sum /tmp/orig.tgz; \
     [ "`sha512sum /tmp/orig.tgz`" = "73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f  /tmp/orig.tgz" ]; \
-    echo sha is ok; \
     tar xavf /tmp/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|6.0.8|"  "debian/changelog"; \
     yes | mk-build-deps --install debian/control || true; \
