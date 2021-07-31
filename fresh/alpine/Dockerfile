@@ -26,6 +26,7 @@ RUN set -e;\
 FROM alpine
 
 COPY --from=0 /tmp/pkgs /tmp
+COPY --from=0 /pkg-varnish-cache/systemd/varnishreload /usr/bin/
 
 RUN set -e; \
     apk add --allow-untrusted /tmp/*.apk; \
