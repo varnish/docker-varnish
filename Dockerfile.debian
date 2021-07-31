@@ -1,23 +1,19 @@
 FROM debian:@DEBIAN@-slim
 
-ARG VARNISH_VERSION=@VARNISH_VERSION@
-ARG DIST_SHA512=@DIST_SHA512@
-ARG PKG_COMMIT=@PKG_COMMIT@
-
-ADD http://varnish-cache.org/_downloads/varnish-$VARNISH_VERSION.tgz /tmp/orig.tgz
+ADD http://varnish-cache.org/_downloads/varnish-@VARNISH_VERSION@.tgz /tmp/orig.tgz
 
 RUN set -e; \
     apt-get update; \
     apt-get install -y curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot; \
      git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout $PKG_COMMIT; \
+    git checkout @PKG_COMMIT@; \
     rm -rf .git; \
     sha512sum /tmp/orig.tgz; \
-    [ "`sha512sum /tmp/orig.tgz`" = "$DIST_SHA512  /tmp/orig.tgz" ]; \
+    [ "`sha512sum /tmp/orig.tgz`" = "@DIST_SHA512@  /tmp/orig.tgz" ]; \
     echo sha is ok; \
     tar xavf /tmp/orig.tgz --strip 1; \
-    sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
+    sed -i -e "s|@VERSION@|@VARNISH_VERSION@|"  "debian/changelog"; \
     yes | mk-build-deps --install debian/control || true; \
     tar cvzf debian.tar.gz debian --dereference; tar xavf debian.tar.gz; \
     sed -i '' debian/varnish*; \
