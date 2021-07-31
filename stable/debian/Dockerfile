@@ -12,6 +12,7 @@ RUN set -e; \
      git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout $PKG_COMMIT; \
+    rm -rf .git; \
     sha512sum /tmp/orig.tgz; \
     [ "`sha512sum /tmp/orig.tgz`" = "$DIST_SHA512  /tmp/orig.tgz" ]; \
     echo sha is ok; \
