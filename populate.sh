@@ -52,7 +52,7 @@ update_library(){
 	tags="$1 $version $tags"
 
 	if [ "$2" != "debian" ]; then
-		tags=`echo "$tags" | sed "s/\( \|$\)/-$2\1/g"`
+		tags=`echo "$tags" | sed -e "s/\( \|$\)/-$2\1/g" -e "s/latest-$2/$2/"`
 	fi
 
 	cat >> library.varnish <<- EOF
