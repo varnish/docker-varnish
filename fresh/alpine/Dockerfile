@@ -1,7 +1,10 @@
-FROM alpine
+FROM alpine:3
+
+ENV VARNISH_SIZE 100M
 
 RUN set -e;\
-    apk add -q --no-progress --update tar alpine-sdk sudo git; \
+    BASE_PKGS="tar alpine-sdk sudo git"; \
+    apk add -q --no-progress --update $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache/alpine; \
     git checkout 1f139121b5bce0b5b8f5d104224e14880a921b6b; \
@@ -16,18 +19,13 @@ RUN set -e;\
     su builder -c "abuild-keygen -nai"; \
     chown builder -R .; \
     su builder -c "abuild -r";\
-    mkdir /tmp/pkgs; \
-    cp ~builder/packages/pkg-varnish-cache/*/*.apk /tmp/pkgs
-
-FROM alpine
-
-COPY --from=0 /tmp/pkgs /tmp
-COPY --from=0 /pkg-varnish-cache/systemd/varnishreload /usr/bin/
-
-RUN set -e; \
-    apk add --allow-untrusted /tmp/*.apk; \
+    apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
+    echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
+    cp /pkg-varnish-cache/systemd/varnishreload /usr/bin/; \
+    apk del $BASE_PKGS; \
     rm -rf /tmp/*.apk; \
-    echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl
+    sed -i '/^builder/d' /etc/sudoers; \
+    deluser --remove-home builder
 
 WORKDIR /etc/varnish
 
