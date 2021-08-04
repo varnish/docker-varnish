@@ -23,7 +23,7 @@ RUN set -e;\
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
     cp /pkg-varnish-cache/systemd/varnishreload /usr/bin/; \
     apk del $BASE_PKGS; \
-    rm -rf /tmp/*.apk; \
+    rm -rf ~builder /pkg-varnish-cache; \
     sed -i '/^builder/d' /etc/sudoers; \
     deluser --remove-home builder
 

@@ -6,24 +6,25 @@ RUN set -e; \
     BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
+    tmpdir="$(mktemp -d)"; \
+    cd "$tmpdir"; \
     apt-get update; \
     apt-get install -y $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout @PKG_COMMIT@; \
     rm -rf .git; \
-    curl http://varnish-cache.org/_downloads/varnish-@VARNISH_VERSION@.tgz -o /tmp/orig.tgz; \
-    echo "@DIST_SHA512@  /tmp/orig.tgz" | sha512sum -c -; \
-    tar xavf /tmp/orig.tgz --strip 1; \
+    curl -f http://varnish-cache.org/_downloads/varnish-@VARNISH_VERSION@.tgz -o $tmpdir/orig.tgz; \
+    echo "@DIST_SHA512@  $tmpdir/orig.tgz" | sha512sum -c -; \
+    tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|@VARNISH_VERSION@|"  "debian/changelog"; \
     yes | mk-build-deps --install debian/control || true; \
     tar cvzf debian.tar.gz debian --dereference; tar xavf debian.tar.gz; \
     sed -i '' debian/varnish*; \
-    dpkg-buildpackage -us -uc -j16; \
+    dpkg-buildpackage -us -uc -j"$(nproc)"; \
     apt-get -y install ../*.deb; \
-    apt-get -y remove varnish-build-deps $BASE_PKGS; \
-    apt-get -y autoremove; \
-    rm -rf /var/lib/apt/lists/*
+    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
+    rm -rf /var/lib/apt/lists/* "$tmpdir"
 
 WORKDIR /etc/varnish
 
