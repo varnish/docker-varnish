@@ -20,8 +20,9 @@ RUN set -e; \
     tar cvzf debian.tar.gz debian --dereference; tar xavf debian.tar.gz; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j16; \
-    apt-get install -y ../*.deb; \
-    apt remove -y varnish-build-deps $BASE_PKGS; \
+    apt-get -y install ../*.deb; \
+    apt-get -y remove varnish-build-deps $BASE_PKGS; \
+    apt-get -y autoremove; \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /etc/varnish
