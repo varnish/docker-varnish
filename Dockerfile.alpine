@@ -1,10 +1,10 @@
-FROM alpine:3
+FROM alpine:3.14
 
 ENV VARNISH_SIZE 100M
 
 RUN set -e;\
     BASE_PKGS="tar alpine-sdk sudo git"; \
-    apk add -q --no-progress --update $BASE_PKGS; \
+    apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache/alpine; \
     git checkout @PKG_COMMIT@; \
@@ -12,7 +12,6 @@ RUN set -e;\
         -e "s/pkgver=@VERSION@/pkgver=@VARNISH_VERSION@/" \
 	-e 's@^source=.*@source="http://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
 	-e "s/^sha512sums=.*/sha512sums=\"@DIST_SHA512@  varnish-\$pkgver.tgz\"/"; \
-    cat APKBUILD; \
     adduser -D builder; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers; \
     addgroup builder abuild; \
@@ -22,7 +21,7 @@ RUN set -e;\
     apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
     cp /pkg-varnish-cache/systemd/varnishreload /usr/bin/; \
-    apk del $BASE_PKGS; \
+    apk del --no-network varnish-build-deps; \
     rm -rf ~builder /pkg-varnish-cache; \
     sed -i '/^builder/d' /etc/sudoers; \
     deluser --remove-home builder

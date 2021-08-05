@@ -18,8 +18,7 @@ RUN set -e; \
     echo "73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|6.0.8|"  "debian/changelog"; \
-    yes | mk-build-deps --install debian/control || true; \
-    tar cvzf debian.tar.gz debian --dereference; tar xavf debian.tar.gz; \
+    mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
     apt-get -y install ../*.deb; \
