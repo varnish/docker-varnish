@@ -7,7 +7,7 @@ RUN set -e;\
     apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache/alpine; \
-    git checkout 1f139121b5bce0b5b8f5d104224e14880a921b6b; \
+    git checkout 19c0d20d5eb033a5b2db68a326e3a77e9ceda668; \
     sed -i APKBUILD \
         -e "s/pkgver=@VERSION@/pkgver=6.6.1/" \
 	-e 's@^source=.*@source="http://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
@@ -20,7 +20,6 @@ RUN set -e;\
     su builder -c "abuild -r";\
     apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
-    cp /pkg-varnish-cache/systemd/varnishreload /usr/bin/; \
     apk del --no-network varnish-build-deps; \
     rm -rf ~builder /pkg-varnish-cache; \
     sed -i '/^builder/d' /etc/sudoers; \

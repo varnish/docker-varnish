@@ -20,7 +20,6 @@ RUN set -e;\
     su builder -c "abuild -r";\
     apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
-    cp /pkg-varnish-cache/systemd/varnishreload /usr/bin/; \
     apk del --no-network varnish-build-deps; \
     rm -rf ~builder /pkg-varnish-cache; \
     sed -i '/^builder/d' /etc/sudoers; \

@@ -12,7 +12,7 @@ RUN set -e; \
     apt-get install -y $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout 6890e35e3fd95fe2db068f8899dfff0855c354be; \
+    git checkout c50cf7dd02c725c00011835afebc06224755be82; \
     rm -rf .git; \
     curl -f http://varnish-cache.org/_downloads/varnish-6.0.8.tgz -o $tmpdir/orig.tgz; \
     echo "73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f  $tmpdir/orig.tgz" | sha512sum -c -; \
