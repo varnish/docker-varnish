@@ -7,7 +7,7 @@ RUN set -e;\
     apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache/alpine; \
-    git checkout 19c0d20d5eb033a5b2db68a326e3a77e9ceda668; \
+    git checkout d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129; \
     sed -i APKBUILD \
         -e "s/pkgver=@VERSION@/pkgver=6.6.1/" \
 	-e 's@^source=.*@source="http://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
