@@ -14,7 +14,7 @@
 
 # Official Varnish Docker image
 
-This is the source repository useid to build the official [Varnish Docker image](https://hub.docker.com/_/varnish).
+This is the source repository used to build the official [Varnish Docker image](https://hub.docker.com/_/varnish).
 
 ## Versions
 
