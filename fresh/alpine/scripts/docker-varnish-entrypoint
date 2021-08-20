@@ -12,6 +12,7 @@ if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
 	    -a proxy=:8443,PROXY \
 	    -p feature=+http2 \
 	    -s malloc,$VARNISH_SIZE \
+	    -T :6082 \
 	    "$@"
 fi
 

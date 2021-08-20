@@ -30,5 +30,5 @@ WORKDIR /etc/varnish
 COPY scripts/ /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
-EXPOSE 80 8443
+EXPOSE 80 6082 8443
 CMD []

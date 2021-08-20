@@ -48,6 +48,7 @@ When running the Varnish image, a `varnishd` process will be started that listen
 
 * port `80` for *plain HTTP*
 * port `8443` for the *PROXY protocol*
+* port `6082` for the *control terminal*
 
 > See [TLS section](#tls) for more information about the primary *PROXY protocol* use case.
 
