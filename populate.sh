@@ -12,12 +12,19 @@ CONFIG='
 		"pkg-commit": "10da6a585eb7d8defe9d273a51df5b133500eb6b",
 		"dist-sha512": "73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f"
 	},
-	"fresh": {
+	"old": {
 		"debian": "bullseye",
 		"version": "6.6.1",
 		"tags": "6.6 latest",
 		"pkg-commit": "d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129",
 		"dist-sha512": "af3ee1743af2ede2d3efbb73e5aa9b42c7bbd5f86163ec338c8afd1989c3e51ff3e1b40bed6b72224b5d339a74f22d6e5f3c3faf2fedee8ab4715307ed5d871b"
+	},
+	"fresh": {
+		"debian": "bullseye",
+		"version": "7.0.0",
+		"tags": "7.0 latest",
+		"pkg-commit": "d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129",
+		"dist-sha512": "39c694db4ec7b35236d12fe2c03036260d6799395b1c8bb5a58e96fc88d67dcaa5eb8bc75643540d3aa0edc1a8924d7d839e88293b0521fadef4cd12f466fb4b"
 	}
 }'
 
