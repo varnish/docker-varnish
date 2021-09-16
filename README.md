@@ -21,13 +21,14 @@ This is the source repository used to build the official [Varnish Docker image](
 This repository tracks two Varnish versions:
 
 - `fresh`: the latest release.
+- `old`: the release before `fresh`.
 - `stable`: an Long-Term Support (LTS) release that will receive bug and security fixes even though it's not the latest one.
 
 New major/minor versions are release on the 15th of March and of September, this is when the `fresh` and `stable` labels are reevaluated.
 
 ## Building
 
-The docker build directories are under `fresh/` and `stable/`. Dockerfiles are generated all at once using:
+The docker build directories are under `fresh/` (latest), `old/` and `stable/`. Dockerfiles are generated all at once using:
 
 ```
 # don't forget to commit there afterward
