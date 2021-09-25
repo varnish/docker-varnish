@@ -23,6 +23,8 @@ RUN set -e; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
     apt-get -y install ../*.deb; \
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
+    mkdir /pkgs; \
+    mv ../*.deb /pkgs; \
     rm -rf /var/lib/apt/lists/* "$tmpdir"
 
 WORKDIR /etc/varnish
