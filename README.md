@@ -31,7 +31,7 @@ New major/minor versions are release on the 15th of March and of September, this
 The docker build directories are under `fresh/` (latest), `old/` and `stable/`. Dockerfiles are generated all at once using:
 
 ```
-# don't forget to commit there afterward
+# don't forget to commit them afterward
 ./populate.sh dockerfiles
 ```
 
