@@ -21,10 +21,10 @@ CONFIG='
        },
 	"fresh": {
 		"debian": "bullseye",
-		"version": "7.0.0",
-		"tags": "7.0 latest",
+		"version": "7.0.1",
+		"tags": "7.1 latest",
 		"pkg-commit": "d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129",
-		"dist-sha512": "39c694db4ec7b35236d12fe2c03036260d6799395b1c8bb5a58e96fc88d67dcaa5eb8bc75643540d3aa0edc1a8924d7d839e88293b0521fadef4cd12f466fb4b"
+		"dist-sha512": "7541d50b03a113f0a13660d459cc4c2eb45d57fb19380ab56a5413a4e5d702f9c0856585f09aeea6084a239ad8c69017af3805a864540b4697e0eac29f00b408"
 	}
 }'
 
