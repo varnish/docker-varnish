@@ -18,13 +18,15 @@ This is the source repository used to build the official [Varnish Docker image](
 
 ## Versions
 
-This repository tracks two Varnish versions:
+This repository tracks tree Varnish versions:
 
 - `fresh`: the latest release.
 - `old`: the release before `fresh`.
 - `stable`: an Long-Term Support (LTS) release that will receive bug and security fixes even though it's not the latest one.
 
-New major/minor versions are release on the 15th of March and of September, this is when the `fresh` and `stable` labels are reevaluated.
+New major/minor versions are released on the 15th of March and of September, this is when the `fresh` and `stable` labels are reevaluated.
+
+In addition, the directory `next` is a copy of `fresh` with breaking changes that must wait for the the next release to be published. This image isn't available on the Docker hub.
 
 ## Building
 

@@ -23,14 +23,12 @@ RUN set -e;\
     apk del --no-network varnish-build-deps; \
     rm -rf ~builder /pkg-varnish-cache; \
     sed -i '/^builder/d' /etc/sudoers; \
-    deluser --remove-home builder; \
-    chown varnish /var/lib/varnish;
+    deluser --remove-home builder;
 
 WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
-USER varnish
 EXPOSE 80 8443
 CMD []
