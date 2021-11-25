@@ -26,7 +26,7 @@ RUN set -e; \
     mkdir /pkgs; \
     mv ../*dev*.deb /pkgs; \
     rm -rf /var/lib/apt/lists/* "$tmpdir"; \
-    chown varnish /var/lib/varnish
+    chown varnish /var/lib/varnish;
 
 WORKDIR /etc/varnish
 

@@ -25,14 +25,12 @@ RUN set -e; \
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
     mkdir /pkgs; \
     mv ../*dev*.deb /pkgs; \
-    rm -rf /var/lib/apt/lists/* "$tmpdir"; \
-    chown varnish /var/lib/varnish
+    rm -rf /var/lib/apt/lists/* "$tmpdir";
 
 WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
-USER varnish
 EXPOSE 80 8443
 CMD []

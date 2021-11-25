@@ -24,7 +24,7 @@ RUN set -e;\
     rm -rf ~builder /pkg-varnish-cache; \
     sed -i '/^builder/d' /etc/sudoers; \
     deluser --remove-home builder; \
-    chown varnish /var/lib/varnish
+    chown varnish /var/lib/varnish;
 
 WORKDIR /etc/varnish
 
