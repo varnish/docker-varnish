@@ -34,11 +34,7 @@ update_dockerfiles() {
 	DIST_SHA512=`echo $CONFIG | jq -r ".[\"$1\"][\"dist-sha512\"]"`
 	PKG_COMMIT=`echo $CONFIG | jq -r ".[\"$1\"][\"pkg-commit\"]"`
 
-	mkdir -p $1/$2/scripts
-
-	cp -d scripts/* $1/$2/scripts
-
-	sed Dockerfile.$2 \
+	sed $1/$2/Dockerfile.tmpl \
 		-e "s/@DEBIAN@/$DEBIAN/" \
 		-e "s/@VARNISH_VERSION@/$VARNISH_VERSION/" \
 		-e "s/@DIST_SHA512@/$DIST_SHA512/" \
