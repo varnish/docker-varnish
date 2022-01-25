@@ -7,31 +7,31 @@ CONFIG='
 {
 	"stable": {
 		"debian": "bullseye",
-		"version": "6.0.8",
+		"version": "6.0.10",
 		"tags": "6.0",
 		"pkg-commit": "10da6a585eb7d8defe9d273a51df5b133500eb6b",
-		"dist-sha512": "73ed2f465ba3b11680b20a70633fc78da9b3eac68395f927b7ff02f4106b6cc92a2b395db2813a0605da2771530e5c4fc594eaf5a9a32bf2e42181b6dd90cf3f"
+		"dist-sha512": "b89ac4465aacde2fde963642727d20d7d33d04f89c0764c43d59fe13e70fe729079fef44da28cc0090fa153ec584a0fe9723fd2ce976e8e9021410a5f73eadd2"
 	},
        "old": {
                "debian": "bullseye",
-               "version": "6.6.1",
+               "version": "6.6.2",
                "tags": "6.6",
                "pkg-commit": "d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129",
-               "dist-sha512": "af3ee1743af2ede2d3efbb73e5aa9b42c7bbd5f86163ec338c8afd1989c3e51ff3e1b40bed6b72224b5d339a74f22d6e5f3c3faf2fedee8ab4715307ed5d871b"
+               "dist-sha512": "8fa163678e2e454fcc959ba24f349de00e6c00357df55f37f12f0d3acbcb2799b2f376385cef2d40c14a4cc44a5eea1b5a3fbf6245961611d4fc3ea30699035d"
        },
 	"fresh": {
 		"debian": "bullseye",
-		"version": "7.0.1",
+		"version": "7.0.2",
 		"tags": "7.0 latest",
 		"pkg-commit": "d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129",
-		"dist-sha512": "7541d50b03a113f0a13660d459cc4c2eb45d57fb19380ab56a5413a4e5d702f9c0856585f09aeea6084a239ad8c69017af3805a864540b4697e0eac29f00b408"
+		"dist-sha512": "5eb08345c95152639266b7ad241185188477f8fd04e88e4dfda1579719a1a413790a0616f25d70994f6d3b8f7640ea80926ece7c547555dad856fd9f6960c9a3"
 	},
 	"next": {
 		"debian": "bullseye",
-		"version": "7.0.1",
+		"version": "7.0.2",
 		"tags": "7.0 latest",
 		"pkg-commit": "d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129",
-		"dist-sha512": "7541d50b03a113f0a13660d459cc4c2eb45d57fb19380ab56a5413a4e5d702f9c0856585f09aeea6084a239ad8c69017af3805a864540b4697e0eac29f00b408"
+		"dist-sha512": "5eb08345c95152639266b7ad241185188477f8fd04e88e4dfda1579719a1a413790a0616f25d70994f6d3b8f7640ea80926ece7c547555dad856fd9f6960c9a3"
 	}
 }'
 

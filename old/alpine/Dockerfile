@@ -9,9 +9,9 @@ RUN set -e;\
     cd pkg-varnish-cache/alpine; \
     git checkout d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129; \
     sed -i APKBUILD \
-        -e "s/pkgver=@VERSION@/pkgver=6.6.1/" \
-	-e 's@^source=.*@source="http://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
-	-e "s/^sha512sums=.*/sha512sums=\"af3ee1743af2ede2d3efbb73e5aa9b42c7bbd5f86163ec338c8afd1989c3e51ff3e1b40bed6b72224b5d339a74f22d6e5f3c3faf2fedee8ab4715307ed5d871b  varnish-\$pkgver.tgz\"/"; \
+        -e "s/pkgver=@VERSION@/pkgver=6.6.2/" \
+	-e 's@^source=.*@source="https://varnish-cache.org/downloads/varnish-$pkgver.tgz"@' \
+	-e "s/^sha512sums=.*/sha512sums=\"8fa163678e2e454fcc959ba24f349de00e6c00357df55f37f12f0d3acbcb2799b2f376385cef2d40c14a4cc44a5eea1b5a3fbf6245961611d4fc3ea30699035d  varnish-\$pkgver.tgz\"/"; \
     adduser -D builder; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers; \
     addgroup builder abuild; \
