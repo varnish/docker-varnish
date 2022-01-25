@@ -14,7 +14,7 @@ RUN set -e; \
     cd pkg-varnish-cache; \
     git checkout 10da6a585eb7d8defe9d273a51df5b133500eb6b; \
     rm -rf .git; \
-    curl -f http://varnish-cache.org/_downloads/varnish-6.0.10.tgz -o $tmpdir/orig.tgz; \
+    curl -f https://varnish-cache.org/downloads/varnish-6.0.10.tgz -o $tmpdir/orig.tgz; \
     echo "b89ac4465aacde2fde963642727d20d7d33d04f89c0764c43d59fe13e70fe729079fef44da28cc0090fa153ec584a0fe9723fd2ce976e8e9021410a5f73eadd2  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|6.0.10|"  "debian/changelog"; \
