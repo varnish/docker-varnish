@@ -10,7 +10,7 @@ RUN set -e;\
     git checkout @PKG_COMMIT@; \
     sed -i APKBUILD \
         -e "s/pkgver=@VERSION@/pkgver=@VARNISH_VERSION@/" \
-	-e 's@^source=.*@source="https://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
+	-e 's@^source=.*@source="https://varnish-cache.org/downloads/varnish-$pkgver.tgz"@' \
 	-e "s/^sha512sums=.*/sha512sums=\"@DIST_SHA512@  varnish-\$pkgver.tgz\"/"; \
     adduser -D builder; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers; \
