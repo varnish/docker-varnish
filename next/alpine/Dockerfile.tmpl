@@ -1,6 +1,18 @@
 FROM alpine:3.14
 
+ARG  PKG_COMMIT=@PKG_COMMIT@
+ARG  VARNISH_VERSION=@VARNISH_VERSION@
+ARG  DIST_SHA512=@DIST_SHA512@
+ARG  VARNISH_MODULES_VERSION=@VARNISH_MODULES_VERSION@
+ARG  VARNISH_MODULES_SHA512SUM=@VARNISH_MODULES_SHA512SUM@
+ARG  VMOD_DYNAMIC_VERSION=@VMOD_DYNAMIC_VERSION@
+ARG  VMOD_DYNAMIC_COMMIT=@VMOD_DYNAMIC_COMMIT@
+ARG  VMOD_DYNAMIC_SHA512SUM=@VMOD_DYNAMIC_SHA512SUM@
+
 ENV VARNISH_SIZE 100M
+
+COPY APKBUILD.vmod-dynamic /vmod-dynamic/alpine/APKBUILD
+COPY APKBUILD.varnish-modules /varnish-modules/alpine/APKBUILD
 
 RUN set -e;\
     BASE_PKGS="tar alpine-sdk sudo git"; \
@@ -13,16 +25,49 @@ RUN set -e;\
 	-e 's@^source=.*@source="https://varnish-cache.org/downloads/varnish-$pkgver.tgz"@' \
 	-e "s/^sha512sums=.*/sha512sums=\"@DIST_SHA512@  varnish-\$pkgver.tgz\"/"; \
     adduser -D builder; \
-    echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers; \
+    echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder; \
     addgroup builder abuild; \
     su builder -c "abuild-keygen -nai"; \
+    \
+    # varnish tarball and packaging
+    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
+    cd pkg-varnish-cache/alpine; \
+    git checkout $PKG_COMMIT; \
+    sed -i APKBUILD \
+        -e "s/pkgver=@VERSION@/pkgver=$VARNISH_VERSION/" \
+	-e 's@^source=.*@source="http://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
+	-e "s/^sha512sums=.*/sha512sums=\"$DIST_SHA512  varnish-\$pkgver.tgz\"/"; \
+    \
+    # build and install varnish package
     chown builder -R .; \
-    su builder -c "abuild -r";\
+    su builder -c "abuild -r"; \
     apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
+    \
+    # build and install varnish-modules package
+    cd /varnish-modules/alpine; \
+    sed -i APKBUILD \
+        -e "s/@VARNISH_VERSION\@/$VARNISH_VERSION/" \
+        -e "s/@VARNISH_MODULES_VERSION\@/$VARNISH_MODULES_VERSION/" \
+        -e "s/@VARNISH_MODULES_SHA512SUM\@/$VARNISH_MODULES_SHA512SUM/"; \
+    chown builder -R .; \
+    su builder -c "abuild -r";\
+    apk add --allow-untrusted ~builder/packages/varnish-modules/*/*.apk; \
+    \
+    # build and install vmod-dynamic package
+    cd /vmod-dynamic/alpine; \
+    sed -i APKBUILD \
+        -e "s/@VARNISH_VERSION\@/$VARNISH_VERSION/" \
+        -e "s/@VMOD_DYNAMIC_VERSION\@/$VMOD_DYNAMIC_VERSION/" \
+        -e "s/@VMOD_DYNAMIC_COMMIT\@/$VMOD_DYNAMIC_COMMIT"/ \
+        -e "s/@VMOD_DYNAMIC_SHA512SUM\@/$VMOD_DYNAMIC_SHA512SUM/"; \
+    chown builder -R .; \
+    su builder -c "abuild -r";\
+    apk add --allow-untrusted ~builder/packages/vmod-dynamic/*/*.apk; \
+    \
+    # cleanup
     apk del --no-network varnish-build-deps; \
-    rm -rf ~builder /pkg-varnish-cache; \
-    sed -i '/^builder/d' /etc/sudoers; \
+    rm -rf ~builder /pkg-varnish-cache /varnish-modules /vmod-dynamic /etc/sudoers.d/builder; \
     deluser --remove-home builder; \
     chown varnish /var/lib/varnish;
 

@@ -1,0 +1,43 @@
+# Contributor: Guillaume Quintard <guillaume.quintard@gmail.com>
+# Maintainer: Guillaume Quintard <guillaume.quintard@gmail.com>
+pkgname=vmod-dynamic
+pkgver=@VMOD_DYNAMIC_VERSION@
+pkgrel=1
+pkgdesc="dynamic backends for Varnish"
+url="https://github.com/nigoroll/libvmod-dynamic"
+arch="all"
+license="BSD-2-Clause"
+_vversion="@VARNISH_VERSION@"
+_commit=@VMOD_DYNAMIC_COMMIT@
+makedepends="autoconf automake gcc libtool make py3-docutils python3
+	varnish-dev~=$_vversion"
+depends="varnish~=$_vversion"
+subpackages="$pkgname-doc"
+source="https://github.com/nigoroll/libvmod-dynamic/archive/$_commit.tar.gz"
+
+build() {
+	cd libvmod-dynamic-$_commit
+	./autogen.sh
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--localstatedir=/var/lib
+	make -j1
+}
+
+check() {
+	make check  -k VERBOSE=1
+}
+
+package() {
+	cd src/libvmod-dynamic-$_commit
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+@VMOD_DYNAMIC_SHA512SUM@  $_commit.tar.gz
+"
