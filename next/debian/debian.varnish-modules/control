@@ -1,0 +1,30 @@
+Source: varnish-modules
+Section: web
+Priority: extra
+Maintainer: Uplex Varnish <varnish@uplex.de>
+Build-Depends: debhelper (>= 7),
+ automake,
+ autotools-dev,
+ libtool,
+ build-essential,
+ pkg-config,
+ python3-docutils,
+ varnish (= DPGK_VERSION),
+ varnish-dev (= DPGK_VERSION)
+Standards-Version: 3.9.6
+Vcs-Git: git://github.com/varnish/varnish-modules.git
+Homepage: https://github.com/varnish/varnish-modules
+
+Package: varnish-modules
+Architecture: any
+Depends: ${Varnish:strictABI}, ${Varnish:ABI}, ${shlibs:Depends}, ${misc:Depends}
+Description: A collection of modules ("vmods") extending Varnish VCL
+ .
+ Included:
+ * Simpler handling of HTTP cookies
+ * Variable support
+ * Request and bandwidth throttling
+ * Modify and change complex HTTP headers
+ * 3.0-style saint mode,
+ * Advanced cache invalidations, and more.
+ * Client request body access
