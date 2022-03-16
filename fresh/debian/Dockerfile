@@ -1,36 +1,69 @@
 FROM debian:bullseye-slim
 
+ARG  PKG_COMMIT=3ba24a8eee8cc5c082714034145b907402bbdb83
+ARG  VARNISH_VERSION=7.1.0
+ARG  DIST_SHA512=ad9ce0cdc759976fcb7044914d28863edd197167f583fab2d1bc57f4e5b86c224b7c948faf1f7364a2a16bde9c415375d011462bdc43026c5f7a60e65bd21f73
+ARG  VARNISH_MODULES_VERSION=0.20.0
+ARG  VARNISH_MODULES_SHA512SUM=e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc5709dca2aa9c0b474bd8a06491ed3dee23636d335241ced4c7ef017b57413b05792ad382f6306a0b36
+ARG  VMOD_DYNAMIC_VERSION=2.6.0
+ARG  VMOD_DYNAMIC_COMMIT=9666973952f62110c872d720af3dae0b85b4b597
+ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5
+
 ENV VARNISH_SIZE 100M
 
+COPY debian.varnish-modules /work/varnish-modules/debian
+COPY debian.vmod-dynamic /work/vmod-dynamic/debian
+
 RUN set -e; \
-    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot"; \
+    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
-    tmpdir="$(mktemp -d)"; \
-    cd "$tmpdir"; \
+    mkdir -p /work/varnish /pkgs; \
     apt-get update; \
     apt-get install -y $BASE_PKGS; \
+    # varnish
+    cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129; \
+    git checkout 3ba24a8eee8cc5c082714034145b907402bbdb83; \
     rm -rf .git; \
-    curl -f https://varnish-cache.org/downloads/varnish-7.0.2.tgz -o $tmpdir/orig.tgz; \
-    echo "5eb08345c95152639266b7ad241185188477f8fd04e88e4dfda1579719a1a413790a0616f25d70994f6d3b8f7640ea80926ece7c547555dad856fd9f6960c9a3  $tmpdir/orig.tgz" | sha512sum -c -; \
+    curl -f https://varnish-cache.org/downloads/varnish-7.1.0.tgz -o $tmpdir/orig.tgz; \
+    echo "ad9ce0cdc759976fcb7044914d28863edd197167f583fab2d1bc57f4e5b86c224b7c948faf1f7364a2a16bde9c415375d011462bdc43026c5f7a60e65bd21f73  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
-    sed -i -e "s|@VERSION@|7.0.2|"  "debian/changelog"; \
+    sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
     apt-get -y install ../*.deb; \
-    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
-    mkdir /pkgs; \
     mv ../*dev*.deb /pkgs; \
-    rm -rf /var/lib/apt/lists/* "$tmpdir";
+    # varnish-modules
+    cd /work/varnish-modules; \
+    curl -fLo src.tar.gz https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz; \
+    echo "$VARNISH_MODULES_SHA512SUM  src.tar.gz" | sha512sum -c -; \
+    tar xavf src.tar.gz --strip 1; \
+    dch -u low --package "varnish-modules" --create -v "$VARNISH_MODULES_VERSION" -D stable "release"; \
+    sed -i "s/DPGK_VERSION/$VARNISH_VERSION/g" debian/control; \
+    dpkg-buildpackage -us -uc -j"$(nproc)"; \
+    apt-get -y install ../*.deb; \
+    # vmod-dynamic
+    cd /work/vmod-dynamic; \
+    curl -fLo src.tar.gz https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz; \
+    echo "$VMOD_DYNAMIC_SHA512SUM  src.tar.gz" | sha512sum -c -; \
+    tar xavf src.tar.gz --strip 1; \
+    dch -u low --package "libvmod-dynamic" --create -v "2.5.0" -D stable "release"; \
+    sed -i "s/DPGK_VERSION/$VARNISH_VERSION/g" debian/control; \
+    dpkg-buildpackage -us -uc -j"$(nproc)"; \
+    apt-get -y install ../*.deb; \
+    # clean up
+    apt-get -y purge --auto-remove varnish-build-deps libvmod-dynamic-dbgsym varnish-modules-dbgsym $BASE_PKGS; \
+    rm -rf /var/lib/apt/lists/* /work/; \
+    chown varnish /var/lib/varnish;
 
 WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
+USER varnish
 EXPOSE 80 8443
 CMD []

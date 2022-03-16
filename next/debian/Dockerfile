@@ -1,13 +1,13 @@
 FROM debian:bullseye-slim
 
-ARG  PKG_COMMIT=d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129
-ARG  VARNISH_VERSION=7.0.2
-ARG  DIST_SHA512=5eb08345c95152639266b7ad241185188477f8fd04e88e4dfda1579719a1a413790a0616f25d70994f6d3b8f7640ea80926ece7c547555dad856fd9f6960c9a3
-ARG  VARNISH_MODULES_VERSION=0.19.0
-ARG  VARNISH_MODULES_SHA512SUM=fc6f4c1695f80fa3b267c13c772dca9cf577eed38c733207cf0f8e01b5d4ebabbe43e936974ba70338a663a45624254759cfd75f8fbae0202361238ee5f15cef
-ARG  VMOD_DYNAMIC_VERSION=2.5.0
-ARG  VMOD_DYNAMIC_COMMIT=4d0ca5230d563d9c0e03df0ec6e01f7c174fdfd5
-ARG  VMOD_DYNAMIC_SHA512SUM=ea9dceb88fb472faaec5e7ff79f65afdcdbfde9661fb460c629bffdcea4a9f51e3499aab9e5c202d382d3460912f502145af21e54a5e4a8ae25b34051a484b35
+ARG  PKG_COMMIT=3ba24a8eee8cc5c082714034145b907402bbdb83
+ARG  VARNISH_VERSION=7.1.0
+ARG  DIST_SHA512=ad9ce0cdc759976fcb7044914d28863edd197167f583fab2d1bc57f4e5b86c224b7c948faf1f7364a2a16bde9c415375d011462bdc43026c5f7a60e65bd21f73
+ARG  VARNISH_MODULES_VERSION=0.20.0
+ARG  VARNISH_MODULES_SHA512SUM=e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc5709dca2aa9c0b474bd8a06491ed3dee23636d335241ced4c7ef017b57413b05792ad382f6306a0b36
+ARG  VMOD_DYNAMIC_VERSION=2.6.0
+ARG  VMOD_DYNAMIC_COMMIT=9666973952f62110c872d720af3dae0b85b4b597
+ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5
 
 ENV VARNISH_SIZE 100M
 
@@ -25,10 +25,10 @@ RUN set -e; \
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129; \
+    git checkout 3ba24a8eee8cc5c082714034145b907402bbdb83; \
     rm -rf .git; \
-    curl -f https://varnish-cache.org/downloads/varnish-7.0.2.tgz -o $tmpdir/orig.tgz; \
-    echo "5eb08345c95152639266b7ad241185188477f8fd04e88e4dfda1579719a1a413790a0616f25d70994f6d3b8f7640ea80926ece7c547555dad856fd9f6960c9a3  $tmpdir/orig.tgz" | sha512sum -c -; \
+    curl -f https://varnish-cache.org/downloads/varnish-7.1.0.tgz -o $tmpdir/orig.tgz; \
+    echo "ad9ce0cdc759976fcb7044914d28863edd197167f583fab2d1bc57f4e5b86c224b7c948faf1f7364a2a16bde9c415375d011462bdc43026c5f7a60e65bd21f73  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
