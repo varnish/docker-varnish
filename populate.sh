@@ -94,7 +94,7 @@ update_library(){
 populate_library() {
 	cat > library.varnish <<- EOF
 		# this file was generated using https://github.com/varnish/docker-varnish/blob/`git rev-parse HEAD`/populate.sh
-		Maintainers: Guillaume Quintard <guillaume@varni.sh> (@gquintard)
+		Maintainers: Guillaume Quintard <guillaume.quintard@gmail.com> (@gquintard)
 		GitRepo: https://github.com/varnish/docker-varnish.git
 	EOF
 
