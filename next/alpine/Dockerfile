@@ -11,11 +11,8 @@ ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b46
 
 ENV VARNISH_SIZE 100M
 
-COPY APKBUILD.vmod-dynamic /vmod-dynamic/alpine/APKBUILD
-COPY APKBUILD.varnish-modules /varnish-modules/alpine/APKBUILD
-
 RUN set -e;\
-    BASE_PKGS="tar alpine-sdk sudo git"; \
+    BASE_PKGS="tar alpine-sdk sudo py3-docutils python3 autoconf automake libtool"; \
     apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache/alpine; \
@@ -43,27 +40,27 @@ RUN set -e;\
     su builder -c "abuild -r"; \
     apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
+     \
+    # varnish-modules
+    mkdir -p /work/varnish-modules; \
+    cd /work/varnish-modules; \
+    curl -fLo src.tar.gz https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz; \
+    echo "$VARNISH_MODULES_SHA512SUM  src.tar.gz" | sha512sum -c -; \
+    tar xavf src.tar.gz --strip 1; \
+    ./configure --libdir=/usr/lib; \
+    make -j"$(nproc)" install; \
+    make -j"$(nproc)" check; \
     \
-    # build and install varnish-modules package
-    cd /varnish-modules/alpine; \
-    sed -i APKBUILD \
-        -e "s/@VARNISH_VERSION\@/$VARNISH_VERSION/" \
-        -e "s/@VARNISH_MODULES_VERSION\@/$VARNISH_MODULES_VERSION/" \
-        -e "s/@VARNISH_MODULES_SHA512SUM\@/$VARNISH_MODULES_SHA512SUM/"; \
-    chown builder -R .; \
-    su builder -c "abuild -r";\
-    apk add --allow-untrusted ~builder/packages/varnish-modules/*/*.apk; \
-    \
-    # build and install vmod-dynamic package
-    cd /vmod-dynamic/alpine; \
-    sed -i APKBUILD \
-        -e "s/@VARNISH_VERSION\@/$VARNISH_VERSION/" \
-        -e "s/@VMOD_DYNAMIC_VERSION\@/$VMOD_DYNAMIC_VERSION/" \
-        -e "s/@VMOD_DYNAMIC_COMMIT\@/$VMOD_DYNAMIC_COMMIT"/ \
-        -e "s/@VMOD_DYNAMIC_SHA512SUM\@/$VMOD_DYNAMIC_SHA512SUM/"; \
-    chown builder -R .; \
-    su builder -c "abuild -r";\
-    apk add --allow-untrusted ~builder/packages/vmod-dynamic/*/*.apk; \
+    # vmod-dynamic
+    mkdir /work/vmod-dynamic; \
+    cd /work/vmod-dynamic; \
+    curl -fLo src.tar.gz https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz; \
+    echo "$VMOD_DYNAMIC_SHA512SUM  src.tar.gz" | sha512sum -c -; \
+    tar xavf src.tar.gz --strip 1; \
+    ./autogen.sh; \
+    ./configure --libdir=/usr/lib; \
+    make -j"$(nproc)" install; \
+    make -j"$(nproc)" check; \
     \
     # cleanup
     apk del --no-network varnish-build-deps; \

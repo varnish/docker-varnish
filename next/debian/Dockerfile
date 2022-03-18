@@ -11,11 +11,8 @@ ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b46
 
 ENV VARNISH_SIZE 100M
 
-COPY debian.varnish-modules /work/varnish-modules/debian
-COPY debian.vmod-dynamic /work/vmod-dynamic/debian
-
 RUN set -e; \
-    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild libgetdns-dev"; \
+    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     mkdir -p /work/varnish /pkgs; \
@@ -36,27 +33,30 @@ RUN set -e; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
     apt-get -y install ../*.deb; \
     mv ../*dev*.deb /pkgs; \
+    \
     # varnish-modules
+    mkdir /work/varnish-modules; \
     cd /work/varnish-modules; \
     curl -fLo src.tar.gz https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz; \
     echo "$VARNISH_MODULES_SHA512SUM  src.tar.gz" | sha512sum -c -; \
     tar xavf src.tar.gz --strip 1; \
-    dch -u low --package "varnish-modules" --create -v "$VARNISH_MODULES_VERSION" -D stable "release"; \
-    sed -i "s/DPGK_VERSION/7.0.2/g" debian/control; \
-    dpkg-buildpackage -us -uc -j"$(nproc)"; \
-    apt-get -y install ../*.deb; \
+    ./configure --libdir=/usr/lib; \
+    make -j"$(nproc)" install; \
+    make -j"$(nproc)" check; \
+    \
     # vmod-dynamic
+    mkdir /work/vmod-dynamic; \
     cd /work/vmod-dynamic; \
     curl -fLo src.tar.gz https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz; \
     echo "$VMOD_DYNAMIC_SHA512SUM  src.tar.gz" | sha512sum -c -; \
     tar xavf src.tar.gz --strip 1; \
-    dch -u low --package "libvmod-dynamic" --create -v "2.5.0" -D stable "release"; \
-    sed -i "s/DPGK_VERSION/7.0.2/g" debian/control; \
-    dpkg-buildpackage -us -uc -j"$(nproc)"; \
-    apt-get -y install ../*.deb; \
+    ./autogen.sh; \
+    ./configure --libdir=/usr/lib; \
+    make -j"$(nproc)" install; \
+    make -j"$(nproc)" check; \
     # clean up
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
-    rm -rf /var/lib/apt/lists/* /work/; \
+    rm -rf /var/lib/apt/lists/* /work/ /usr/lib/varnish/vmods/libvmod_*.la; \
     chown varnish /var/lib/varnish;
 
 WORKDIR /etc/varnish
