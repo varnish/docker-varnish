@@ -14,13 +14,6 @@ ENV VARNISH_SIZE 100M
 RUN set -e;\
     BASE_PKGS="tar alpine-sdk sudo py3-docutils python3 autoconf automake libtool"; \
     apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
-    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
-    cd pkg-varnish-cache/alpine; \
-    git checkout @PKG_COMMIT@; \
-    sed -i APKBUILD \
-        -e "s/pkgver=@VERSION@/pkgver=@VARNISH_VERSION@/" \
-	-e 's@^source=.*@source="https://varnish-cache.org/downloads/varnish-$pkgver.tgz"@' \
-	-e "s/^sha512sums=.*/sha512sums=\"@DIST_SHA512@  varnish-\$pkgver.tgz\"/"; \
     adduser -D builder; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder; \
     addgroup builder abuild; \
