@@ -41,8 +41,8 @@ RUN set -e;\
     echo "$VARNISH_MODULES_SHA512SUM  src.tar.gz" | sha512sum -c -; \
     tar xavf src.tar.gz --strip 1; \
     ./configure --libdir=/usr/lib; \
-    make -j"$(nproc)" install; \
-    make -j"$(nproc)" check; \
+    make -j"$(nproc)" VERBOSE=1 install; \
+    make -j"$(nproc)" VERBOSE=1 check; \
     \
     # vmod-dynamic
     mkdir /work/vmod-dynamic; \
@@ -52,8 +52,8 @@ RUN set -e;\
     tar xavf src.tar.gz --strip 1; \
     ./autogen.sh; \
     ./configure --libdir=/usr/lib; \
-    make -j"$(nproc)" install; \
-    make -j"$(nproc)" check; \
+    make -j"$(nproc)" VERBOSE=1 install; \
+    make -j"$(nproc)" VERBOSE=1 check; \
     \
     # cleanup
     apk del --no-network varnish-build-deps; \
