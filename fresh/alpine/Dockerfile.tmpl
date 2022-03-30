@@ -50,6 +50,14 @@ RUN set -e;\
     curl -fLo src.tar.gz https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz; \
     echo "$VMOD_DYNAMIC_SHA512SUM  src.tar.gz" | sha512sum -c -; \
     tar xavf src.tar.gz --strip 1; \
+    # patching things up for armv8
+    sed -i '14 a AC_CHECK_HEADERS([stdatomic.h])' configure.ac; \
+    git clone https://github.com/varnishcache/varnish-cache.git; \
+    cd varnish-cache; \
+    git checkout d48636d23bb277ca8650a6174c872d74080f2859; \
+    cp include/vmb.h ../src/vmb.h; \
+    cd /work/vmod-dynamic; \
+    # actual build
     ./autogen.sh; \
     ./configure --libdir=/usr/lib; \
     make -j"$(nproc)" VERBOSE=1 install; \
