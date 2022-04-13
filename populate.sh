@@ -46,6 +46,8 @@ CONFIG='
 
 }'
 
+TOOLBOX_COMMIT=96bab07cf58b6e04824ffec608199f1780ff0d04
+
 resolve_json() {
 	echo $CONFIG | jq -r ".[\"$1\"][\"$2\"]"
 }
@@ -61,6 +63,7 @@ update_dockerfiles() {
 		-e "s/@VMOD_DYNAMIC_VERSION@/$(resolve_json "$1" vmod-dynamic-version)/" \
 		-e "s/@VMOD_DYNAMIC_COMMIT@/$(resolve_json "$1" vmod-dynamic-commit)/" \
 		-e "s/@VMOD_DYNAMIC_SHA512SUM@/$(resolve_json "$1" vmod-dynamic-sha512sum)/" \
+		-e "s/@TOOLBOX_COMMIT@/$TOOLBOX_COMMIT/" \
 		> $1/$2/Dockerfile
 }
 

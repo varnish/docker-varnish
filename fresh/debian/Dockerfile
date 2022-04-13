@@ -8,6 +8,8 @@ ARG  VARNISH_MODULES_SHA512SUM=e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc570
 ARG  VMOD_DYNAMIC_VERSION=2.6.0
 ARG  VMOD_DYNAMIC_COMMIT=9666973952f62110c872d720af3dae0b85b4b597
 ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5
+ARG  TOOLBOX_COMMIT=96bab07cf58b6e04824ffec608199f1780ff0d04
+ENV  VMOD_DEPS="automake curl gcc libtool make pkg-config python3-sphinx varnish-dev"
 
 ENV VARNISH_SIZE 100M
 
@@ -34,30 +36,17 @@ RUN set -e; \
     apt-get -y install ../*.deb; \
     mv ../*dev*.deb /pkgs; \
     \
+    git clone https://github.com/varnish/toolbox.git; \
+    cd toolbox; \
+    git checkout $TOOLBOX_COMMIT; \
+    cp install-vmod/install-vmod /usr/local/bin/; \
+    \
     # varnish-modules
-    mkdir /work/varnish-modules; \
-    cd /work/varnish-modules; \
-    curl -fLo src.tar.gz https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz; \
-    echo "$VARNISH_MODULES_SHA512SUM  src.tar.gz" | sha512sum -c -; \
-    tar xavf src.tar.gz --strip 1; \
-    ./configure --libdir=/usr/lib; \
-    make -j"$(nproc)" VERBOSE=1 install; \
-    make -j"$(nproc)" VERBOSE=1 check; \
+    install-vmod https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz $VARNISH_MODULES_SHA512SUM; \
     \
     # vmod-dynamic
-    mkdir /work/vmod-dynamic; \
-    cd /work/vmod-dynamic; \
-    curl -fLo src.tar.gz https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz; \
-    echo "$VMOD_DYNAMIC_SHA512SUM  src.tar.gz" | sha512sum -c -; \
-    tar xavf src.tar.gz --strip 1; \
-    # patching things up for armv8
-    cp /work/varnish/pkg-varnish-cache/include/vmb.h src/vmb.h; \
-    sed -i '14 a AC_CHECK_HEADERS([stdatomic.h])' configure.ac; \
-    # actual build
-    ./autogen.sh; \
-    ./configure --libdir=/usr/lib; \
-    make -j"$(nproc)" VERBOSE=1 install; \
-    make -j"$(nproc)" VERBOSE=1 check; \
+    install-vmod https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
+    \
     # clean up
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
     rm -rf /var/lib/apt/lists/* /work/ /usr/lib/varnish/vmods/libvmod_*.la; \

@@ -8,6 +8,8 @@ ARG  VARNISH_MODULES_SHA512SUM=e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc570
 ARG  VMOD_DYNAMIC_VERSION=2.6.0
 ARG  VMOD_DYNAMIC_COMMIT=9666973952f62110c872d720af3dae0b85b4b597
 ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5
+ARG  TOOLBOX_COMMIT=96bab07cf58b6e04824ffec608199f1780ff0d04
+ENV  VMOD_DEPS="automake curl gcc libtool make pkgconfig py3-sphinx"
 
 ENV VARNISH_SIZE 100M
 
@@ -33,35 +35,17 @@ RUN set -e;\
     su builder -c "abuild -r"; \
     apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
-     \
+    \
+    git clone https://github.com/varnish/toolbox.git; \
+    cd toolbox; \
+    git checkout $TOOLBOX_COMMIT; \
+    cp install-vmod/install-vmod /usr/local/bin/; \
+    \
     # varnish-modules
-    mkdir -p /work/varnish-modules; \
-    cd /work/varnish-modules; \
-    curl -fLo src.tar.gz https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz; \
-    echo "$VARNISH_MODULES_SHA512SUM  src.tar.gz" | sha512sum -c -; \
-    tar xavf src.tar.gz --strip 1; \
-    ./configure --libdir=/usr/lib; \
-    make -j"$(nproc)" VERBOSE=1 install; \
-    make -j"$(nproc)" VERBOSE=1 check; \
+    install-vmod https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz $VARNISH_MODULES_SHA512SUM; \
     \
     # vmod-dynamic
-    mkdir /work/vmod-dynamic; \
-    cd /work/vmod-dynamic; \
-    curl -fLo src.tar.gz https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz; \
-    echo "$VMOD_DYNAMIC_SHA512SUM  src.tar.gz" | sha512sum -c -; \
-    tar xavf src.tar.gz --strip 1; \
-    # patching things up for armv8
-    sed -i '14 a AC_CHECK_HEADERS([stdatomic.h])' configure.ac; \
-    git clone https://github.com/varnishcache/varnish-cache.git; \
-    cd varnish-cache; \
-    git checkout d48636d23bb277ca8650a6174c872d74080f2859; \
-    cp include/vmb.h ../src/vmb.h; \
-    cd /work/vmod-dynamic; \
-    # actual build
-    ./autogen.sh; \
-    ./configure --libdir=/usr/lib; \
-    make -j"$(nproc)" VERBOSE=1 install; \
-    make -j"$(nproc)" VERBOSE=1 check; \
+    install-vmod https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
     \
     # cleanup
     apk del --no-network varnish-build-deps; \
@@ -72,6 +56,7 @@ RUN set -e;\
 WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
+
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
 USER varnish
