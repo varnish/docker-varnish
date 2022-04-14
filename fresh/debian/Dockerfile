@@ -9,7 +9,7 @@ ARG  VMOD_DYNAMIC_VERSION=2.6.0
 ARG  VMOD_DYNAMIC_COMMIT=9666973952f62110c872d720af3dae0b85b4b597
 ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5
 ARG  TOOLBOX_COMMIT=96bab07cf58b6e04824ffec608199f1780ff0d04
-ENV  VMOD_DEPS="automake curl gcc libtool make pkg-config python3-sphinx varnish-dev"
+ENV  VMOD_DEPS="automake curl gcc libtool make pkg-config python3-sphinx"
 
 ENV VARNISH_SIZE 100M
 
