@@ -28,8 +28,8 @@ CONFIG='
 		"varnish-modules-version": "0.20.0",
 		"varnish-modules-sha512sum": "e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc5709dca2aa9c0b474bd8a06491ed3dee23636d335241ced4c7ef017b57413b05792ad382f6306a0b36",
 		"vmod-dynamic-version": "2.6.0",
-		"vmod-dynamic-commit": "9666973952f62110c872d720af3dae0b85b4b597",
-		"vmod-dynamic-sha512sum": "e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5"
+		"vmod-dynamic-commit": "025e9918f6cba33135e16e0fb0d86b4c34b6dd5a",
+		"vmod-dynamic-sha512sum": "89b7251529c4c63c408b83c59e32b54b94b0f31f83614a34b3ffc4fb96ebdac5b6f8b5fe5b95056d5952a3c0a0217c935c5073c38415f7680af748e58c041816"
 	},
 	"next": {
 		"debian": "bullseye",
