@@ -14,17 +14,17 @@ CONFIG='
 	},
 	"old": {
 		"debian": "bullseye",
-		"version": "7.0.2",
+		"version": "7.0.3",
 		"tags": "7.0",
 		"pkg-commit": "d3e6a3fad7d4c2ac781ada92dcc246e7eef9d129",
-		"dist-sha512": "5eb08345c95152639266b7ad241185188477f8fd04e88e4dfda1579719a1a413790a0616f25d70994f6d3b8f7640ea80926ece7c547555dad856fd9f6960c9a3"
+		"dist-sha512": "515d5a60120228de381af5f78cd0b712ee77430c59c8760a1a027c5f5759c8f20f3ab79f4d3785f9f4ca3b1b62b0abb59d9e0b29010a879b6f93fa65e6b6f84d"
 	},
 	"fresh": {
 		"debian": "bullseye",
-		"version": "7.1.0",
+		"version": "7.1.1",
 		"tags": "7.1 latest",
 		"pkg-commit": "3ba24a8eee8cc5c082714034145b907402bbdb83",
-		"dist-sha512": "ad9ce0cdc759976fcb7044914d28863edd197167f583fab2d1bc57f4e5b86c224b7c948faf1f7364a2a16bde9c415375d011462bdc43026c5f7a60e65bd21f73",
+		"dist-sha512": "7c3c081bd37c63b429337a25ebc0c14d780b0c4fd235d18b9ac1004e0bb2f65e70664c5bd25c5d941deeb6bc078f344fa2629cf0d641a0149fe29dcfa07ffcd2",
 		"varnish-modules-version": "0.20.0",
 		"varnish-modules-sha512sum": "e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc5709dca2aa9c0b474bd8a06491ed3dee23636d335241ced4c7ef017b57413b05792ad382f6306a0b36",
 		"vmod-dynamic-version": "2.6.0",
