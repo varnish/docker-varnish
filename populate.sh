@@ -33,12 +33,12 @@ CONFIG='
 	},
 	"next": {
 		"debian": "bullseye",
-		"version": "7.1.0",
-		"tags": "7.1",
-		"pkg-commit": "3ba24a8eee8cc5c082714034145b907402bbdb83",
-		"dist-sha512": "ad9ce0cdc759976fcb7044914d28863edd197167f583fab2d1bc57f4e5b86c224b7c948faf1f7364a2a16bde9c415375d011462bdc43026c5f7a60e65bd21f73",
-		"varnish-modules-version": "0.20.0",
-		"varnish-modules-sha512sum": "e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc5709dca2aa9c0b474bd8a06491ed3dee23636d335241ced4c7ef017b57413b05792ad382f6306a0b36",
+		"version": "7.2.0",
+		"tags": "7.2 latest",
+		"pkg-commit": "ffc59a345217b599fd49f7f0442b5f653fbe6fc2",
+		"dist-sha512": "d9a57d644d1b1456ee96ee84182f816b3b693fe2d9cc4b1859b62a836ee8c7d51025bb96efbc0ebc82349f60b2f186335436d76c12a5257c0560572db9d01133",
+		"varnish-modules-version": "0.21.0",
+		"varnish-modules-sha512sum": "a442f58968b471d713c99a94e5b80302c07ea163d3d5022d768eb0b39ab081f18744fd529b04283b0c6ec942f362197935d8ef1aa04f26eff10a81425a63bd35",
 		"vmod-dynamic-version": "2.6.0",
 		"vmod-dynamic-commit": "9666973952f62110c872d720af3dae0b85b4b597",
 		"vmod-dynamic-sha512sum": "e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5"

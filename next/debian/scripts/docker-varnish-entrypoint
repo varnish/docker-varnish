@@ -8,8 +8,8 @@ if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
     set -- varnishd \
 	    -F \
 	    -f /etc/varnish/default.vcl \
-	    -a http=:80,HTTP \
-	    -a proxy=:8443,PROXY \
+	    -a http=:${VARNISH_HTTP_PORT:-80},HTTP \
+	    -a proxy=:${VARNISH_PROXY_PORT:-8443},PROXY \
 	    -p feature=+http2 \
 	    -s malloc,$VARNISH_SIZE \
 	    "$@"
