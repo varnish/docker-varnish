@@ -1,0 +1,79 @@
+#/bin/sh
+
+# usage:
+#     install_vmod URL [SHA512SUM]
+# deps:
+# - varnish development files
+# - curl
+# - pkg-config
+# - nproc
+# - make
+# - gcc/clang
+# - automake
+# - libtoolize
+# - whatever dependencies the vmod needs
+
+set -e
+
+check_bin() {
+	if ! command "$@" &>/dev/null; then
+		echo "please install $1"
+		exit 1
+	fi
+}
+
+check_bin automake --version
+check_bin curl --version
+check_bin gcc --version
+check_bin libtool --version
+check_bin make --version
+check_bin nproc
+check_bin pkg-config --version
+check_bin rst2man --version
+check_bin tar --version
+
+if ! pkg-config varnishapi; then
+	echo "pkg-config couldn't find varnishapi (did you install the varnish dev file/package?)"
+	exit 1
+fi
+
+if [ -n "$1" ]; then
+	URL="$1"
+else
+	echo no TARBALL specified
+	exit 1
+fi
+
+SHA512SUM="$2"
+
+set -x
+
+rm -rf /tmp/module_to_build
+mkdir /tmp/module_to_build
+
+if [ -e "$URL" ]; then
+	cp "$URL" /tmp/module_to_build/src.tar.gz
+else
+	curl -fLo /tmp/module_to_build/src.tar.gz "$URL"
+fi
+
+cd /tmp/module_to_build
+
+if [ -n "$SHA512SUM" ]; then
+	echo "$SHA512SUM  src.tar.gz" | sha512sum -c -
+fi
+tar xavf src.tar.gz --strip 1
+
+if [ ! -x configure ]; then
+	if [ -e autogen.sh ]; then
+		./autogen.sh
+	elif [ -e bootstrap ]; then
+		./bootstrap
+	fi
+fi
+
+./configure
+make -j"$(nproc)" VERBOSE=1 check
+make -j"$(nproc)" VERBOSE=1 install
+
+rm -rf /tmp/module_to_build 
