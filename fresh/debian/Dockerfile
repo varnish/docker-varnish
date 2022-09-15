@@ -14,12 +14,12 @@ ENV  VMOD_DEPS="automake curl gcc libtool make pkg-config python3-sphinx"
 ENV VARNISH_SIZE 100M
 
 RUN set -e; \
-    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild"; \
+    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild libgetdns-dev"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
-    apt-get install -y $BASE_PKGS; \
+    apt-get install -y $BASE_PKGS libgetdns10; \
     # varnish
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
@@ -48,7 +48,7 @@ RUN set -e; \
     install-vmod https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
     \
     # clean up
-    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
+    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS libgetdns10; \
     rm -rf /var/lib/apt/lists/* /work/ /usr/lib/varnish/vmods/libvmod_*.la; \
     chown varnish /var/lib/varnish;
 

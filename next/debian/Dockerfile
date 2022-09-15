@@ -12,12 +12,12 @@ ARG  VMOD_DYNAMIC_SHA512SUM=e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b46
 ENV VARNISH_SIZE 100M
 
 RUN set -e; \
-    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild"; \
+    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild libgetdns-dev"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
-    apt-get install -y $BASE_PKGS; \
+    apt-get install -y $BASE_PKGS libgetdns10; \
     # varnish
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
