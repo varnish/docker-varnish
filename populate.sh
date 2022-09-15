@@ -15,7 +15,7 @@ CONFIG='
 	"old": {
 		"debian": "bullseye",
 		"version": "7.1.1",
-		"tags": "7.1 latest",
+		"tags": "7.1",
 		"pkg-commit": "3ba24a8eee8cc5c082714034145b907402bbdb83",
 		"dist-sha512": "7c3c081bd37c63b429337a25ebc0c14d780b0c4fd235d18b9ac1004e0bb2f65e70664c5bd25c5d941deeb6bc078f344fa2629cf0d641a0149fe29dcfa07ffcd2",
 		"varnish-modules-version": "0.20.0",
