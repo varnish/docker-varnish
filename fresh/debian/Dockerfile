@@ -14,7 +14,7 @@ ENV  VMOD_DEPS="automake curl libtool make pkg-config python3-sphinx"
 ENV VARNISH_SIZE 100M
 
 RUN set -e; \
-    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot sbuild libgetdns-dev"; \
+    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot libgetdns-dev"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     mkdir -p /work/varnish /pkgs; \
