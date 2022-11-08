@@ -7,17 +7,17 @@ CONFIG='
 {
 	"stable": {
 		"debian": "bullseye",
-		"version": "6.0.10",
+		"version": "6.0.11",
 		"tags": "6.0",
 		"pkg-commit": "10da6a585eb7d8defe9d273a51df5b133500eb6b",
-		"dist-sha512": "b89ac4465aacde2fde963642727d20d7d33d04f89c0764c43d59fe13e70fe729079fef44da28cc0090fa153ec584a0fe9723fd2ce976e8e9021410a5f73eadd2"
+		"dist-sha512": "02f56f360c6bbed663e712edef961384e6003cfe73307c7ea50f805ac4b4df0d26958179170401a2254a69ab623acc172da42926d82189bfa724a4e8a78597ea"
 	},
 	"old": {
 		"debian": "bullseye",
-		"version": "7.1.1",
+		"version": "7.1.2",
 		"tags": "7.1",
 		"pkg-commit": "3ba24a8eee8cc5c082714034145b907402bbdb83",
-		"dist-sha512": "7c3c081bd37c63b429337a25ebc0c14d780b0c4fd235d18b9ac1004e0bb2f65e70664c5bd25c5d941deeb6bc078f344fa2629cf0d641a0149fe29dcfa07ffcd2",
+		"dist-sha512": "e16a4b75ede25f3812dfc4e95545e39a80022835b9155a4e42118f911e41b691cbedd296db48d307ba4a4d0d01df1149306d752de07cabe459ccbf5bcdd49238",
 		"varnish-modules-version": "0.20.0",
 		"varnish-modules-sha512sum": "e63d6da8f63a5ce56bc7a5a1dd1a908e4ab0f6a36b5bdc5709dca2aa9c0b474bd8a06491ed3dee23636d335241ced4c7ef017b57413b05792ad382f6306a0b36",
 		"vmod-dynamic-version": "2.6.0",
@@ -26,10 +26,10 @@ CONFIG='
 	},
 	"fresh": {
 		"debian": "bullseye",
-		"version": "7.2.0",
+		"version": "7.2.1",
 		"tags": "7.2 latest",
 		"pkg-commit": "ffc59a345217b599fd49f7f0442b5f653fbe6fc2",
-		"dist-sha512": "d9a57d644d1b1456ee96ee84182f816b3b693fe2d9cc4b1859b62a836ee8c7d51025bb96efbc0ebc82349f60b2f186335436d76c12a5257c0560572db9d01133",
+		"dist-sha512": "7b9b837a8bafdf5798e81bc38163457b3bca16d933a9492800cdd2cde35c9b524a10b7e5ec931217e11d72f32feb05157a7eecfd9cf2c5856e717b634e51d089",
 		"varnish-modules-version": "0.21.0",
 		"varnish-modules-sha512sum": "a442f58968b471d713c99a94e5b80302c07ea163d3d5022d768eb0b39ab081f18744fd529b04283b0c6ec942f362197935d8ef1aa04f26eff10a81425a63bd35",
 		"vmod-dynamic-version": "2.6.0",
@@ -38,10 +38,10 @@ CONFIG='
 	},
 	"next": {
 		"debian": "bullseye",
-		"version": "7.2.0",
+		"version": "7.2.1",
 		"tags": "7.2 latest",
 		"pkg-commit": "ffc59a345217b599fd49f7f0442b5f653fbe6fc2",
-		"dist-sha512": "d9a57d644d1b1456ee96ee84182f816b3b693fe2d9cc4b1859b62a836ee8c7d51025bb96efbc0ebc82349f60b2f186335436d76c12a5257c0560572db9d01133",
+		"dist-sha512": "7b9b837a8bafdf5798e81bc38163457b3bca16d933a9492800cdd2cde35c9b524a10b7e5ec931217e11d72f32feb05157a7eecfd9cf2c5856e717b634e51d089",
 		"varnish-modules-version": "0.21.0",
 		"varnish-modules-sha512sum": "a442f58968b471d713c99a94e5b80302c07ea163d3d5022d768eb0b39ab081f18744fd529b04283b0c6ec942f362197935d8ef1aa04f26eff10a81425a63bd35",
 		"vmod-dynamic-version": "2.6.0",
