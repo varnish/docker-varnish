@@ -32,9 +32,9 @@ CONFIG='
 		"dist-sha512": "7b9b837a8bafdf5798e81bc38163457b3bca16d933a9492800cdd2cde35c9b524a10b7e5ec931217e11d72f32feb05157a7eecfd9cf2c5856e717b634e51d089",
 		"varnish-modules-version": "0.21.0",
 		"varnish-modules-sha512sum": "a442f58968b471d713c99a94e5b80302c07ea163d3d5022d768eb0b39ab081f18744fd529b04283b0c6ec942f362197935d8ef1aa04f26eff10a81425a63bd35",
-		"vmod-dynamic-version": "2.6.0",
-		"vmod-dynamic-commit": "9666973952f62110c872d720af3dae0b85b4b597",
-		"vmod-dynamic-sha512sum": "e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5"
+		"vmod-dynamic-version": "2.8.0",
+		"vmod-dynamic-commit": "5c702fa6c3a88882a2678f75161692762e7d6c47",
+		"vmod-dynamic-sha512sum": "3503ae09bae731213d5a6823af9fb758bcbcaf06678a2a0efc0b35d9f1b18ab46e02f02b75db8a4858bb2b623e76ea253e65ef2ae3ab076558b52b414996d33a"
 	},
 	"next": {
 		"debian": "bullseye",
@@ -44,10 +44,9 @@ CONFIG='
 		"dist-sha512": "7b9b837a8bafdf5798e81bc38163457b3bca16d933a9492800cdd2cde35c9b524a10b7e5ec931217e11d72f32feb05157a7eecfd9cf2c5856e717b634e51d089",
 		"varnish-modules-version": "0.21.0",
 		"varnish-modules-sha512sum": "a442f58968b471d713c99a94e5b80302c07ea163d3d5022d768eb0b39ab081f18744fd529b04283b0c6ec942f362197935d8ef1aa04f26eff10a81425a63bd35",
-		"vmod-dynamic-version": "2.6.0",
-		"vmod-dynamic-commit": "9666973952f62110c872d720af3dae0b85b4b597",
-		"vmod-dynamic-sha512sum": "e62f1ee801ab2c9e22f5554bbe40c239257e2c46ea3d2ae19b465b1c82edad6f675417be8f7351d4f9eddafc9ad6c0149f88edc44dd0b922ad82e5d75b6b15a5"
-
+		"vmod-dynamic-version": "2.8.0",
+		"vmod-dynamic-commit": "5c702fa6c3a88882a2678f75161692762e7d6c47",
+		"vmod-dynamic-sha512sum": "3503ae09bae731213d5a6823af9fb758bcbcaf06678a2a0efc0b35d9f1b18ab46e02f02b75db8a4858bb2b623e76ea253e65ef2ae3ab076558b52b414996d33a"
 	}
 
 }'
