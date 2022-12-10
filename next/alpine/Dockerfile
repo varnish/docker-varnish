@@ -16,6 +16,13 @@ ENV VARNISH_SIZE 100M
 RUN set -e;\
     BASE_PKGS="tar alpine-sdk sudo py3-docutils python3 autoconf automake libtool"; \
     apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
+    \
+    # create users and groups with fixed IDs
+    addgroup -g 1000 -S varnish; \
+    adduser -u 1000 -S -D -H -s /sbin/nologin -G varnish -g varnish varnish; \
+    adduser -u 1001 -S -D -H -s /sbin/nologin -G varnish -g varnish vcache; \
+    adduser -u 1002 -S -D -H -s /sbin/nologin -G varnish -g varnish varnishlog; \
+    \
     adduser -D builder; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder; \
     addgroup builder abuild; \
