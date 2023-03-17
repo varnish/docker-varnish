@@ -1,13 +1,13 @@
 FROM debian:bullseye-slim
 
-ARG  PKG_COMMIT=ffc59a345217b599fd49f7f0442b5f653fbe6fc2
-ARG  VARNISH_VERSION=7.2.1
-ARG  DIST_SHA512=7b9b837a8bafdf5798e81bc38163457b3bca16d933a9492800cdd2cde35c9b524a10b7e5ec931217e11d72f32feb05157a7eecfd9cf2c5856e717b634e51d089
-ARG  VARNISH_MODULES_VERSION=0.21.0
-ARG  VARNISH_MODULES_SHA512SUM=a442f58968b471d713c99a94e5b80302c07ea163d3d5022d768eb0b39ab081f18744fd529b04283b0c6ec942f362197935d8ef1aa04f26eff10a81425a63bd35
+ARG  PKG_COMMIT=712667312304cbb1798f131caa0a98b7697a2cd9
+ARG  VARNISH_VERSION=7.3.0
+ARG  DIST_SHA512=2693ed52dccc889e0bb1035ef1e3e5e12b8060ff3be6e6b78593b83f60408035649185dc29dd92265e18d362c3bff2f82cd74b7ae0aa68b94b40013824f3c165
+ARG  VARNISH_MODULES_VERSION=0.22.0
+ARG  VARNISH_MODULES_SHA512SUM=597ac1161224a25c11183fbaaf25412c8f8e0af3bf58fa76161328d8ae97aa7c485cfa6ed50e9f24ce73eca9ddeeb87ee4998427382c0fce633bf43eaf08068a
 ARG  VMOD_DYNAMIC_VERSION=2.8.0
-ARG  VMOD_DYNAMIC_COMMIT=5c702fa6c3a88882a2678f75161692762e7d6c47
-ARG  VMOD_DYNAMIC_SHA512SUM=3503ae09bae731213d5a6823af9fb758bcbcaf06678a2a0efc0b35d9f1b18ab46e02f02b75db8a4858bb2b623e76ea253e65ef2ae3ab076558b52b414996d33a
+ARG  VMOD_DYNAMIC_COMMIT=32c331e79dba857b0309ba0d527ba17bf64ff2c7
+ARG  VMOD_DYNAMIC_SHA512SUM=83617d5ef7d5b6894cbd28f5ac224555372a62b269c2d544a32f29dee7f50005f72a8301d095952b49a552259700d69ceeee20577e9c915aa530fce59363f34a
 ARG  TOOLBOX_COMMIT=96bab07cf58b6e04824ffec608199f1780ff0d04
 ENV  VMOD_DEPS="automake curl libtool make pkg-config python3-sphinx"
 
@@ -20,14 +20,20 @@ RUN set -e; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
     apt-get install -y $BASE_PKGS libgetdns10; \
+    \
+    # create users and groups with fixed IDs
+    adduser --uid 1000 --quiet --system --no-create-home --home /nonexistent --group varnish; \
+    adduser --uid 1001 --quiet --system --no-create-home --home /nonexistent --ingroup varnish vcache; \
+    adduser --uid 1002 --quiet --system --no-create-home --home /nonexistent --ingroup varnish varnishlog; \
+    \
     # varnish
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout ffc59a345217b599fd49f7f0442b5f653fbe6fc2; \
+    git checkout 712667312304cbb1798f131caa0a98b7697a2cd9; \
     rm -rf .git; \
-    curl -f https://varnish-cache.org/downloads/varnish-7.2.1.tgz -o $tmpdir/orig.tgz; \
-    echo "7b9b837a8bafdf5798e81bc38163457b3bca16d933a9492800cdd2cde35c9b524a10b7e5ec931217e11d72f32feb05157a7eecfd9cf2c5856e717b634e51d089  $tmpdir/orig.tgz" | sha512sum -c -; \
+    curl -f https://varnish-cache.org/downloads/varnish-7.3.0.tgz -o $tmpdir/orig.tgz; \
+    echo "2693ed52dccc889e0bb1035ef1e3e5e12b8060ff3be6e6b78593b83f60408035649185dc29dd92265e18d362c3bff2f82cd74b7ae0aa68b94b40013824f3c165  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \

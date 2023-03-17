@@ -20,6 +20,12 @@ RUN set -e; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
     apt-get install -y $BASE_PKGS libgetdns10; \
+    \
+    # create users and groups with fixed IDs
+    adduser --uid 1000 --quiet --system --no-create-home --home /nonexistent --group varnish; \
+    adduser --uid 1001 --quiet --system --no-create-home --home /nonexistent --ingroup varnish vcache; \
+    adduser --uid 1002 --quiet --system --no-create-home --home /nonexistent --ingroup varnish varnishlog; \
+    \
     # varnish
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
