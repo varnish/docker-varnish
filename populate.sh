@@ -33,8 +33,8 @@ CONFIG='
 		"varnish-modules-version": "0.22.0",
 		"varnish-modules-sha512sum": "597ac1161224a25c11183fbaaf25412c8f8e0af3bf58fa76161328d8ae97aa7c485cfa6ed50e9f24ce73eca9ddeeb87ee4998427382c0fce633bf43eaf08068a",
 		"vmod-dynamic-version": "2.8.0",
-		"vmod-dynamic-commit": "32c331e79dba857b0309ba0d527ba17bf64ff2c7",
-		"vmod-dynamic-sha512sum": "83617d5ef7d5b6894cbd28f5ac224555372a62b269c2d544a32f29dee7f50005f72a8301d095952b49a552259700d69ceeee20577e9c915aa530fce59363f34a"
+		"vmod-dynamic-commit": "af9c51cb53982b42eed6116960015c09171838b0",
+		"vmod-dynamic-sha512sum": "4a91de4a1fc3e6eb925ac5e8c9d56d9786c368fbbb3b957285bd0edf4e955ee19ad1ee6b4b3c4754cf5885be6593c269419c19fea36760513397d92085e105de"
 	}
 
 }'
