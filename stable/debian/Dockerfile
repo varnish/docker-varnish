@@ -9,7 +9,7 @@ RUN set -e; \
     tmpdir="$(mktemp -d)"; \
     cd "$tmpdir"; \
     apt-get update; \
-    apt-get install -y $BASE_PKGS; \
+    apt-get install -y --no-install-recommends $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout 10da6a585eb7d8defe9d273a51df5b133500eb6b; \
@@ -21,7 +21,7 @@ RUN set -e; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
-    apt-get -y install ../*.deb; \
+    apt-get -y --no-install-recommends install ../*.deb; \
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
     mkdir /pkgs; \
     mv ../*dev*.deb /pkgs; \
