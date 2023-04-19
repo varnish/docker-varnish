@@ -19,7 +19,7 @@ RUN set -e; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
-    apt-get install -y $BASE_PKGS libgetdns10; \
+    apt-get install -y --no-install-recommends $BASE_PKGS libgetdns10; \
     # varnish
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
@@ -33,7 +33,7 @@ RUN set -e; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
-    apt-get -y install ../*.deb; \
+    apt-get -y --no-install-recommends install ../*.deb; \
     mv ../*dev*.deb /pkgs; \
     \
     git clone https://github.com/varnish/toolbox.git; \
