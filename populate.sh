@@ -39,7 +39,7 @@ CONFIG='
 
 }'
 
-TOOLBOX_COMMIT=721c66e07e64d48de93978cfc4aa1051ef10df7b
+TOOLBOX_COMMIT=13c3a9b06572757b67822a95f13aa869b78acbef
 
 resolve_json() {
 	echo $CONFIG | jq -r ".[\"$1\"][\"$2\"]"
