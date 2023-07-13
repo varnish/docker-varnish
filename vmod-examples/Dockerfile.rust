@@ -1,0 +1,19 @@
+FROM varnish:7.3
+
+ARG VMOD_URL=
+ARG VMOD_BUILD_DEPS=
+ARG VMOD_RUN_DEPS=
+ARG SKIP_CHECK=
+
+USER root
+RUN set -e; \
+    apt-get update; \
+    apt-get install /pkgs/*.deb $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS clang curl jq -y; \
+    curl -sSf https://sh.rustup.rs -o /tmp/rustup.sh; \
+    sh /tmp/rustup.sh -y; \
+    . "$HOME/.cargo/env"; \
+    install-vmod $VMOD_URL; \
+    apt-get -y purge --auto-remove $VMOD_DEPS clang curl jq; \
+    rustup self uninstall -y; \
+    rm -rf /var/lib/apt/lists/* /tmp/varnish-cache "$HOME/.cargo/env"
+USER varnish

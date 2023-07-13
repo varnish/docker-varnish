@@ -1,0 +1,18 @@
+FROM varnish:7.3
+
+ARG VMOD_URL=
+ARG VMOD_BUILD_DEPS=
+ARG VMOD_RUN_DEPS=
+ARG SKIP_CHECK=
+
+USER root
+RUN set -e; \
+    # get the dependencies
+    apt-get update; \
+    apt-get -y install /pkgs/*.deb $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS; \
+    # build and install
+    install-vmod $VMOD_URL; \
+    # clean up and set the user back to varnish
+    apt-get -y purge --auto-remove $VMOD_DEPS varnish-dev $VMOD_BUILD_DEPS; \
+    rm -rf /var/lib/apt/lists/* /tmp/varnish-cache
+USER varnish
