@@ -12,6 +12,7 @@ This directory hopes to fix remedy this by doing two things. The first one is pr
 Thankfully, there's a relatively small number of types of vmods:
 - `C` vmods that just need the `dev` package of Varnish and a few classic dependencies (`make`, `autotools`, etc.)
 - same as the first group, but those need access to the source of the exact version of Varnish that we build against
+- same as the first group, but we need to compile some dependencies from sources
 - `rust` vmods
 
 Each type of vmod is represented by the a `Dockerfile.*` you'll find in this here directory. and you can have a look at the `build()` in the [examples.sh](./examples.sh) script to see how to use them.

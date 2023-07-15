@@ -1,0 +1,39 @@
+FROM varnish:7.3
+
+ARG VMOD_URL=
+ARG VMOD_BUILD_DEPS=
+ARG VMOD_RUN_DEPS=
+ARG SKIP_CHECK=
+
+USER root
+# follow https://github.com/carlosabalde/libvmod-redis/blob/master/.github/workflows/main.yml
+# for most of the install logic
+RUN set -e; \
+    # get the dependencies
+    apt-get update; \
+    apt-get -y install /pkgs/*.deb $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS; \
+    # compile hiredis with TLS support from source
+    cd /tmp; \
+    curl -L https://github.com/redis/hiredis/archive/v1.2.0.zip -o hiredis.zip; \
+    unzip hiredis.zip; \
+    cd hiredis-*/; \
+    make USE_SSL=1; \
+    make USE_SSL=1 PREFIX='/usr/local' install; \
+    ldconfig; \
+    # compile redis from source
+    cd /tmp; \
+    curl -L http://download.redis.io/releases/redis-7.0.9.tar.gz -o redis.tar.gz; \
+    tar zxvf redis.tar.gz; \
+    cd redis-*/; \
+    make BUILD_TLS=yes; \
+    make BUILD_TLS=yes PREFIX='/usr/local' install; \
+    ldconfig; \
+    # get, compile and install the cmod
+    mkdir /tmp/module_to_build; \
+    cd /tmp/module_to_build; \
+    curl -L -o - $VMOD_URL | tar xazvf - --strip 1; \
+    # clean up and set the user back to varnish
+    apt-get -y purge --auto-remove $VMOD_DEPS varnish-dev $VMOD_BUILD_DEPS; \
+    # don't forget to clean the redis/hiredis sources
+    rm -rf /var/lib/apt/lists/* /tmp/varnish-cache /tmp/hiredis* /tmp/redis*
+USER varnish

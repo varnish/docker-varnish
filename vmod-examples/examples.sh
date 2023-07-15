@@ -31,6 +31,8 @@ build() {
 # - cfg: https://github.com/carlosabalde/libvmod-cfg
 # - blobdigest: https://gitlab.com/uplex/varnish/libvmod-blobdigest
 # - brotli: https://gitlab.com/uplex/varnish/libvfp-brotli
+# - geoip2: https://github.com/varnishcache-friends/libvmod-geoip2
+# - redis: https://github.com/carlosabalde/libvmod-redis
 # - uuid: https://github.com/otto-de/libvmod-uuid
 build \
 	regular \
@@ -68,6 +70,14 @@ build \
 
 build \
 	regular \
+	geoip2 \
+	https://github.com/varnishcache-friends/libvmod-geoip2/archive/refs/heads/devel.tar.gz \
+	"libmaxminddb-dev" \
+	"libmaxminddb0" \
+	true # the tarball doesn't include the maxmind database used by the tests, so skip them
+
+build \
+	regular \
 	uuid \
 	https://github.com/otto-de/libvmod-uuid/archive/ae0ca345b9974092bf139409d2852fc46886c250.tar.gz \
 	"libossp-uuid-dev" \
@@ -91,6 +101,15 @@ build \
 	"" \
 	"" \
 	true
+
+# C vmod, but we need to build some dependencies from sources, so we use
+# a custom Dockerfile
+# - redit: https://github.com/carlosabalde/libvmod-redis
+build \
+	custom.redis \
+	redis \
+	http://github.com/carlosabalde/libvmod-redis/archive/refs/heads/7.3.tar.gz \
+	"libev-dev libssl-dev unzip"
 
 # rust vmods:
 # - fileserver: https://github.com/gquintard/vmod_fileserver
