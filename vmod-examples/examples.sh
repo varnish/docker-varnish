@@ -25,6 +25,11 @@ build() {
 		.
 }
 
+build \
+	regular \
+	xcounter \
+	https://github.com/xcir/libvmod-xcounter/archive/refs/heads/master.tar.gz
+
 # C vmods that don't require the Varnish source:
 # - all_healthy: https://code.uplex.de/uplex-varnish/libvmod-all_healthy
 # - awrest: https://github.com/xcir/libvmod-awsrest
