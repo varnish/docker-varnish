@@ -14,7 +14,7 @@ build() {
 	#                          the usual building tools (make, gcc, autotools, etc.) are handled automatically
 	#                          those packages are purged once installation is done
 	#   RUN_DEPS (optional): whitespace-separated list of apt packages to install to use the vmod
-	#   SKIP_CHECK (optional_: if present and not empty, skip the tests when compiling the vmod
+	#   SKIP_CHECK (optional): if present and not empty, skip the tests when compiling the vmod
 	docker build \
 		-f Dockerfile.$1 \
 		-t varnish:$2 \
