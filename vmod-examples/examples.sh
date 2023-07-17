@@ -29,11 +29,6 @@ build() {
 	docker run --rm -it -v `pwd`/$2.vcl:/etc/varnish/default.vcl varnish:$2 varnishd -C -f /etc/varnish/default.vcl
 }
 
-build \
-	regular \
-	xcounter \
-	https://github.com/xcir/libvmod-xcounter/archive/refs/heads/master.tar.gz
-
 # C vmods that don't require the Varnish source:
 # - all_healthy: https://code.uplex.de/uplex-varnish/libvmod-all_healthy
 # - awrest: https://github.com/xcir/libvmod-awsrest
@@ -43,6 +38,7 @@ build \
 # - geoip2: https://github.com/varnishcache-friends/libvmod-geoip2
 # - redis: https://github.com/carlosabalde/libvmod-redis
 # - uuid: https://github.com/otto-de/libvmod-uuid
+# - xcounter: https://github.com/xcir/libvmod-xcounter
 build \
 	regular \
 	all_healthy \
@@ -91,6 +87,11 @@ build \
 	https://github.com/otto-de/libvmod-uuid/archive/ae0ca345b9974092bf139409d2852fc46886c250.tar.gz \
 	"libossp-uuid-dev" \
 	"libossp-uuid16"
+
+build \
+	regular \
+	xcounter \
+	https://github.com/xcir/libvmod-xcounter/archive/refs/heads/master.tar.gz
 
 # C vmods that needs the compiled varnish source to build
 # - pesi: https://code.uplex.de/uplex-varnish/libvdp-pesi
