@@ -40,7 +40,6 @@ build() {
 # - brotli: https://gitlab.com/uplex/varnish/libvfp-brotli
 # - geoip2: https://github.com/varnishcache-friends/libvmod-geoip2
 # - jq: https://github.com/varnishcache-friends/libvmod-jq
-# - redis: https://github.com/carlosabalde/libvmod-redis
 # - uuid: https://github.com/otto-de/libvmod-uuid
 # - xcounter: https://github.com/xcir/libvmod-xcounter
 build \
@@ -125,7 +124,7 @@ build \
 
 # C vmod, but we need to build some dependencies from sources, so we use
 # a custom Dockerfile
-# - redit: https://github.com/carlosabalde/libvmod-redis
+# - redis: https://github.com/carlosabalde/libvmod-redis
 build \
 	custom.redis \
 	redis \
