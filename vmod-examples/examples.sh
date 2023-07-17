@@ -39,6 +39,7 @@ build() {
 # - blobdigest: https://gitlab.com/uplex/varnish/libvmod-blobdigest
 # - brotli: https://gitlab.com/uplex/varnish/libvfp-brotli
 # - geoip2: https://github.com/varnishcache-friends/libvmod-geoip2
+# - jq: https://github.com/varnishcache-friends/libvmod-jq
 # - redis: https://github.com/carlosabalde/libvmod-redis
 # - uuid: https://github.com/otto-de/libvmod-uuid
 # - xcounter: https://github.com/xcir/libvmod-xcounter
@@ -83,6 +84,13 @@ build \
 	"libmaxminddb-dev" \
 	"libmaxminddb0" \
 	true # the tarball doesn't include the maxmind database used by the tests, so skip them
+
+build \
+	regular \
+	jq \
+	https://github.com/varnishcache-friends/libvmod-jq/archive/refs/heads/devel.tar.gz \
+	"libjq-dev" \
+	"libjq1"
 
 build \
 	regular \
