@@ -36,6 +36,7 @@ build() {
 # - all_healthy: https://code.uplex.de/uplex-varnish/libvmod-all_healthy
 # - awrest: https://github.com/xcir/libvmod-awsrest
 # - cfg: https://github.com/carlosabalde/libvmod-cfg
+# - crypto: https://code.uplex.de/uplex-varnish/libvmod-crypto/
 # - blobdigest: https://gitlab.com/uplex/varnish/libvmod-blobdigest
 # - brotli: https://gitlab.com/uplex/varnish/libvfp-brotli
 # - geoip2: https://github.com/varnishcache-friends/libvmod-geoip2
@@ -75,6 +76,12 @@ build \
 	https://github.com/carlosabalde/libvmod-cfg/archive/refs/tags/7.3-15.0.tar.gz \
 	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
 	"libjemalloc2"
+
+build \
+	regular \
+	crypto \
+	https://code.uplex.de/uplex-varnish/libvmod-crypto/-/archive/fc9291afa67dc5f1baab0c4e62069dd56a1ae09f/libvmod-crypto-fc9291afa67dc5f1baab0c4e62069dd56a1ae09f.tar.gz \
+	"libssl-dev"
 
 build \
 	regular \
