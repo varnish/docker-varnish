@@ -28,10 +28,14 @@ RUN set -e; \
     make BUILD_TLS=yes; \
     make BUILD_TLS=yes PREFIX='/usr/local' install; \
     ldconfig; \
-    # get, compile and install the cmod
+    # get, compile and install the vmod
     mkdir /tmp/module_to_build; \
     cd /tmp/module_to_build; \
     curl -L -o - $VMOD_URL | tar xazvf - --strip 1; \
+    ./autogen.sh; \
+    ./configure --prefix=/usr; \
+    make check; \
+    make install; \
     # clean up and set the user back to varnish
     apt-get -y purge --auto-remove $VMOD_DEPS varnish-dev $VMOD_BUILD_DEPS; \
     # don't forget to clean the redis/hiredis sources
