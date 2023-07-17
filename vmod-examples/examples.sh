@@ -26,7 +26,10 @@ build() {
 	# build a dummy vtc to make sure the vmod loads, i.e. it's installed
 	# correctly and that the runtime dependencies are right
 	echo "vcl 4.1; import $2; backend default none;" > $2.vcl
-	docker run --rm -it -v `pwd`/$2.vcl:/etc/varnish/default.vcl varnish:$2 varnishd -C -f /etc/varnish/default.vcl
+	# compile once silently, rerun loudly if there's a failure
+	cmd="docker run --rm -it -v `pwd`/$2.vcl:/etc/varnish/default.vcl varnish:$2 varnishd -C -f /etc/varnish/default.vcl"
+	$cmd &> /dev/null || $cmd
+	rm $2.vcl
 }
 
 # C vmods that don't require the Varnish source:
