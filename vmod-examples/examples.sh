@@ -23,6 +23,10 @@ build() {
 		--build-arg VMOD_RUN_DEPS="$5" \
 		--build-arg SKIP_CHECK=$6 \
 		.
+	# build a dummy vtc to make sure the vmod loads, i.e. it's installed
+	# correctly and that the runtime dependencies are right
+	echo "vcl 4.1; import $2; backend default none;" > $2.vcl
+	docker run --rm -it -v `pwd`/$2.vcl:/etc/varnish/default.vcl varnish:$2 varnishd -C -f /etc/varnish/default.vcl
 }
 
 build \
