@@ -41,6 +41,7 @@ build() {
 # - brotli: https://gitlab.com/uplex/varnish/libvfp-brotli
 # - geoip2: https://github.com/varnishcache-friends/libvmod-geoip2
 # - jq: https://github.com/varnishcache-friends/libvmod-jq
+# - querystring: https://github.com/Dridi/libvmod-querystring
 # - uuid: https://github.com/otto-de/libvmod-uuid
 # - xcounter: https://github.com/xcir/libvmod-xcounter
 build \
@@ -97,6 +98,11 @@ build \
 	https://github.com/varnishcache-friends/libvmod-jq/archive/refs/heads/devel.tar.gz \
 	"libjq-dev" \
 	"libjq1"
+
+build \
+	regular \
+	querystring \
+	https://github.com/Dridi/libvmod-querystring/releases/download/v2.0.3/vmod-querystring-2.0.3.tar.gz
 
 build \
 	regular \
