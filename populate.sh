@@ -14,20 +14,8 @@ CONFIG='
 	},
 	"old": {
 		"debian": "bullseye",
-		"version": "7.2.1",
-		"tags": "7.2",
-		"pkg-commit": "ffc59a345217b599fd49f7f0442b5f653fbe6fc2",
-		"dist-sha512": "7b9b837a8bafdf5798e81bc38163457b3bca16d933a9492800cdd2cde35c9b524a10b7e5ec931217e11d72f32feb05157a7eecfd9cf2c5856e717b634e51d089",
-		"varnish-modules-version": "0.21.0",
-		"varnish-modules-sha512sum": "a442f58968b471d713c99a94e5b80302c07ea163d3d5022d768eb0b39ab081f18744fd529b04283b0c6ec942f362197935d8ef1aa04f26eff10a81425a63bd35",
-		"vmod-dynamic-version": "2.8.0",
-		"vmod-dynamic-commit": "5c702fa6c3a88882a2678f75161692762e7d6c47",
-		"vmod-dynamic-sha512sum": "3503ae09bae731213d5a6823af9fb758bcbcaf06678a2a0efc0b35d9f1b18ab46e02f02b75db8a4858bb2b623e76ea253e65ef2ae3ab076558b52b414996d33a"
-	},
-	"fresh": {
-		"debian": "bullseye",
 		"version": "7.3.0",
-		"tags": "7.3 latest",
+		"tags": "7.3",
 		"pkg-commit": "712667312304cbb1798f131caa0a98b7697a2cd9",
 		"dist-sha512": "2693ed52dccc889e0bb1035ef1e3e5e12b8060ff3be6e6b78593b83f60408035649185dc29dd92265e18d362c3bff2f82cd74b7ae0aa68b94b40013824f3c165",
 		"varnish-modules-version": "0.22.0",
@@ -35,8 +23,19 @@ CONFIG='
 		"vmod-dynamic-version": "2.8.0",
 		"vmod-dynamic-commit": "af9c51cb53982b42eed6116960015c09171838b0",
 		"vmod-dynamic-sha512sum": "4a91de4a1fc3e6eb925ac5e8c9d56d9786c368fbbb3b957285bd0edf4e955ee19ad1ee6b4b3c4754cf5885be6593c269419c19fea36760513397d92085e105de"
+	},
+	"fresh": {
+		"debian": "bookworm",
+		"version": "7.4.0",
+		"tags": "7.4 latest",
+		"pkg-commit": "cfa8cb3724e4ca6398f60b09157715bcb99d189d",
+		"dist-sha512": "b707348e9e6b7b9a89159a5aaeffaca8a1783623b64c4cc3e719fbb40af8f962610eeb280a5a062af244e231c6e83d290d95e737f56927ffcc5dd0ee1dea5f92",
+		"varnish-modules-version": "0.22.0",
+		"varnish-modules-sha512sum": "597ac1161224a25c11183fbaaf25412c8f8e0af3bf58fa76161328d8ae97aa7c485cfa6ed50e9f24ce73eca9ddeeb87ee4998427382c0fce633bf43eaf08068a",
+		"vmod-dynamic-version": "2.8.0-1",
+		"vmod-dynamic-commit": "15e32fb8cf96752c90d895b0ca31451bd05d92d9",
+		"vmod-dynamic-sha512sum": "d62d7af87770ef370c2e78e5b464f4f7712ebb50281728ca157ff38303f5455f1afdc0f8efaf0040febdf2d0aedbfa4c3369fe0f9d634ed34f185b54876cb4d1"
 	}
-
 }'
 
 TOOLBOX_COMMIT=01ff3ec18a955f93880afe18167f17d0bc36cd55
