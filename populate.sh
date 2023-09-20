@@ -26,10 +26,10 @@ CONFIG='
 	},
 	"fresh": {
 		"debian": "bookworm",
-		"version": "7.4.0",
+		"version": "7.4.1",
 		"tags": "7.4 latest",
 		"pkg-commit": "cfa8cb3724e4ca6398f60b09157715bcb99d189d",
-		"dist-sha512": "b707348e9e6b7b9a89159a5aaeffaca8a1783623b64c4cc3e719fbb40af8f962610eeb280a5a062af244e231c6e83d290d95e737f56927ffcc5dd0ee1dea5f92",
+		"dist-sha512": "d5a6ce53bd5fd2afc6a56b7d64fbaf3688bf3de1f39149fb4b4b40acda987bd9ead32f1b9050441a6281c0c2f4a5849d179bfa8615ec98640d9a2e030b0cdb0c",
 		"varnish-modules-version": "0.22.0",
 		"varnish-modules-sha512sum": "597ac1161224a25c11183fbaaf25412c8f8e0af3bf58fa76161328d8ae97aa7c485cfa6ed50e9f24ce73eca9ddeeb87ee4998427382c0fce633bf43eaf08068a",
 		"vmod-dynamic-version": "2.8.0-1",
