@@ -9,7 +9,7 @@ ARG  VMOD_DYNAMIC_VERSION=2.8.0
 ARG  VMOD_DYNAMIC_COMMIT=af9c51cb53982b42eed6116960015c09171838b0
 ARG  VMOD_DYNAMIC_SHA512SUM=4a91de4a1fc3e6eb925ac5e8c9d56d9786c368fbbb3b957285bd0edf4e955ee19ad1ee6b4b3c4754cf5885be6593c269419c19fea36760513397d92085e105de
 ARG  TOOLBOX_COMMIT=01ff3ec18a955f93880afe18167f17d0bc36cd55
-ENV  VMOD_DEPS="automake curl libtool make pkg-config python3-sphinx"
+ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
 
 ENV VARNISH_SIZE 100M
 
@@ -20,6 +20,12 @@ RUN set -e; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
     apt-get install -y --no-install-recommends $BASE_PKGS libgetdns10; \
+    \
+    # create users and groups with fixed IDs
+    adduser --uid 1000 --quiet --system --no-create-home --home /nonexistent --group varnish; \
+    adduser --uid 1001 --quiet --system --no-create-home --home /nonexistent --ingroup varnish vcache; \
+    adduser --uid 1002 --quiet --system --no-create-home --home /nonexistent --ingroup varnish varnishlog; \
+    \
     # varnish
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \

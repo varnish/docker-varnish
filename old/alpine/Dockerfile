@@ -9,13 +9,20 @@ ARG  VMOD_DYNAMIC_VERSION=2.8.0
 ARG  VMOD_DYNAMIC_COMMIT=af9c51cb53982b42eed6116960015c09171838b0
 ARG  VMOD_DYNAMIC_SHA512SUM=4a91de4a1fc3e6eb925ac5e8c9d56d9786c368fbbb3b957285bd0edf4e955ee19ad1ee6b4b3c4754cf5885be6593c269419c19fea36760513397d92085e105de
 ARG  TOOLBOX_COMMIT=01ff3ec18a955f93880afe18167f17d0bc36cd55
-ENV  VMOD_DEPS="automake curl libtool make pkgconfig py3-sphinx"
+ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkgconfig py3-sphinx"
 
 ENV VARNISH_SIZE 100M
 
 RUN set -e;\
     BASE_PKGS="tar alpine-sdk sudo py3-docutils python3 autoconf automake libtool"; \
     apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
+    \
+    # create users and groups with fixed IDs
+    addgroup -g 1000 -S varnish; \
+    adduser -u 1000 -S -D -H -s /sbin/nologin -G varnish -g varnish varnish; \
+    adduser -u 1001 -S -D -H -s /sbin/nologin -G varnish -g varnish vcache; \
+    adduser -u 1002 -S -D -H -s /sbin/nologin -G varnish -g varnish varnishlog; \
+    \
     adduser -D builder; \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder; \
     addgroup builder abuild; \
