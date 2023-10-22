@@ -130,7 +130,7 @@ build \
 build \
 	with-varnish-src \
 	slash \
-	https://gitlab.com/uplex/varnish/slash/-/archive/7.3/slash-7.3.tar.gz \
+	https://gitlab.com/uplex/varnish/slash/-/archive/branch-7.3/slash-branch-7.3.tar.gz \
 	"" \
 	"" \
 	true
