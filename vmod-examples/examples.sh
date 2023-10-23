@@ -141,7 +141,7 @@ build \
 build \
 	custom.redis \
 	redis \
-	http://github.com/carlosabalde/libvmod-redis/archive/refs/heads/7.3.tar.gz \
+	https://github.com/carlosabalde/libvmod-redis/archive/refs/heads/7.3-archived.tar.gz \
 	"libev-dev libssl-dev unzip"
 
 # rust vmods:
