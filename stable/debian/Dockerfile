@@ -14,10 +14,10 @@ RUN set -e; \
     cd pkg-varnish-cache; \
     git checkout 10da6a585eb7d8defe9d273a51df5b133500eb6b; \
     rm -rf .git; \
-    curl -f https://varnish-cache.org/downloads/varnish-6.0.11.tgz -o $tmpdir/orig.tgz; \
-    echo "02f56f360c6bbed663e712edef961384e6003cfe73307c7ea50f805ac4b4df0d26958179170401a2254a69ab623acc172da42926d82189bfa724a4e8a78597ea  $tmpdir/orig.tgz" | sha512sum -c -; \
+    curl -f https://varnish-cache.org/downloads/varnish-6.0.12.tgz -o $tmpdir/orig.tgz; \
+    echo "d80abb42380e85bc4be02278b3620b0a66d182465945146eecb2cdc022e77945ad815e897a5ed0bec2f458471617f647a80c743c0f72e73334ad92d3ac298af4  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
-    sed -i -e "s|@VERSION@|6.0.11|"  "debian/changelog"; \
+    sed -i -e "s|@VERSION@|6.0.12|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \

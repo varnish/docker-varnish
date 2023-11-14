@@ -1,8 +1,8 @@
 FROM debian:bookworm-slim
 
 ARG  PKG_COMMIT=cfa8cb3724e4ca6398f60b09157715bcb99d189d
-ARG  VARNISH_VERSION=7.4.1
-ARG  DIST_SHA512=d5a6ce53bd5fd2afc6a56b7d64fbaf3688bf3de1f39149fb4b4b40acda987bd9ead32f1b9050441a6281c0c2f4a5849d179bfa8615ec98640d9a2e030b0cdb0c
+ARG  VARNISH_VERSION=7.4.2
+ARG  DIST_SHA512=acd61a852ac7d66b268ab831d3a771d7a063a6a257b5e7c25c5a2ec9bccefa845279b9bd5fc85dd0b4f1d56da59164a13149355d1e6187e71ad76463687f7971
 ARG  VARNISH_MODULES_VERSION=0.22.0
 ARG  VARNISH_MODULES_SHA512SUM=597ac1161224a25c11183fbaaf25412c8f8e0af3bf58fa76161328d8ae97aa7c485cfa6ed50e9f24ce73eca9ddeeb87ee4998427382c0fce633bf43eaf08068a
 ARG  VMOD_DYNAMIC_VERSION=2.8.0-1
@@ -32,8 +32,8 @@ RUN set -e; \
     cd pkg-varnish-cache; \
     git checkout cfa8cb3724e4ca6398f60b09157715bcb99d189d; \
     rm -rf .git; \
-    curl -f https://varnish-cache.org/downloads/varnish-7.4.1.tgz -o $tmpdir/orig.tgz; \
-    echo "d5a6ce53bd5fd2afc6a56b7d64fbaf3688bf3de1f39149fb4b4b40acda987bd9ead32f1b9050441a6281c0c2f4a5849d179bfa8615ec98640d9a2e030b0cdb0c  $tmpdir/orig.tgz" | sha512sum -c -; \
+    curl -f https://varnish-cache.org/downloads/varnish-7.4.2.tgz -o $tmpdir/orig.tgz; \
+    echo "acd61a852ac7d66b268ab831d3a771d7a063a6a257b5e7c25c5a2ec9bccefa845279b9bd5fc85dd0b4f1d56da59164a13149355d1e6187e71ad76463687f7971  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
