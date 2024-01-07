@@ -14,6 +14,8 @@
 
 This is the source repository used to build the official [Varnish Docker image](https://hub.docker.com/_/varnish).
 
+Don't hesitate to open github issues if something is unclear or impractical. You can also join us on [discord](https://discord.com/invite/EuwdvbZR6d).
+
 ## Versions
 
 This repository tracks tree Varnish versions:
