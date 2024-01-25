@@ -35,10 +35,23 @@ CONFIG='
 		"vmod-dynamic-version": "2.8.0-1",
 		"vmod-dynamic-commit": "15e32fb8cf96752c90d895b0ca31451bd05d92d9",
 		"vmod-dynamic-sha512sum": "d62d7af87770ef370c2e78e5b464f4f7712ebb50281728ca157ff38303f5455f1afdc0f8efaf0040febdf2d0aedbfa4c3369fe0f9d634ed34f185b54876cb4d1"
+	},
+	"next": {
+		"debian": "bookworm",
+		"version": "7.4.2",
+		"tags": "7.4 latest",
+		"pkg-commit": "cfa8cb3724e4ca6398f60b09157715bcb99d189d",
+		"dist-sha512": "acd61a852ac7d66b268ab831d3a771d7a063a6a257b5e7c25c5a2ec9bccefa845279b9bd5fc85dd0b4f1d56da59164a13149355d1e6187e71ad76463687f7971",
+		"varnish-modules-version": "0.22.0",
+		"varnish-modules-sha512sum": "597ac1161224a25c11183fbaaf25412c8f8e0af3bf58fa76161328d8ae97aa7c485cfa6ed50e9f24ce73eca9ddeeb87ee4998427382c0fce633bf43eaf08068a",
+		"vmod-dynamic-version": "2.8.0-1",
+		"vmod-dynamic-commit": "15e32fb8cf96752c90d895b0ca31451bd05d92d9",
+		"vmod-dynamic-sha512sum": "d62d7af87770ef370c2e78e5b464f4f7712ebb50281728ca157ff38303f5455f1afdc0f8efaf0040febdf2d0aedbfa4c3369fe0f9d634ed34f185b54876cb4d1"
+
 	}
 }'
 
-TOOLBOX_COMMIT=01ff3ec18a955f93880afe18167f17d0bc36cd55
+TOOLBOX_COMMIT=cfa9ec43a47429ef94f7e04e4abc58c67ad50add
 
 resolve_json() {
 	echo $CONFIG | jq -r ".[\"$1\"][\"$2\"]"
