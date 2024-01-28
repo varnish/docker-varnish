@@ -1,13 +1,22 @@
 #!/bin/sh
 set -e
 
+# Check if VARNISH_BACKEND_HOST or VARNISH_BACKEND_PORT exists
+if [ -n "$VARNISH_BACKEND_HOST" ] || [ -n "$VARNISH_BACKEND_PORT" ]; then
+    # Use -b flag
+    BACKEND="-b $VARNISH_BACKEND_HOST:$VARNISH_BACKEND_PORT"
+else
+    # Use -f flag
+    BACKEND="-f /etc/varnish/default.vcl"
+fi
+
 # this will check if the first argument is a flag
 # but only works if all arguments require a hyphenated flag
 # -v; -SL; -f arg; etc will work, but not arg1 arg2
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
     set -- varnishd \
 	    -F \
-	    -f /etc/varnish/default.vcl \
+        $BACKEND \
 	    -a http=:${VARNISH_HTTP_PORT:-80},HTTP \
 	    -a proxy=:${VARNISH_PROXY_PORT:-8443},PROXY \
 	    -p feature=+http2 \
