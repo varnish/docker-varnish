@@ -6,6 +6,8 @@
 
 vcl 4.1;
 
+import std;
+
 # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
 include "hit-miss.vcl";
 
@@ -14,10 +16,10 @@ include "hit-miss.vcl";
 # ones to define a proper backend to fetch content from
 backend default none;
 
-#backend default {
-#    .host = "127.0.0.1";
-#    .port = "8080";
-#}
+backend default {
+    .host = std.getenv("VARNISH_BACKEND_HOST") || "127.0.0.1";
+    .port = std.getenv("VARNISH_BACKEND_PORT") || "80";
+}
 
 # VCL allows you to implement a series of callback to dictate how to process
 # each request. vcl_recv is the first one being called, right after Varnish
