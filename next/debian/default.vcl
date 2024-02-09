@@ -17,14 +17,18 @@ include "hit-miss.vcl";
 backend default none;
 
 backend default {
-    .host = std.getenv("VARNISH_BACKEND_HOST") || "127.0.0.1";
-    .port = std.getenv("VARNISH_BACKEND_PORT") || "80";
+    .host = std.getenv("VARNISH_BACKEND_HOST") ? std.getenv("VARNISH_BACKEND_HOST") : "none";
+    .port = std.getenv("VARNISH_BACKEND_PORT") ? std.getenv("VARNISH_BACKEND_PORT") : "none";
 }
 
 # VCL allows you to implement a series of callback to dictate how to process
 # each request. vcl_recv is the first one being called, right after Varnish
 # receives some request headers. It's usually used to sanitize the request
 sub vcl_recv {
+	if (default.backend == "none") {
+        return (synth(503, "Backend Host not set"));
+    }
+
 	# if no backend is configured, generate a welcome message by sending
 	# processing to `vcl_synth
 	if (!req.backend_hint) {
