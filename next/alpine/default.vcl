@@ -24,14 +24,16 @@ backend default none;
 #}
 
 sub vcl_init {
-	new d = dynamic.director(port = std.getenv("VARNISH_BACKEND_PORT"));
+	new d = dynamic.director();
 }
 
 # VCL allows you to implement a series of callback to dictate how to process
 # each request. vcl_recv is the first one being called, right after Varnish
 # receives some request headers. It's usually used to sanitize the request
 sub vcl_recv {
-	set req.backend_hint = d.backend(std.getenv("VARNISH_BACKEND_HOST"));
+	if (std.getenv("VARNISH_BACKEND_HOST")) {
+		set req.backend_hint = d.backend(std.getenv("VARNISH_BACKEND_HOST"));
+	}
 
 	# if no backend is configured, generate a welcome message by sending
 	# processing to `vcl_synth
