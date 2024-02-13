@@ -48,7 +48,7 @@ sub vcl_synth {
 			<html><body>
 
 				<h1>Varnish is running!</h1>
-				<p>Please edit <code>/etc/varnish/default.vcl</code> to setup a backend.</p>
+				<p>Please edit <code>/etc/varnish/default.vcl</code> or set <code>VARNISH_BACKEND_HOST</code> and <code>VARNISH_BACKEND_PORT</code> environment variables to setup a backend.</p>
 
 			</body></html>""");
 	return (deliver);
