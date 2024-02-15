@@ -25,7 +25,8 @@ RUN set -e; \
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
     mkdir /pkgs; \
     mv ../*dev*.deb /pkgs; \
-    rm -rf /var/lib/apt/lists/* "$tmpdir";
+    rm -rf /var/lib/apt/lists/* "$tmpdir" \
+    mkdir -p -m 1777 /var/lib/varnish/varnishd;
 
 WORKDIR /etc/varnish
 
