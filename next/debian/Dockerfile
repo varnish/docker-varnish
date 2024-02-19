@@ -57,7 +57,8 @@ RUN set -e; \
     # clean up
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
     rm -rf /var/lib/apt/lists/* /work/ /usr/lib/varnish/vmods/libvmod_*.la; \
-    chown varnish /var/lib/varnish;
+    chown varnish /var/lib/varnish; \
+    mkdir -p -m 1777 /var/lib/varnish/varnishd
 
 WORKDIR /etc/varnish
 
