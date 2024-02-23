@@ -46,6 +46,7 @@ RUN set -e; \
     cd toolbox; \
     git checkout $TOOLBOX_COMMIT; \
     cp install-vmod/install-vmod /usr/local/bin/; \
+    cp vcls/verbose_builtin/verbose_builtin.vcl vcls/hit-miss/hit-miss.vcl /etc/varnish/; \
     \
     # varnish-modules
     install-vmod https://github.com/varnish/varnish-modules/releases/download/$VARNISH_MODULES_VERSION/varnish-modules-$VARNISH_MODULES_VERSION.tar.gz $VARNISH_MODULES_SHA512SUM; \
@@ -62,6 +63,8 @@ RUN set -e; \
 WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
+COPY default.vcl /etc/varnish/
+
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
 USER varnish
