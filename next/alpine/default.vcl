@@ -18,39 +18,47 @@ import std;
 # ones to define a proper backend to fetch content from
 backend default none;
 
-#backend default {
-#    .host = "127.0.0.1";
-#    .port = "8080";
-#}
-
+# create a director that can find backends on-the-fly
 sub vcl_init {
-	new d = dynamic.director();
+	new dynamic_director = dynamic.director();
 }
 
 # VCL allows you to implement a series of callback to dictate how to process
 # each request. vcl_recv is the first one being called, right after Varnish
 # receives some request headers. It's usually used to sanitize the request
 sub vcl_recv {
+	# if VARNISH_BACKEND_HOST and VARNISH_BACKEND_PORT, use them to find a backend
+	# if not, generate a synthetic response with vcl_synth
 	if (std.getenv("VARNISH_BACKEND_HOST") && std.getenv("VARNISH_BACKEND_PORT")) {
-		set req.backend_hint = d.backend(std.getenv("VARNISH_BACKEND_HOST"), std.getenv("VARNISH_BACKEND_PORT"));
-	}
-
-	# if no backend is configured, generate a welcome message by sending
-	# processing to `vcl_synth
-	if (!req.backend_hint) {
+		set req.backend_hint = dynamic_director.backend(std.getenv("VARNISH_BACKEND_HOST"), std.getenv("VARNISH_BACKEND_PORT"));
+	} else {
 		return(synth(200));
 	}
 }
 
-# Just fill the response body and deliver it
+# build an HTML page explaining to the user what they need to do to configure
+# the backend
 sub vcl_synth {
+	set resp.http.content-type = "text/html; charset=UTF-8;";
 	synthetic("""<!DOCTYPE html>
 			<html><body>
-
 				<h1>Varnish is running!</h1>
-				<p>Please edit <code>/etc/varnish/default.vcl</code> or set <code>VARNISH_BACKEND_HOST</code> and <code>VARNISH_BACKEND_PORT</code> environment variables to setup a backend.</p>
+""");
 
-			</body></html>""");
+	if (std.getenv("VARNISH_BACKEND_HOST") || std.getenv("VARNISH_BACKEND_PORT")) {
+		if (std.getenv("VARNISH_BACKEND_HOST")) {
+			synthetic("""<p>It appears you have set the <b>VARNISH_BACKEND_HOST</b> variable, and not <b>VARNISH_BACKEND_PORT</b>, but <b>Varnish needs both</b> to identify a backend</p>""");
+		} else {
+			synthetic("""<p>It appears you have set the <b>VARNISH_BACKEND_PORT</b> variable, and not <b>VARNISH_BACKEND_HOST</b>, but <b>Varnish needs both</b> to identify a backend</p>""");
+		}
+	} else {
+		synthetic("""<p>You now need to configure your backend. To do so, you can either:
+<ul>
+  <li>set both <b>VARNISH_BACKEND_HOST</b> and <b>VARNISH_BACKEND_PORT</b> environment variables</li>
+  <li>edit/mount <b>/etc/varnish/default.vcl</b> with your routing and caching logic</li>
+</ul>""");
+	}
+	synthetic("""</body></html>""");
 	return (deliver);
 }
 
