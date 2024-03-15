@@ -3,6 +3,27 @@
 set -e
 declare -A IMAGES
 
+CONFIG='
+{
+	"stable": {
+		"version": "6.0.12",
+		"tags": "6.0"
+	},
+	"old": {
+		"version": "7.3.1",
+		"tags": "7.3"
+	},
+	"fresh": {
+
+		"version": "7.4.2",
+		"tags": "7.4 latest"
+	},
+	"next": {
+		"version": "7.4.2",
+		"tags": "7.4 latest"
+	}
+}'
+
 update_library(){
 	version=`echo $CONFIG | jq -r ".[\"$1\"][\"version\"]"`
 	tags=`echo $CONFIG | jq -r ".[\"$1\"][\"tags\"]"`
