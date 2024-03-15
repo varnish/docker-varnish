@@ -18,9 +18,12 @@ import std;
 # ones to define a proper backend to fetch content from
 backend default none;
 
+# we may not have ipv6 in a container, so we'll only contact backend using ipv4
+acl ipv4_only { "0.0.0.0"/0; }
+
 # create a director that can find backends on-the-fly
 sub vcl_init {
-	new dynamic_director = dynamic.director();
+	new dynamic_director = dynamic.director(whitelist = ipv4_only);
 }
 
 # VCL allows you to implement a series of callback to dictate how to process
@@ -31,6 +34,12 @@ sub vcl_recv {
 	# if not, generate a synthetic response with vcl_synth
 	if (std.getenv("VARNISH_BACKEND_HOST") && std.getenv("VARNISH_BACKEND_PORT")) {
 		set req.backend_hint = dynamic_director.backend(std.getenv("VARNISH_BACKEND_HOST"), std.getenv("VARNISH_BACKEND_PORT"));
+		# tweak the host header to match the backend's info
+		if (std.getenv("VARNISH_BACKEND_PORT") == "80") {
+			set req.http.host = std.getenv("VARNISH_BACKEND_HOST");
+		} else {
+			set req.http.host = std.getenv("VARNISH_BACKEND_HOST") + ":" + std.getenv("VARNISH_BACKEND_PORT");
+		}
 	} else {
 		return(synth(200));
 	}
