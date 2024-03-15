@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -e
-declare -A IMAGES
 
 CONFIG='
 {
