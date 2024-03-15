@@ -1,5 +1,9 @@
 FROM debian:bullseye-slim
 
+ARG PKG_COMMIT=10da6a585eb7d8defe9d273a51df5b133500eb6b
+ARG VARNISH_VERSION=6.0.12
+ARG DIST_SHA512=d80abb42380e85bc4be02278b3620b0a66d182465945146eecb2cdc022e77945ad815e897a5ed0bec2f458471617f647a80c743c0f72e73334ad92d3ac298af4
+
 ENV VARNISH_SIZE 100M
 
 RUN set -e; \
@@ -12,12 +16,12 @@ RUN set -e; \
     apt-get install -y --no-install-recommends $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout 10da6a585eb7d8defe9d273a51df5b133500eb6b; \
+    git checkout "$PKG_COMMIT$; \
     rm -rf .git; \
-    curl -f https://varnish-cache.org/downloads/varnish-6.0.12.tgz -o $tmpdir/orig.tgz; \
-    echo "d80abb42380e85bc4be02278b3620b0a66d182465945146eecb2cdc022e77945ad815e897a5ed0bec2f458471617f647a80c743c0f72e73334ad92d3ac298af4  $tmpdir/orig.tgz" | sha512sum -c -; \
+    curl -f "https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz" -o $tmpdir/orig.tgz; \
+    echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
-    sed -i -e "s|@VERSION@|6.0.12|"  "debian/changelog"; \
+    sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \

@@ -30,10 +30,10 @@ RUN set -e; \
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout 712667312304cbb1798f131caa0a98b7697a2cd9; \
+    git checkout "$PKG_COMMIT"; \
     rm -rf .git; \
-    curl -f https://varnish-cache.org/downloads/varnish-7.3.1.tgz -o $tmpdir/orig.tgz; \
-    echo "57de14ff47038752a151b704d7f629438bba74e258e7d88c6ca58e8a10bfc89368f36b7f32d5525ff032033d941f3e48dde5ae090e44ca928110d2eeb1db589d  $tmpdir/orig.tgz" | sha512sum -c -; \
+    curl -f "https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz" -o $tmpdir/orig.tgz; \
+    echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
