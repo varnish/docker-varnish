@@ -30,14 +30,7 @@ In addition, the directory `next` is a copy of `fresh` with breaking changes tha
 
 ## Building
 
-The docker build directories are under `fresh/` (latest), `old/` and `stable/`. Dockerfiles are generated all at once using:
-
-```
-# don't forget to commit them afterward
-./populate.sh dockerfiles
-```
-
-Edit `./populate.sh` first if you want to modify the labels and installed versions.
+The docker build directories are under `fresh/` (latest), `old/` and `stable/`.
 
 To generate the file that will become https://github.com/docker-library/official-images/blob/master/library/varnish, use:
 
