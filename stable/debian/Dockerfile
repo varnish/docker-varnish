@@ -16,7 +16,7 @@ RUN set -e; \
     apt-get install -y --no-install-recommends $BASE_PKGS; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout "$PKG_COMMIT$; \
+    git checkout "$PKG_COMMIT"; \
     rm -rf .git; \
     curl -f "https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz" -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
