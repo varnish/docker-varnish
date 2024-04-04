@@ -1,4 +1,5 @@
 [![GitHub CI build status badge](https://github.com/varnish/docker-varnish/workflows/GitHub%20CI/badge.svg)](https://github.com/varnish/docker-varnish/actions?query=workflow%3A%22GitHub+CI%22)
+[![Documentation](https://img.shields.io/badge/image-documentation-blue)](https://hub.docker.com/_/varnish)
 <!--[![update.sh build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/update.sh/job/varnish.svg?label=Automated%20update.sh)](https://doi-janky.infosiftr.net/job/update.sh/job/varnish/)
 [![amd64 build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/multiarch/job/amd64/job/varnish.svg?label=amd64)](https://doi-janky.infosiftr.net/job/multiarch/job/amd64/job/varnish)
 [![arm32v5 build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/multiarch/job/arm32v5/job/varnish.svg?label=arm32v5)](https://doi-janky.infosiftr.net/job/multiarch/job/arm32v5/job/varnish)
