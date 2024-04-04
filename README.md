@@ -29,17 +29,6 @@ New major/minor versions are released on the 15th of March and of September, thi
 
 In addition, if present, the `next/` directory is a copy of `fresh/` with breaking changes that must wait for the the next release to be published. This image **isn't available on the Docker hub**.
 
-## Running
-
-When running the Varnish image, a `varnishd` process will be started that listens on the following ports:
-
-* port `80` for *plain HTTP*
-* port `8443` for the *PROXY protocol*
-
-> See [TLS section](#tls) for more information about the primary *PROXY protocol* use case.
-
-Varnish will run with a default memory storage size of `100M`. The `VARNISH_SIZE` *environment variable* can be used to extend the size.
-
 ## TLS
 
 If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers or proxy servers, but the Varnish ecosystem also provides *a purpose-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
