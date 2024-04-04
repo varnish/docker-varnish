@@ -1,3 +1,4 @@
+[![Docker Pulls](https://img.shields.io/docker/pulls/_/varnish.svg)](https://hub.docker.com/r/_/varnish)
 [![GitHub CI build status badge](https://github.com/varnish/docker-varnish/workflows/GitHub%20CI/badge.svg)](https://github.com/varnish/docker-varnish/actions?query=workflow%3A%22GitHub+CI%22)
 [![Documentation](https://img.shields.io/badge/image-documentation-blue)](https://hub.docker.com/_/varnish)
 <!--[![update.sh build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/update.sh/job/varnish.svg?label=Automated%20update.sh)](https://doi-janky.infosiftr.net/job/update.sh/job/varnish/)
