@@ -26,18 +26,8 @@ This repository tracks tree Varnish versions:
 
 New major/minor versions are released on the 15th of March and of September, this is when the `fresh` and `stable` labels are reevaluated.
 
-In addition, the directory `next` is a copy of `fresh` with breaking changes that must wait for the the next release to be published. This image isn't available on the Docker hub.
+In addition, if present, the `next/` directory is a copy of `fresh/` with breaking changes that must wait for the the next release to be published. This image **isn't available on the Docker hub**.
 
-## Building
-
-The docker build directories are under `fresh/` (latest), `old/` and `stable/`.
-
-To generate the file that will become https://github.com/docker-library/official-images/blob/master/library/varnish, use:
-
-```
-# commit your changes first!
-./populate.sh library
-```
 ## Running
 
 When running the Varnish image, a `varnishd` process will be started that listens on the following ports:
@@ -57,6 +47,12 @@ Hitch supports the [PROXY protocol](https://www.haproxy.org/download/1.8/doc/pro
 
 > Hitch, or any other TLS terminator that supports the *PROXY protocol* will connect to Varnish on port `8443`.
 
-## Image documentation
+## Maintenance
 
-Please see https://github.com/docker-library/docs/tree/master/varnish
+New release playbook:
+1. Update the `fresh/`, `old/`,`stable/` as needed (in case of a regular new release, `fresh/` becomes `old/, and a new `fresh/` is created)
+2. Commit and push
+3. Make sure CI passes
+4. Generate a new `library` file using `./populate.sh library`
+5. Open a PR for the library file [docker-library/official-images repository](https://github.com/docker-library/official-images/blob/master/library/varnish)
+6. Optionally, open a PR to update the documentation in the [docker-library/docs repository](https://github.com/docker-library/docs/tree/master/varnish)
