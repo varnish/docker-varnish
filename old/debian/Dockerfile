@@ -1,13 +1,13 @@
 FROM debian:bookworm-slim
 
 ARG  PKG_COMMIT=cfa8cb3724e4ca6398f60b09157715bcb99d189d
-ARG  VARNISH_VERSION=7.4.3
-ARG  DIST_SHA512=2530e913abc34b4afbfaf22a562e596141f855ed6af9c58c211ff5b76c12a0df6d7101af02994ff8b3c031be35e3fade3963dfec44ddd7d270e0d8535e4360f2
-ARG  VARNISH_MODULES_VERSION=0.22.0
-ARG  VARNISH_MODULES_SHA512SUM=597ac1161224a25c11183fbaaf25412c8f8e0af3bf58fa76161328d8ae97aa7c485cfa6ed50e9f24ce73eca9ddeeb87ee4998427382c0fce633bf43eaf08068a
+ARG  VARNISH_VERSION=7.5.0
+ARG  DIST_SHA512=ca77abcb21299942b2bfd433e5f964d2e974cdae92d6a8889217fcd81933a3b7bc1e70ba87d7e842a4f90b59d7948242155380054d67ad49aab8dcea343055a2
+ARG  VARNISH_MODULES_VERSION=0.24.0
+ARG  VARNISH_MODULES_SHA512SUM=fd1b1b7ff61654e568df208229eb1af0086c98726592d1269ca5e13b24ce292a4ec6aeea52a5469f465ca426019629ef5db5a54dfed7f1fd2f0a4b50c92503a6
 ARG  VMOD_DYNAMIC_VERSION=2.8.0-1
-ARG  VMOD_DYNAMIC_COMMIT=15e32fb8cf96752c90d895b0ca31451bd05d92d9
-ARG  VMOD_DYNAMIC_SHA512SUM=d62d7af87770ef370c2e78e5b464f4f7712ebb50281728ca157ff38303f5455f1afdc0f8efaf0040febdf2d0aedbfa4c3369fe0f9d634ed34f185b54876cb4d1
+ARG  VMOD_DYNAMIC_COMMIT=5dc09f52cd8eeed77d879b0313bd8ad9a749477f
+ARG  VMOD_DYNAMIC_SHA512SUM=0f57c1ca2d85acb4dce86f241a709486fc14dae03af4c6f9a4c59471e4ed2fe776c6a07ed24b898624025b52ed08a051340bc89ce539f25844a0b3650d14c292
 ARG  TOOLBOX_COMMIT=cfa9ec43a47429ef94f7e04e4abc58c67ad50add
 ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
 
@@ -30,9 +30,9 @@ RUN set -e; \
     cd /work/varnish; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
-    git checkout "$PKG_COMMIT"; \
+    git checkout $PKG_COMMIT; \
     rm -rf .git; \
-    curl -f "https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz" -o $tmpdir/orig.tgz; \
+    curl -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
     sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
