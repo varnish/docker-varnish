@@ -10,11 +10,11 @@ CONFIG='
 	},
 	"old": {
 		"version": "7.5.0",
-		"tags": "7.5 latest"
+		"tags": "7.5"
 	},
 	"fresh": {
 		"version": "7.6.0",
-		"tags": "7.6 latest"
+		"tags": "7 7.6 latest"
 	}
 }'
 
