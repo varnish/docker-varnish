@@ -11,7 +11,8 @@ ARG  VMOD_DYNAMIC_SHA512SUM=e25ba047dcee58173901c2742afc36e79bc2b501c1bb7210d692
 ARG  TOOLBOX_COMMIT=cfa9ec43a47429ef94f7e04e4abc58c67ad50add
 ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
 
-ENV VARNISH_SIZE 100M
+ENV VARNISH_SIZE=100M
+ENV VSM_NOPID=1
 
 RUN set -ex; \
     BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot libgetdns-dev"; \
