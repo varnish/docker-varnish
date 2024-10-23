@@ -102,7 +102,7 @@ build \
 build \
 	regular \
 	querystring \
-	https://github.com/Dridi/libvmod-querystring/releases/download/v2.0.3/vmod-querystring-2.0.3.tar.gz
+	https://git.sr.ht/~dridi/vmod-querystring/refs/download/vmod-querystring-2.0.4/vmod-querystring-2.0.4.tar.gz
 
 build \
 	regular \
