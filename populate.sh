@@ -13,7 +13,7 @@ CONFIG='
 		"tags": "7.5"
 	},
 	"fresh": {
-		"version": "7.6.0",
+		"version": "7.6.1",
 		"tags": "7 7.6 latest"
 	}
 }'

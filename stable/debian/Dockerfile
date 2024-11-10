@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 ARG PKG_COMMIT=10da6a585eb7d8defe9d273a51df5b133500eb6b
 ARG VARNISH_VERSION=6.0.13
