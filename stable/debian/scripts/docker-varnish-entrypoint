@@ -7,7 +7,7 @@ set -e
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
     set -- varnishd \
 	    -F \
-	    -f /etc/varnish/default.vcl \
+	    -f ${VARNISH_VCL_FILE:-/etc/varnish/default.vcl} \
 	    -a http=:${VARNISH_HTTP_PORT:-80},HTTP \
 	    -a proxy=:${VARNISH_PROXY_PORT:-8443},PROXY \
 	    -p feature=+http2 \
