@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.21
 
 ARG  PKG_COMMIT=7d90347be31891b338dededb318594cebb668ba7
 ARG  VARNISH_VERSION=7.6.1
@@ -15,7 +15,7 @@ ENV VARNISH_SIZE=100M
 ENV VSM_NOPID=1
 
 RUN set -ex;\
-    BASE_PKGS="tar alpine-sdk sudo py3-docutils python3 autoconf automake libtool"; \
+    BASE_PKGS="tar alpine-sdk curl sudo py3-docutils python3 autoconf automake libtool"; \
     apk add --virtual varnish-build-deps -q --no-progress --update $BASE_PKGS; \
     \
     # create users and groups with fixed IDs
