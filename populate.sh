@@ -5,15 +5,15 @@ set -e
 CONFIG='
 {
 	"stable": {
-		"version": "6.0.14",
+		"version": "6.0.15",
 		"tags": "6.0"
 	},
 	"old": {
-		"version": "7.6.3",
+		"version": "7.6.4",
 		"tags": "7.6"
 	},
 	"fresh": {
-		"version": "7.7.1",
+		"version": "7.7.2",
 		"tags": "7 7.7 latest"
 	}
 }'
