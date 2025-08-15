@@ -26,7 +26,7 @@ RUN set -e; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
     apt-get -y --no-install-recommends install ../*.deb; \
-    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
+    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS varnish-dev; \
     mkdir /pkgs; \
     mv ../*dev*.deb /pkgs; \
     rm -rf /var/lib/apt/lists/* "$tmpdir";

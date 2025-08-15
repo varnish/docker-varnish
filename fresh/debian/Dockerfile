@@ -56,7 +56,7 @@ RUN set -ex; \
     install-vmod https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
     \
     # clean up
-    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS; \
+    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS varnish-dev; \
     rm -rf /var/lib/apt/lists/* /work/ /usr/lib/varnish/vmods/libvmod_*.la; \
     chown varnish /var/lib/varnish; \
     mkdir -p -m 1777 /var/lib/varnish/varnishd
