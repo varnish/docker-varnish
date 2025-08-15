@@ -33,6 +33,7 @@ update_library(){
 		Architectures: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
 		Directory: $1/$2
 		GitCommit: `git log -n1 --pretty=oneline $1/$2 | cut -f1 -d" "`
+		GitFetch: refs/heads/main
 	EOF
 }
 
