@@ -20,7 +20,7 @@ RUN set -ex; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
-    apt-get install -y --no-install-recommends $BASE_PKGS libgetdns10; \
+    apt-get install -y --no-install-recommends $BASE_PKGS libgetdns10 netbase; \
     \
     # create users and groups with fixed IDs
     adduser --uid 1000 --quiet --system --no-create-home --home /nonexistent --group varnish; \
