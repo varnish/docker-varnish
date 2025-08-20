@@ -1,4 +1,4 @@
-FROM varnish:7.3
+FROM varnish
 
 ARG VMOD_URL=
 ARG VMOD_BUILD_DEPS=

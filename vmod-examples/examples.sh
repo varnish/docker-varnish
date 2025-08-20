@@ -27,7 +27,7 @@ build() {
 	# correctly and that the runtime dependencies are right
 	echo "vcl 4.1; import $2; backend default none;" > $2.vcl
 	# compile once silently, rerun loudly if there's a failure
-	cmd="docker run --rm -it -v `pwd`/$2.vcl:/etc/varnish/default.vcl varnish:$2 varnishd -C -f /etc/varnish/default.vcl"
+	cmd="docker run --rm -v `pwd`/$2.vcl:/etc/varnish/default.vcl varnish:$2 varnishd -C -f /etc/varnish/default.vcl"
 	$cmd &> /dev/null || $cmd
 	rm $2.vcl
 }
