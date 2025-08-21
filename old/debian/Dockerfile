@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ARG  PKG_COMMIT=7d90347be31891b338dededb318594cebb668ba7
 ARG  VARNISH_VERSION=7.6.4
@@ -20,7 +20,7 @@ RUN set -ex; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     mkdir -p /work/varnish /pkgs; \
     apt-get update; \
-    apt-get install -y --no-install-recommends $BASE_PKGS libgetdns10 netbase; \
+    apt-get install -y --no-install-recommends $BASE_PKGS adduser libgetdns10 netbase; \
     \
     # create users and groups with fixed IDs
     adduser --uid 1000 --quiet --system --no-create-home --home /nonexistent --group varnish; \
@@ -32,6 +32,8 @@ RUN set -ex; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout $PKG_COMMIT; \
+    # temporary pending https://github.com/varnishcache/pkg-varnish-cache/pull/182
+    sed -i '/libpcre3-dev,/d' debian/control; \
     rm -rf .git; \
     curl -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
@@ -55,7 +57,8 @@ RUN set -ex; \
     # vmod-dynamic
     install-vmod https://github.com/nigoroll/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
     \
-    # clean up
+    # clean up and ensure varnish package is not removed.
+    apt-mark hold varnish; \
     apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS varnish-dev; \
     rm -rf /var/lib/apt/lists/* /work/ /usr/lib/varnish/vmods/libvmod_*.la; \
     chown varnish /var/lib/varnish; \
