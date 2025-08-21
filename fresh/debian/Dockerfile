@@ -32,7 +32,8 @@ RUN set -ex; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout $PKG_COMMIT; \
-    sed -i '/libpcre3-dev,/d' debian/control; \   # temporary pending https://github.com/varnishcache/pkg-varnish-cache/pull/182
+    # temporary pending https://github.com/varnishcache/pkg-varnish-cache/pull/182
+    sed -i '/libpcre3-dev,/d' debian/control; \
     rm -rf .git; \
     curl -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
