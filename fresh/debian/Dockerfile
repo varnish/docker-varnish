@@ -1,6 +1,6 @@
 FROM debian:trixie-slim
 
-ARG  PKG_COMMIT=7d90347be31891b338dededb318594cebb668ba7
+ARG  PKG_COMMIT=1f0d212dc45065f38bd80ac57fe22773a20a0595
 ARG  VARNISH_VERSION=7.7.2
 ARG  DIST_SHA512=7a063fa26c01abef3f1c04adaf1a07eb8ebb3d7631f4c797fb4082c75d9133a1e830c5fbbf7f36cc921d502dcfbb36e93ef1cd46e65cf1885efcb740f86da8ac
 ARG  VARNISH_MODULES_VERSION=0.26.0
@@ -32,8 +32,6 @@ RUN set -ex; \
     git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
     cd pkg-varnish-cache; \
     git checkout $PKG_COMMIT; \
-    # temporary pending https://github.com/varnishcache/pkg-varnish-cache/pull/182
-    sed -i '/libpcre3-dev,/d' debian/control; \
     rm -rf .git; \
     curl -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
