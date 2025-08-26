@@ -74,14 +74,14 @@ build \
 build \
 	regular \
 	cfg \
-	https://github.com/carlosabalde/libvmod-cfg/archive/refs/tags/7.3-15.0.tar.gz \
+	https://github.com/carlosabalde/libvmod-cfg/archive/refs/tags/7.7-19.0.tar.gz \
 	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
 	"libjemalloc2"
 
 build \
 	regular \
 	crypto \
-	https://code.uplex.de/uplex-varnish/libvmod-crypto/-/archive/fc9291afa67dc5f1baab0c4e62069dd56a1ae09f/libvmod-crypto-fc9291afa67dc5f1baab0c4e62069dd56a1ae09f.tar.gz \
+	https://code.uplex.de/uplex-varnish/libvmod-crypto/-/archive/0c015f925308e22fc856da24b99a491251ce7123/libvmod-crypto-0c015f925308e22fc856da24b99a491251ce7123.tar.gz \
 	"libssl-dev"
 
 build \
@@ -119,18 +119,18 @@ build \
 # C vmods that needs the compiled varnish source to build
 # - pesi: https://code.uplex.de/uplex-varnish/libvdp-pesi
 # - slash: https://gitlab.com/uplex/varnish/slash
-build \
-	with-varnish-src \
-	pesi \
-	https://code.uplex.de/uplex-varnish/libvdp-pesi/-/archive/7.3/libvdp-pesi-7.3.tar.gz \
-	"" \
-	"" \
-	true
-
+#build \
+#	with-varnish-src \
+#	pesi \
+#	https://code.uplex.de/uplex-varnish/libvdp-pesi/-/archive/master/libvdp-pesi-master.tar.gz \
+#	"zlib1g-dev" \
+#	"" \
+#	true
+#
 build \
 	with-varnish-src \
 	slash \
-	https://gitlab.com/uplex/varnish/slash/-/archive/branch-7.3/slash-branch-7.3.tar.gz \
+	https://gitlab.com/uplex/varnish/slash/-/archive/slash-1.0.0-rc3/slash-slash-1.0.0-rc3.tar.gz \
 	"" \
 	"" \
 	true
@@ -141,7 +141,7 @@ build \
 build \
 	custom.redis \
 	redis \
-	https://github.com/carlosabalde/libvmod-redis/archive/refs/heads/7.3-archived.tar.gz \
+	https://github.com/carlosabalde/libvmod-redis/archive/refs/tags/7.7-21.0.tar.gz \
 	"libev-dev libssl-dev unzip"
 
 # rust vmods:
@@ -151,7 +151,7 @@ build \
 build \
 	rust \
 	fileserver \
-	https://github.com/gquintard/vmod_fileserver/archive/refs/tags/v0.0.4.tar.gz \
+	https://github.com/varnish-rs/vmod-fileserver/archive/refs/tags/v0.0.9.tar.gz \
 	"" \
 	"" \
 	true
@@ -159,10 +159,10 @@ build \
 build \
 	rust \
 	reqwest \
-	https://github.com/gquintard/vmod_reqwest/archive/refs/tags/v0.0.9.tar.gz \
+	https://github.com/varnish-rs/vmod-reqwest/archive/refs/tags/v0.0.15.tar.gz \
 	"libssl-dev"
 
 build \
 	rust \
 	rers \
-	https://github.com/gquintard/vmod_rers/archive/refs/tags/v0.0.7.tar.gz
+	https://github.com/varnish-rs/vmod-rers/archive/refs/tags/v0.0.12.tar.gz
