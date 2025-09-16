@@ -9,12 +9,12 @@ CONFIG='
 		"tags": "6.0"
 	},
 	"old": {
-		"version": "7.6.5",
-		"tags": "7.6"
+		"version": "7.7.3",
+		"tags": "7.7"
 	},
 	"fresh": {
-		"version": "7.7.3",
-		"tags": "7 7.7 latest"
+		"version": "8.0.0",
+		"tags": "8 8.0 latest"
 	}
 }'
 
