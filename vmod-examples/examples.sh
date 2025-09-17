@@ -52,7 +52,7 @@ build \
 build \
 	regular \
 	awsrest \
-	https://github.com/xcir/libvmod-awsrest/archive/d1dda713a6a30fbfc52e4b2ec1baee4839afc69d.tar.gz \
+	https://github.com/xcir/libvmod-awsrest/archive/13fc85c3429dca71d878685a3a8f740de38ba451.tar.gz \
 	"libmhash-dev" \
 	"libmhash2"
 
@@ -71,17 +71,17 @@ build \
 	"libbrotli-dev" \
 	"libbrotli1"
 
-build \
-	regular \
-	cfg \
-	https://github.com/carlosabalde/libvmod-cfg/archive/refs/tags/7.7-19.0.tar.gz \
-	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
-	"libjemalloc2"
-
+#build \
+#	regular \
+#	cfg \
+#	https://github.com/carlosabalde/libvmod-cfg/archive/refs/tags/8.0-20.0.tar.gz \
+#	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
+#	"libjemalloc2"
+#
 build \
 	regular \
 	crypto \
-	https://code.uplex.de/uplex-varnish/libvmod-crypto/-/archive/0c015f925308e22fc856da24b99a491251ce7123/libvmod-crypto-0c015f925308e22fc856da24b99a491251ce7123.tar.gz \
+	https://code.uplex.de/uplex-varnish/libvmod-crypto/-/archive/d815920b1060ac91bbf6701deca2a3a87f97b898/libvmod-crypto-d815920b1060ac91bbf6701deca2a3a87f97b898.tar.gz \
 	"libssl-dev"
 
 build \
@@ -127,42 +127,42 @@ build \
 #	"" \
 #	true
 #
-build \
-	with-varnish-src \
-	slash \
-	https://gitlab.com/uplex/varnish/slash/-/archive/slash-1.0.0-rc3/slash-slash-1.0.0-rc3.tar.gz \
-	"" \
-	"" \
-	true
-
+#build \
+#	with-varnish-src \
+#	slash \
+#	https://gitlab.com/uplex/varnish/slash/-/archive/slash-1.0.0-rc3/slash-slash-1.0.0-rc3.tar.gz \
+#	"" \
+#	"" \
+#	true
+#
 # C vmod, but we need to build some dependencies from sources, so we use
 # a custom Dockerfile
 # - redis: https://github.com/carlosabalde/libvmod-redis
 build \
 	custom.redis \
 	redis \
-	https://github.com/carlosabalde/libvmod-redis/archive/refs/tags/7.7-21.0.tar.gz \
+	https://github.com/carlosabalde/libvmod-redis/archive/refs/tags/8.0-22.0.tar.gz \
 	"libev-dev libssl-dev unzip"
 
 # rust vmods:
 # - fileserver: https://github.com/gquintard/vmod_fileserver
 # - reqwest: https://github.com/gquintard/vmod_reqwest
 # - rers: https://github.com/gquintard/vmod_rers
-build \
-	rust \
-	fileserver \
-	https://github.com/varnish-rs/vmod-fileserver/archive/refs/tags/v0.0.9.tar.gz \
-	"" \
-	"" \
-	true
-
-build \
-	rust \
-	reqwest \
-	https://github.com/varnish-rs/vmod-reqwest/archive/refs/tags/v0.0.15.tar.gz \
-	"libssl-dev"
-
-build \
-	rust \
-	rers \
-	https://github.com/varnish-rs/vmod-rers/archive/refs/tags/v0.0.12.tar.gz
+#build \
+#	rust \
+#	fileserver \
+#	https://github.com/varnish-rs/vmod-fileserver/archive/refs/tags/v0.0.9.tar.gz \
+#	"" \
+#	"" \
+#	true
+#
+#build \
+#	rust \
+#	reqwest \
+#	https://github.com/varnish-rs/vmod-reqwest/archive/refs/tags/v0.0.15.tar.gz \
+#	"libssl-dev"
+#
+#build \
+#	rust \
+#	rers \
+#	https://github.com/varnish-rs/vmod-rers/archive/refs/tags/v0.0.12.tar.gz

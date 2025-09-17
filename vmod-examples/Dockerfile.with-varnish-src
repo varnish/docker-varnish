@@ -11,7 +11,7 @@ RUN set -e; \
     apt-get update; \
     apt-get -y install /pkgs/*.deb $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS git libpcre2-dev libedit-dev; \
     # grab and compile the right commit of the Varnish source
-    git clone https://github.com/varnishcache/varnish-cache.git /tmp/varnish-cache; \
+    git clone --recursive https://github.com/varnishcache/varnish-cache.git /tmp/varnish-cache; \
     cd /tmp/varnish-cache; \
     # make sure to check out the exact same version that's already compiled and installed
     git checkout $(varnishd -V 2>&1 | grep -o '[0-9a-f]\{40\}*'); \
