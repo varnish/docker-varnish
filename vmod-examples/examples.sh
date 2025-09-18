@@ -71,13 +71,13 @@ build \
 	"libbrotli-dev" \
 	"libbrotli1"
 
-#build \
-#	regular \
-#	cfg \
-#	https://github.com/carlosabalde/libvmod-cfg/archive/refs/tags/8.0-20.0.tar.gz \
-#	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
-#	"libjemalloc2"
-#
+build \
+	regular \
+	cfg \
+	https://github.com/carlosabalde/libvmod-cfg/archive/732bee63b507bbf1112b15eaf67ed2da5bfc19fb.tar.gz \
+	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
+	"libjemalloc2"
+
 build \
 	regular \
 	crypto \
