@@ -148,21 +148,23 @@ build \
 # - fileserver: https://github.com/gquintard/vmod_fileserver
 # - reqwest: https://github.com/gquintard/vmod_reqwest
 # - rers: https://github.com/gquintard/vmod_rers
-#build \
-#	rust \
-#	fileserver \
-#	https://github.com/varnish-rs/vmod-fileserver/archive/refs/tags/v0.0.9.tar.gz \
-#	"" \
-#	"" \
-#	true
-#
-#build \
-#	rust \
-#	reqwest \
-#	https://github.com/varnish-rs/vmod-reqwest/archive/refs/tags/v0.0.15.tar.gz \
-#	"libssl-dev"
-#
-#build \
-#	rust \
-#	rers \
-#	https://github.com/varnish-rs/vmod-rers/archive/refs/tags/v0.0.12.tar.gz
+build \
+	rust \
+	fileserver \
+	https://github.com/varnish-rs/vmod-fileserver/archive/refs/tags/v0.0.10.tar.gz \
+	"" \
+	"" \
+	true
+
+build \
+	rust \
+	reqwest \
+	https://github.com/varnish-rs/vmod-reqwest/archive/refs/tags/v0.0.16.tar.gz \
+	"libssl-dev" \
+	"" \
+	true
+
+build \
+	rust \
+	rers \
+	https://github.com/varnish-rs/vmod-rers/archive/refs/tags/v0.0.13.tar.gz
