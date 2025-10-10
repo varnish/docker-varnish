@@ -1,0 +1,45 @@
+ARG DEBIAN_VERSION=bookworm
+
+FROM debian:$DEBIAN_VERSION-slim
+
+ARG DEBIAN_VERSION=bookworm
+ARG VARNISH_PLUS_VERSION=6.0.16r4-1~$DEBIAN_VERSION
+ARG VARNISH_OTEL_VERSION=1.2.1-1~$DEBIAN_VERSION
+ARG TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
+
+ENV VARNISH_SIZE=100M
+ENV VSM_NOPID=1
+ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
+
+COPY varnishplus_60-enterprise-archive-keyring.gpg /etc/apt/keyrings/varnishplus_60-enterprise-archive-keyring.gpg
+COPY varnishplus_60-enterprise.list /etc/apt/sources.list.d/varnishplus_60-enterprise.list
+
+RUN set -ex; \
+    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot libgetdns-dev"; \
+    export DEBIAN_FRONTEND=noninteractive; \
+    export DEBCONF_NONINTERACTIVE_SEEN=true; \
+    apt-get update; \
+    apt-get install -y ca-certificates git; \
+    apt-get update; \
+    apt-get install -y varnish-plus=$VARNISH_PLUS_VERSION varnish-otel=$VARNISH_OTEL_VERSION; \
+    \
+    git clone https://github.com/varnish/toolbox.git /tmp/toolbox; \
+    cd /tmp/toolbox; \
+    git checkout $TOOLBOX_COMMIT; \
+    cp install-vmod/install-vmod /usr/local/bin/; \
+    cp vcls/verbose_builtin/verbose_builtin.vcl vcls/hit-miss/hit-miss.vcl /etc/varnish/; \
+    \
+    # clean up and ensure varnish package is not removed.
+    apt-mark hold varnish; \
+    apt-get purge -y ca-certificates git; \
+    rm -rf /var/lib/apt/lists/* /tmp/toolbox
+
+WORKDIR /etc/varnish
+
+COPY scripts/ /usr/local/bin/
+
+ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
+
+USER varnish
+EXPOSE 80 8443
+CMD []

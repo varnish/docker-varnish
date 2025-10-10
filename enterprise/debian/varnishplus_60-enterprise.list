@@ -1,0 +1,1 @@
+deb [signed-by=/etc/apt/keyrings/varnishplus_60-enterprise-archive-keyring.gpg] https://packagecloud.io/varnishplus/60-enterprise/debian/ bookworm main
