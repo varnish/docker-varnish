@@ -22,6 +22,7 @@ RUN set -ex; \
     apt-get install -y ca-certificates git; \
     apt-get update; \
     apt-get install -y varnish-plus=$VARNISH_PLUS_VERSION varnish-otel=$VARNISH_OTEL_VERSION; \
+    chown varnish /var/lib/varnish; \
     \
     git clone https://github.com/varnish/toolbox.git /tmp/toolbox; \
     cd /tmp/toolbox; \
