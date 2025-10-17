@@ -1,6 +1,25 @@
 #!/bin/sh
 set -e
 
+# License file handling
+LICENSE_FILE="${VARNISH_LICENSE_FILE:-/etc/varnish/varnish-enterprise.lic}"
+
+if [ -n "$VARNISH_LICENSE" ]; then
+    echo "Writing license from VARNISH_LICENSE environment variable..."
+    echo "$VARNISH_LICENSE" > "$LICENSE_FILE"
+    chmod 644 "$LICENSE_FILE"
+fi
+
+if [ -f "$LICENSE_FILE" ]; then
+    echo "Using Varnish Enterprise license from: $LICENSE_FILE"
+else
+    echo "Warning: No Varnish Enterprise license found at $LICENSE_FILE"
+    echo "Enterprise features and VMODs will not be available."
+    echo "To provide a license, either:"
+    echo "  - Mount a license file: -v /path/to/varnish-enterprise.lic:$LICENSE_FILE"
+    echo "  - Set environment variable: -e VARNISH_LICENSE=\"\$(cat varnish-enterprise.lic)\""
+fi
+
 # this will check if the first argument is a flag
 # but only works if all arguments require a hyphenated flag
 # -v; -SL; -f arg; etc will work, but not arg1 arg2
