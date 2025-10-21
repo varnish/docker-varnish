@@ -32,7 +32,7 @@ RUN set -ex; \
     \
     # clean up and ensure varnish package is not removed.
     apt-mark hold varnish; \
-    apt-get purge -y ca-certificates git; \
+    apt-get purge -y git; \
     rm -rf /var/lib/apt/lists/* /tmp/toolbox
 
 WORKDIR /etc/varnish
