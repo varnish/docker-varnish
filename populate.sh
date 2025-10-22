@@ -66,6 +66,9 @@ case "$1" in
 		diff <(grep '^ARG' old/alpine/Dockerfile) <(grep '^ARG' old/debian/Dockerfile)
 		echo OK
 		;;
+	dump)
+		echo "$CONFIG"
+		;;
 	*)
 		echo invalid choice
 		exit 1

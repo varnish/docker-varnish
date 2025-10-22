@@ -11,4 +11,4 @@ docker build . -t varnish/enterprise:latest
 for t in $TAGS; do
 	docker tag varnish/enterprise varnish/enterprise:$t
 done
-docker push varnish/enterprise --all-tags
+#docker push varnish/enterprise --all-tags

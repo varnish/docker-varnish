@@ -1,0 +1,35 @@
+name: Check for updates
+
+on:
+  push:
+    branches:
+      - "*"
+  schedule:
+    - cron: 0 0 * * 0
+
+jobs:
+  check:
+    strategy:
+      matrix:
+        version:
+          - stable
+          - old
+          - fresh
+    name: Generate Jobs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check version
+        run: |
+          V=varnish-$(./populate.sh dump | jq -r .${{ matrix.version }}.version)
+          FILTER="${V%.*}.*"
+          echo "FILTER: $FILTER"
+          git clone https://github.com/varnishcache/varnish-cache.git
+          cd varnish-cache
+          LATEST=$(git tag --sort=version:refname -l "$FILTER" | tail -n 1)
+          if [ "$LATEST" != "$V" ]; then
+            echo "We are targetting $V for ${{ matrix.version }}, but $LATEST is out"
+            exit 1
+          else
+            echo "We are properly targetting $LATEST"
+          fi
