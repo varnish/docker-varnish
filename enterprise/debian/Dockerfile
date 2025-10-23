@@ -7,9 +7,12 @@ ARG VARNISH_PLUS_VERSION=6.0.16r4-1~$DEBIAN_VERSION
 ARG VARNISH_OTEL_VERSION=1.2.1-1~$DEBIAN_VERSION
 ARG TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 
-ENV VARNISH_SIZE=100M
+ENV VARNISH_SIZE=
 ENV VSM_NOPID=1
-ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
+ENV VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
+ENV MSE4_CONFIG="/etc/varnish/mse4.conf"
+ENV VARNISH_STORAGE_BACKEND="malloc"
+ENV MSE4_CACHE_FORCE_PRESERVE="0"
 
 COPY varnishplus_60-enterprise-archive-keyring.gpg /etc/apt/keyrings/varnishplus_60-enterprise-archive-keyring.gpg
 COPY varnishplus_60-enterprise.list /etc/apt/sources.list.d/varnishplus_60-enterprise.list

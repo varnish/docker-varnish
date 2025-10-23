@@ -1,18 +1,47 @@
-#!/bin/sh
-set -e
+#!/bin/bash
+set -o errexit
+set -o nounset
 
-# this will check if the first argument is a flag
-# but only works if all arguments require a hyphenated flag
-# -v; -SL; -f arg; etc will work, but not arg1 arg2
-if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
+# Internal variable, only used to add params based on env
+EXTRA=
+
+# if the number of arguments ($#) isn't 0 and the first argument doesn't start with '-',
+# just run the user provided command ($@) without modification
+# ${1#-} is bash syntax for "$1, removing '-' if it's the first character",
+# so if it's equal to $1, then $1 doesn't start with '-'
+if [ "$#" -ne 0 ] && [ "${1#-}" == "$1" ]; then
+    exec "$@"
+fi
+
+if [ -f "${MSE4_CONFIG}" ]; then
+    echo "Creating and initializing Massive Storage Engine 4 data files and stores"
+    # Handle MSE4 persistent cache upgrade preservation behavior.
+    if [ "$MSE4_CACHE_FORCE_PRESERVE" -eq 0 ]; then
+        mkfs.mse4 -f -c "${MSE4_CONFIG}" configure || true
+    else
+        mkfs.mse4 -c "${MSE4_CONFIG}" configure || true
+    fi
+    EXTRA="${EXTRA} -s mse4,${MSE4_CONFIG}"
+    VARNISH_STORAGE_BACKEND="mse4"
+elif [ "${VARNISH_STORAGE_BACKEND}" = "mse4" ]; then
+    EXTRA="${EXTRA} -s mse4"
+elif [ "${VARNISH_STORAGE_BACKEND}" = "malloc" ]; then
+    EXTRA="${EXTRA} -s malloc,${VARNISH_SIZE:-100M}"
+else
+    echo "Invalid VARNISH_STORAGE_BACKEND: ${VARNISH_STORAGE_BACKEND}"
+    exit 1
+fi
+
+if [ "${VARNISH_STORAGE_BACKEND}" = "mse4" -a -n "${VARNISH_SIZE}" ]; then
+    EXTRA="${EXTRA} -p memory_target=${VARNISH_SIZE}"
+fi
     set -- varnishd \
 	    -F \
 	    -f ${VARNISH_VCL_FILE:-/etc/varnish/default.vcl} \
 	    -a http=:${VARNISH_HTTP_PORT:-80},HTTP \
 	    -a proxy=:${VARNISH_PROXY_PORT:-8443},PROXY \
 	    -p feature=+http2 \
-	    -s malloc,$VARNISH_SIZE \
+	    $EXTRA \
 	    "$@"
-fi
 
 exec "$@"
