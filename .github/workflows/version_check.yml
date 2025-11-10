@@ -8,14 +8,14 @@ on:
     - cron: 0 0 * * 0
 
 jobs:
-  check:
+  varnish_cache_check:
     strategy:
       matrix:
         version:
           - stable
           - old
           - fresh
-    name: Generate Jobs
+    name: Varnish Cache version check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -33,3 +33,57 @@ jobs:
           else
             echo "We are properly targetting $LATEST"
           fi
+  varnish_enterprise_check:
+    name: Varnish Enterprise version check
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Check version
+        run: |
+          set -ex
+          cat << EOF > Dockerfile
+          FROM varnish/enterprise
+          USER root
+          RUN set -ex; \
+            apt-get update; \
+            apt-get install -y curl ca-certificates; \
+            curl -s https://packagecloud.io/install/repositories/varnishplus/60-enterprise/script.deb.sh | bash
+          EOF
+          docker build -t tester .
+
+          LATEST_VERSION=$(docker run --rm tester apt-cache show varnish-plus | awk '$1 == "Version:" {print $2}' | sort -h | tail -1 | sed 's/~.*//')
+          CURRENT_VERSION=$(sed -n 's/^ARG VARNISH_PLUS_VERSION=//p' enterprise/debian/Dockerfile)
+
+          echo $LATEST_VERSION - $CURRENT_VERSION
+
+          echo "LATEST_VERSION=$LATEST_VERSION" >> "$GITHUB_ENV"
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> "$GITHUB_ENV"
+
+          if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
+            echo "Current version is $CURRENT_VERSION, but it looks like $LATEST_VERSION is out"
+            exit 1
+          fi
+      - name: Create PR to update the Enterprise Dockerfile
+        if: failure()
+        run: |
+          set -ex
+          echo ${{ env.CURRENT_VERSION }} - ${{ env.LATEST_VERSION }}
+          BRANCH=auto-pr-enterprise-${{ env.LATEST_VERSION }}
+          
+          if [ -n "$(git branch --list $BRANCH)" ]; then
+            echo "Branch $BRANCH already exist, bailing out"
+            exit 0
+          fi
+          git config --global user.email "none"
+          git config --global user.name "Github Actions"
+
+          git switch main
+          git switch -c $BRANCH
+          sed -i "s/VARNISH_PLUS_VERSION=${{ env.CURRENT_VERSION }}/VARNISH_PLUS_VERSION=${{ env.LATEST_VERSION }}/" enterprise/debian/Dockerfile
+          git commit enterprise/debian/Dockerfile -m "Upgrade Varnish Enterprise to ${{ env.LATEST_VERSION }}"
+          git push origin $BRANCH
+          gh pr create --title "Upgrade Varnish Enterprise to ${{ env.LATEST_VERSION }}" --body "Automated PR from .github/workflows/version_check.yml" --base main --head $BRANCH
