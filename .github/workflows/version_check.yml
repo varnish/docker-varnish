@@ -84,6 +84,10 @@ jobs:
           git switch main
           git switch -c $BRANCH
           sed -i "s/VARNISH_PLUS_VERSION=${{ env.CURRENT_VERSION }}/VARNISH_PLUS_VERSION=${{ env.LATEST_VERSION }}/" enterprise/debian/Dockerfile
+          if [ -z "$(git diff)"]; then
+            echo "It looks like the Docker file is up-to-date, maybe the new image is being published right now?"
+            exit 0
+          fi
           git commit enterprise/debian/Dockerfile -m "Upgrade Varnish Enterprise to ${{ env.LATEST_VERSION }}"
           git push origin $BRANCH
           gh pr create --title "Upgrade Varnish Enterprise to ${{ env.LATEST_VERSION }}" --body "Automated PR from .github/workflows/version_check.yml" --base main --head $BRANCH
