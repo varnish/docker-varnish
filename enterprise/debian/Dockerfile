@@ -3,7 +3,8 @@ ARG DEBIAN_VERSION=bookworm
 FROM debian:$DEBIAN_VERSION-slim
 
 ARG DEBIAN_VERSION=bookworm
-ARG VARNISH_PLUS_VERSION=6.0.16r4-1~$DEBIAN_VERSION
+ARG VARNISH_PLUS_VERSION=6.0.16r4-1
+ARG VARNISH_PLUS_FULL_VERSION=6.0.16r4-1
 ARG VARNISH_OTEL_VERSION=1.2.1-1~$DEBIAN_VERSION
 ARG TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 
@@ -24,7 +25,7 @@ RUN set -ex; \
     apt-get update; \
     apt-get install -y ca-certificates git; \
     apt-get update; \
-    apt-get install -y varnish-plus=$VARNISH_PLUS_VERSION varnish-otel=$VARNISH_OTEL_VERSION; \
+    apt-get install -y varnish-plus=$VARNISH_PLUS_VERSION~$DEBIAN_VERSION varnish-otel=$VARNISH_OTEL_VERSION~$DEBIAN_VERSION; \
     chown varnish /var/lib/varnish; \
     \
     git clone https://github.com/varnish/toolbox.git /tmp/toolbox; \
