@@ -47,7 +47,7 @@ build() {
 build \
 	regular \
 	all_healthy \
-	https://code.uplex.de/uplex-varnish/libvmod-all_healthy/-/archive/bd18be272a2027b9f6dcb42c4e4d5d7625cf80a4/libvmod-all_healthy-bd18be272a2027b9f6dcb42c4e4d5d7625cf80a4.tar.gz
+	https://code.uplex.de/uplex-varnish/libvmod-all_healthy/archive/e77f9df24f89ace9996703b2a4ac6b72cf0365db.tar.gz
 
 build \
 	regular \
@@ -59,7 +59,7 @@ build \
 build \
 	regular \
 	blobdigest \
-	https://gitlab.com/uplex/varnish/libvmod-blobdigest/-/archive/efa1e7d64f8b1a17a02a9fd30df606804ba40a3b/libvmod-blobdigest-efa1e7d64f8b1a17a02a9fd30df606804ba40a3b.tar.gz \
+	https://code.uplex.de/uplex-varnish/libvmod-blobdigest/archive/e3e6c23b46e6cda20ad75c406d847b074ab785ab.tar.gz \
 	"" \
 	"" \
 	true
@@ -67,7 +67,7 @@ build \
 build \
 	regular \
 	brotli \
-	https://gitlab.com/uplex/varnish/libvfp-brotli/-/archive/cff18a7baafbe64b933ee216f7354f44318397a9/libvfp-brotli-cff18a7baafbe64b933ee216f7354f44318397a9.tar.gz \
+	https://code.uplex.de/uplex-varnish/libvfp-brotli/archive/d5b6ad352ce546a51495d92c64f80f12d672373c.tar.gz \
 	"libbrotli-dev" \
 	"libbrotli1"
 
@@ -81,7 +81,7 @@ build \
 build \
 	regular \
 	crypto \
-	https://code.uplex.de/uplex-varnish/libvmod-crypto/-/archive/d815920b1060ac91bbf6701deca2a3a87f97b898/libvmod-crypto-d815920b1060ac91bbf6701deca2a3a87f97b898.tar.gz \
+	https://code.uplex.de/uplex-varnish/libvmod-crypto/archive/d815920b1060ac91bbf6701deca2a3a87f97b898.tar.gz \
 	"libssl-dev"
 
 build \
