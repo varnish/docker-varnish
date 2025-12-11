@@ -1,4 +1,4 @@
-name: GitHub CI
+name: DockerHub test
 
 on:
   pull_request:
