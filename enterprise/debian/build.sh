@@ -2,7 +2,7 @@
 set -ex
 
 cd "$(dirname "$0")"
-docker build . -t varnish/enterprise:latest
+docker build . -t varnish/enterprise:latest -t varnish/varnish-enterprise:latest
 
 VARNISH_VERSION=$(docker run --rm varnish/enterprise:latest varnishd -V 2>&1 | sed -En 's/^varnishd \(varnish-plus-(.*) revision .*/\1/p')
 
@@ -17,5 +17,7 @@ echo TAGS: $TAGS
 
 for t in $TAGS; do
 	docker tag varnish/enterprise varnish/enterprise:$t
+	docker tag varnish/varnish-enterprise varnish/varnish-enterprise:$t
 done
 docker push varnish/enterprise --all-tags
+docker push varnish/varnish-enterprise --all-tags
