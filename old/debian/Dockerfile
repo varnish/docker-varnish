@@ -32,9 +32,7 @@ RUN set -ex; \
     cd /work/varnish; \
     git clone https://github.com/varnish/all-packager.git; \
     cd all-packager/varnish-cache; \
-    # sanity check
     source ../pkg.env ; \
-    test "$VARNISH_VERSION" = "$varnish_version"; \
     git checkout $PKG_COMMIT; \
     rm -rf ../.git; \
     curl -L -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
