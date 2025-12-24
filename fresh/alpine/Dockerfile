@@ -1,6 +1,6 @@
-FROM alpine:3.22
+FROM alpine:3.23
 
-ARG  PKG_COMMIT=1f0d212dc45065f38bd80ac57fe22773a20a0595
+ARG  PKG_COMMIT=eb692742c1a107cf3f896985271b35b125873bd7
 ARG  VARNISH_VERSION=8.0.0
 ARG  DIST_SHA512=c381928e23deaacb863dcf389a494f30a56d22a4e88fe0c5dc7d4a93828f3dc0595c7ae41837f3549795828aca1a30e08f4456d4a752a6d12c19b61943dd99e9
 ARG  VARNISH_MODULES_VERSION=0.27.0
@@ -29,8 +29,8 @@ RUN set -ex;\
     su builder -c "abuild-keygen -nai"; \
     \
     # varnish tarball and packaging
-    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
-    cd pkg-varnish-cache/alpine; \
+    git clone https://github.com/varnish/all-packager.git; \
+    cd all-packager/varnish-cache/alpine; \
     git checkout $PKG_COMMIT; \
     sed -i APKBUILD \
         -e "s/pkgver=@VERSION@/pkgver=$VARNISH_VERSION/" \
@@ -40,7 +40,7 @@ RUN set -ex;\
     # build and install varnish package
     chown builder -R .; \
     su builder -c "abuild -r"; \
-    apk add --allow-untrusted ~builder/packages/pkg-varnish-cache/*/*.apk; \
+    apk add --allow-untrusted ~builder/packages/varnish-cache/*/*.apk; \
     echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
     \
     git clone https://github.com/varnish/toolbox.git; \

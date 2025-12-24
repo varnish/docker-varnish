@@ -1,6 +1,6 @@
 FROM debian:trixie-slim
 
-ARG  PKG_COMMIT=1f0d212dc45065f38bd80ac57fe22773a20a0595
+ARG  PKG_COMMIT=eb692742c1a107cf3f896985271b35b125873bd7
 ARG  VARNISH_VERSION=8.0.0
 ARG  DIST_SHA512=c381928e23deaacb863dcf389a494f30a56d22a4e88fe0c5dc7d4a93828f3dc0595c7ae41837f3549795828aca1a30e08f4456d4a752a6d12c19b61943dd99e9
 ARG  VARNISH_MODULES_VERSION=0.27.0
@@ -13,6 +13,7 @@ ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-s
 ENV VARNISH_SIZE=100M
 ENV VSM_NOPID=1
 
+SHELL ["/bin/bash", "-ec"]
 RUN set -ex; \
     BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot libgetdns-dev"; \
     export DEBIAN_FRONTEND=noninteractive; \
@@ -28,14 +29,18 @@ RUN set -ex; \
     \
     # varnish
     cd /work/varnish; \
-    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
-    cd pkg-varnish-cache; \
+    git clone https://github.com/varnish/all-packager.git; \
+    cd all-packager/varnish-cache; \
+    # sanity check
+    source ../pkg.env ; \
+    test "$VARNISH_VERSION" = "$varnish_version"; \
     git checkout $PKG_COMMIT; \
-    rm -rf .git; \
+    rm -rf ../.git; \
     curl -L -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
-    sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
+    source /etc/os-release; \
+    sed -i -e "s|@VERSION@|$VARNISH_VERSION-$package_release~$VERSION_CODENAME|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \

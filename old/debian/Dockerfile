@@ -14,6 +14,7 @@ ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-s
 ENV VARNISH_SIZE=100M
 ENV VSM_NOPID=1
 
+SHELL ["/bin/bash", "-ec"]
 RUN set -ex; \
     BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot libgetdns-dev"; \
     export DEBIAN_FRONTEND=noninteractive; \
@@ -29,14 +30,18 @@ RUN set -ex; \
     \
     # varnish
     cd /work/varnish; \
-    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
-    cd pkg-varnish-cache; \
+    git clone https://github.com/varnish/all-packager.git; \
+    cd all-packager/varnish-cache; \
+    # sanity check
+    source ../pkg.env ; \
+    test "$VARNISH_VERSION" = "$varnish_version"; \
     git checkout $PKG_COMMIT; \
-    rm -rf .git; \
+    rm -rf ../.git; \
     curl -L -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
-    sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
+    source /etc/os-release; \
+    sed -i -e "s|@VERSION@|$VARNISH_VERSION-$package_release~$VERSION_CODENAME|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
