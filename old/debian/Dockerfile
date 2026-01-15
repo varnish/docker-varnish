@@ -30,16 +30,14 @@ RUN set -ex; \
     \
     # varnish
     cd /work/varnish; \
-    git clone https://github.com/varnish/all-packager.git; \
-    cd all-packager/varnish-cache; \
-    source ../pkg.env ; \
+    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
+    cd pkg-varnish-cache; \
     git checkout $PKG_COMMIT; \
-    rm -rf ../.git; \
+    rm -rf .git; \
     curl -L -f https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz -o $tmpdir/orig.tgz; \
     echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
     tar xavf $tmpdir/orig.tgz --strip 1; \
-    source /etc/os-release; \
-    sed -i -e "s|@VERSION@|$VARNISH_VERSION-$package_release~$VERSION_CODENAME|"  "debian/changelog"; \
+    sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
     mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
     sed -i '' debian/varnish*; \
     dpkg-buildpackage -us -uc -j"$(nproc)"; \
