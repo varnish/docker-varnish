@@ -56,6 +56,10 @@ RUN set -ex; \
     # vmod-dynamic
     SKIP_CHECK=1 install-vmod https://github.com/gquintard/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
     \
+    # set IPC_LOCK capability on varnishd to allow mlock() of VSL
+    apt-get install -y --no-install-recommends libcap2-bin; \
+    setcap cap_ipc_lock+ep /usr/sbin/varnishd; \
+    \
     # clean up and ensure varnish package is not removed.
     apt-mark hold varnish; \
     apt-get -y purge --auto-remove $BASE_PKGS varnish-dev; \
