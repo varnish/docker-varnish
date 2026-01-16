@@ -55,8 +55,12 @@ RUN set -ex;\
     # vmod-dynamic
     SKIP_CHECK=1 install-vmod https://github.com/gquintard/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
     \
+    # set IPC_LOCK capability on varnishd to allow mlock() of VSL
+    apk add --no-progress libcap; \
+    setcap cap_ipc_lock+ep /usr/sbin/varnishd; \
+    \
     # cleanup
-    apk del --no-network varnish-build-deps; \
+    apk del --no-network varnish-build-deps libcap; \
     rm -rf ~builder /pkg-varnish-cache /varnish-modules /vmod-dynamic /etc/sudoers.d/builder; \
     deluser --remove-home builder; \
     chown varnish /var/lib/varnish; \
