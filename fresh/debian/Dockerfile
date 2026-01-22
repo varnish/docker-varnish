@@ -13,29 +13,33 @@ ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-s
 ENV VARNISH_SIZE=100M
 ENV VSM_NOPID=1
 
-COPY varnish.pub.asc /etc/varnish/
+COPY varnish.pub.asc /etc/apt/keyrings/varnish.pub.asc
 
-SHELL ["/bin/bash", "-ec"]
 RUN set -ex; \
-    BASE_PKGS="apt-utils dpkg-dev debhelper devscripts equivs fakeroot git gpg libgetdns-dev pkg-config python3-docutils"; \
+    BASE_PKGS="apt-utils automake git libgetdns-dev libtool make pkg-config python3-docutils"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     \
-    apt update; \
+    . /etc/os-release; \
+    apt-get update; \
     apt-get install -y apt-transport-https curl $BASE_PKGS; \
-    mkdir -p /etc/apt/keyrings/; \
-    cat /etc/varnish/varnish.pub.asc | gpg --dearmor | tee /etc/apt/keyrings/varnish.gpg > /dev/null; \
-    source /etc/os-release; \
-    echo "deb [signed-by=/etc/apt/keyrings/varnish.gpg] https://packages.varnish-software.com/varnish/$ID $VERSION_CODENAME main" | tee -a /etc/apt/sources.list.d/varnish.list; \
+    echo "deb [signed-by=/etc/apt/keyrings/varnish.pub.asc] https://packages.varnish-software.com/varnish/$ID $VERSION_CODENAME main" | tee -a /etc/apt/sources.list.d/varnish.list; \
     apt-get update; \
     # create users and groups with fixed IDs
     adduser --uid 1000 --quiet --system --no-create-home --home /nonexistent --group varnish; \
     adduser --uid 1001 --quiet --system --no-create-home --home /nonexistent --ingroup varnish vcache; \
     adduser --uid 1002 --quiet --system --no-create-home --home /nonexistent --ingroup varnish varnishlog; \
     \
-    mkdir -p /work/varnish /pkgs; \
     apt-get update; \
-    apt-get install -y --no-install-recommends {varnish,varnish-dev,varnish-modules,vmod-fileserver,vmod-reqwest,vmod-rers}=${VARNISH_VERSION} varnish adduser libgetdns10t64 netbase; \
+    apt-get install -y --no-install-recommends \
+				varnish=${VARNISH_VERSION} \
+				varnish-dev=${VARNISH_VERSION} \
+				varnish-modules=${VARNISH_VERSION} \
+				vmod-fileserver=${VARNISH_VERSION} \
+				vmod-reqwest=${VARNISH_VERSION} \
+				vmod-rers=${VARNISH_VERSION} \
+				libgetdns10t64 \
+				netbase; \
     \
     git clone https://github.com/varnish/toolbox.git; \
     cd toolbox; \
@@ -49,7 +53,7 @@ RUN set -ex; \
     # clean up and ensure varnish package is not removed.
     apt-mark hold varnish; \
     apt-get -y purge --auto-remove $BASE_PKGS varnish-dev; \
-    rm -rf /var/lib/apt/lists/* /work/ /usr/lib/varnish/vmods/libvmod_*.la; \
+    rm -rf /var/lib/apt/lists/* /usr/lib/varnish/vmods/libvmod_*.la; \
     chown varnish /var/lib/varnish; \
     mkdir -p -m 1777 /var/lib/varnish/varnishd
 
