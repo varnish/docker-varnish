@@ -9,7 +9,7 @@ USER root
 RUN set -e; \
     # get the dependencies
     apt-get update; \
-    apt-get -y install /pkgs/*.deb $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS; \
+    apt-get -y install $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS; \
     # build and install
     install-vmod $VMOD_URL; \
     # clean up and set the user back to varnish

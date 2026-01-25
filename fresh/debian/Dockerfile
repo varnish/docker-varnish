@@ -9,7 +9,7 @@ ARG  VARNISH_MODULES_SHA512SUM=bb8a55b3d665fe6de918f784a6f4276b2053f5b1cd0628d6b
 ARG  VMOD_DYNAMIC_COMMIT=99f72bc4958dca3555dbfeeb43512f243b004a72
 ARG  VMOD_DYNAMIC_SHA512SUM=6f7b635c3fd9b8acfff6130e4bbe88d0bb97dc0ac178918c2288670951dace70742d9c8d7d798fe885ef908707a21ba2e6ca15c1524d531a59c80d4fdc9c5881
 ARG  TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
-ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
+ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx varnish-dev"
 
 ENV VARNISH_SIZE=100M
 ENV VSM_NOPID=1
@@ -63,6 +63,7 @@ WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
 COPY default.vcl /etc/varnish/
+COPY index.html /etc/varnish/
 
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 

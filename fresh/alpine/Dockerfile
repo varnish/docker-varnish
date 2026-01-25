@@ -43,7 +43,6 @@ RUN set -ex;\
     chown builder -R .; \
     su builder -c "abuild -r"; \
     apk add --allow-untrusted ~builder/packages/varnish-cache/*/*.apk; \
-    echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
     \
     git clone https://github.com/varnish/toolbox.git; \
     cd toolbox; \
@@ -68,6 +67,7 @@ WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
 COPY default.vcl /etc/varnish/
+COPY index.html /etc/varnish/
 
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
