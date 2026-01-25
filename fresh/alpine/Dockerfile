@@ -30,8 +30,10 @@ RUN set -ex;\
     \
     # varnish tarball and packaging
     git clone https://github.com/varnish/all-packager.git; \
-    cd all-packager/varnish-cache/alpine; \
+    cd all-packager; \
     git checkout $PKG_COMMIT; \
+    cd varnish-cache/alpine; \
+    ls; \
     sed -i APKBUILD \
         -e "s/pkgver=@VERSION@/pkgver=$VARNISH_VERSION/" \
 	-e 's@^source=.*@source="http://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
