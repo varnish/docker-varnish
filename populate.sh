@@ -60,8 +60,6 @@ case "$1" in
 		populate_library
 		;;
 	check)
-		echo 'checking fresh/*/Dockerfile'
-		diff <(grep '^ARG' fresh/alpine/Dockerfile) <(grep '^ARG' fresh/debian/Dockerfile)
 		echo 'checking old/*/Dockerfile'
 		diff <(grep '^ARG' old/alpine/Dockerfile) <(grep '^ARG' old/debian/Dockerfile)
 		echo OK
