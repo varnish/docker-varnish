@@ -11,7 +11,7 @@ USER root
 RUN set -e; \
     # get the dependencies
     apt-get update; \
-    apt-get -y install /pkgs/*.deb $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS; \
+    apt-get -y install $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS; \
     # compile hiredis with TLS support from source
     cd /tmp; \
     curl -L https://github.com/redis/hiredis/archive/v1.2.0.zip -o hiredis.zip; \
