@@ -23,7 +23,7 @@ RUN set -ex; \
     apt-get update; \
     apt-get install -y apt-transport-https curl $BASE_PKGS; \
     mkdir -p /etc/apt/keyrings; \
-    gpg --batch --keyserver hkps://keyserver.ubuntu.com --recv-keys $REPO_FINGERPRINT; \
+    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $REPO_FINGERPRINT; \
     gpg --batch --armor --export "$REPO_FINGERPRINT" > /etc/apt/keyrings/varnish.gpg; \
     echo "deb [signed-by=/etc/apt/keyrings/varnish.gpg] https://packages.varnish-software.com/varnish/$ID $VERSION_CODENAME main" | tee -a /etc/apt/sources.list.d/varnish.list; \
     apt-get update; \
