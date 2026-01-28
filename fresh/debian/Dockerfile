@@ -30,7 +30,7 @@ RUN set -ex; \
     adduser --uid 1001 --quiet --system --no-create-home --home /nonexistent --ingroup varnish vcache; \
     adduser --uid 1002 --quiet --system --no-create-home --home /nonexistent --ingroup varnish varnishlog; \
     \
-    if [ "$(uname -m)" = "x86_64" ]; then \
+    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
         EXTRA_VMODS="vmod-cfg=${VARNISH_VERSION}"; \
     else \
         EXTRA_VMODS= ; \
@@ -40,7 +40,6 @@ RUN set -ex; \
 				varnish=${VARNISH_VERSION} \
 				varnish-dev=${VARNISH_VERSION} \
 				varnish-modules=${VARNISH_VERSION} \
-				vmod-cfg=${VARNISH_VERSION} \
 				vmod-digest=${VARNISH_VERSION} \
 				vmod-fileserver=${VARNISH_VERSION} \
 				vmod-geoip2=${VARNISH_VERSION} \
@@ -68,7 +67,7 @@ RUN set -ex; \
     apt-get -y purge --auto-remove $BASE_PKGS varnish-dev; \
     rm -rf /var/lib/apt/lists/* /usr/lib/varnish/vmods/libvmod_*.la; \
     # clean up the temporary GPG home directory
-    rm -rf "$GNUPGHOME"; \
+    rm -rf "$GNUPGHOME" ~/.gnupg; \
     chown varnish /var/lib/varnish; \
     mkdir -p -m 1777 /var/lib/varnish/varnishd
 
