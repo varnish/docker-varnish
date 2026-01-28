@@ -23,7 +23,6 @@ RUN set -ex; \
     mkdir -p /etc/apt/keyrings; \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $REPO_FINGERPRINT; \
     gpg --batch --armor --export "$REPO_FINGERPRINT" > /etc/apt/keyrings/varnish.gpg; \
-    rm -r ~/.gnupg; \
     echo "deb [signed-by=/etc/apt/keyrings/varnish.gpg] https://packages.varnish-software.com/varnish/$ID $VERSION_CODENAME main" | tee -a /etc/apt/sources.list.d/varnish.list; \
     apt-get update; \
     # create users and groups with fixed IDs
@@ -31,6 +30,11 @@ RUN set -ex; \
     adduser --uid 1001 --quiet --system --no-create-home --home /nonexistent --ingroup varnish vcache; \
     adduser --uid 1002 --quiet --system --no-create-home --home /nonexistent --ingroup varnish varnishlog; \
     \
+    if [ "$(uname -m)" = "x86_64" ]; then \
+        EXTRA_VMODS="vmod-cfg=${VARNISH_VERSION}"; \
+    else \
+        EXTRA_VMODS= ; \
+    fi; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
 				varnish=${VARNISH_VERSION} \
@@ -46,6 +50,7 @@ RUN set -ex; \
 				vmod-reqwest=${VARNISH_VERSION} \
 				vmod-rers=${VARNISH_VERSION} \
 				vmod-uuid=${VARNISH_VERSION} \
+				${EXTRA_VMODS} \
 				libgetdns10t64 \
 				netbase; \
     \
@@ -62,6 +67,8 @@ RUN set -ex; \
     apt-mark hold varnish; \
     apt-get -y purge --auto-remove $BASE_PKGS varnish-dev; \
     rm -rf /var/lib/apt/lists/* /usr/lib/varnish/vmods/libvmod_*.la; \
+    # clean up the temporary GPG home directory
+    rm -rf "$GNUPGHOME"; \
     chown varnish /var/lib/varnish; \
     mkdir -p -m 1777 /var/lib/varnish/varnishd
 
