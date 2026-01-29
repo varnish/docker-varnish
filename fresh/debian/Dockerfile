@@ -67,7 +67,7 @@ RUN set -ex; \
     apt-get -y purge --auto-remove $BASE_PKGS varnish-dev; \
     rm -rf /var/lib/apt/lists/* /usr/lib/varnish/vmods/libvmod_*.la; \
     # clean up the temporary GPG home directory
-    rm -rf "$GNUPGHOME" ~/.gnupg; \
+    rm -rf ~/.gnupg; \
     chown varnish /var/lib/varnish; \
     mkdir -p -m 1777 /var/lib/varnish/varnishd
 
