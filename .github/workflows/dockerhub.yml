@@ -34,7 +34,7 @@ jobs:
         name: Generate Jobs
         run: |
           strategy="$(GITHUB_REPOSITORY=varnish "$BASHBREW_SCRIPTS/github-actions/generate.sh")"
-          echo "strategy=$strategy" >> "$GITHUB_OUTPUT"
+          echo "strategy=$strategy" | jq '.matrix.include = [ .matrix.include[], (.matrix.include[] | .os = "ubuntu-latest-arm") ]' >> "$GITHUB_OUTPUT"
           jq . <<<"$strategy" # sanity check / debugging aid
 
   test:
