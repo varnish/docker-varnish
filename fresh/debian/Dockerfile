@@ -10,6 +10,7 @@ ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-s
 ENV VARNISH_SIZE=100M
 ENV VSM_NOPID=1
 
+COPY scripts/ /usr/local/bin/
 RUN set -ex; \
     . /etc/os-release; \
     VARNISH_VERSION=$VARNISH_VERSION_NUMBER~$VERSION_CODENAME; \
@@ -59,6 +60,8 @@ RUN set -ex; \
     # set IPC_LOCK capability on varnishd to allow mlock() of VSL
     apt-get install -y --no-install-recommends libcap2-bin; \
     setcap cap_ipc_lock+ep /usr/sbin/varnishd; \
+    setcap cap_ipc_lock+i /usr/sbin/varnishd; \
+    setcap cap_ipc_lock+ep /usr/local/bin/docker-varnish-entrypoint; \
     \
     # clean up and ensure varnish package is not removed.
     apt-mark hold varnish; \
@@ -71,7 +74,6 @@ RUN set -ex; \
 
 WORKDIR /etc/varnish
 
-COPY scripts/ /usr/local/bin/
 COPY default.vcl /etc/varnish/
 COPY index.html /etc/varnish/
 
