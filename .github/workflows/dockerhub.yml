@@ -55,6 +55,8 @@ jobs:
       - name: debug test
         run: |
           docker run --rm varnish:${{ matrix.name }} sleep 1
+          docker run --rm varnish:${{ matrix.name }} varnishd -V
+          docker run --rm varnish:${{ matrix.name }} varnishd -F -f /etc/varnish/default.vcl -a :9999
           docker run --rm varnish:${{ matrix.name }}
       - name: Test ${{ matrix.name }}
         run: ${{ matrix.runs.test }}
