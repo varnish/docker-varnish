@@ -55,7 +55,7 @@ jobs:
           echo 1
           docker run --rm varnish:${{ matrix.name }} sleep 1
           echo 2
-          docker run --rm varnish:${{ matrix.name }} varnishd -V
+          docker run --rm --entrypoint "" varnish:${{ matrix.name }} varnishd -V
           echo 3
           docker run --rm varnish:${{ matrix.name }} varnishd -F -f /etc/varnish/default.vcl -a :9999
           echo 4
