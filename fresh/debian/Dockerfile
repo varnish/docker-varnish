@@ -59,9 +59,8 @@ RUN set -ex; \
     \
     # set IPC_LOCK capability on varnishd to allow mlock() of VSL
     apt-get install -y --no-install-recommends libcap2-bin; \
-    setcap cap_ipc_lock+ep /usr/sbin/varnishd; \
-    setcap cap_ipc_lock+i /usr/sbin/varnishd; \
-    setcap cap_ipc_lock+ep /usr/local/bin/docker-varnish-entrypoint; \
+    setcap cap_ipc_lock+ep+i /usr/sbin/varnishd; \
+    setcap cap_ipc_lock+ep+i /usr/local/bin/docker-varnish-entrypoint; \
     \
     # clean up and ensure varnish package is not removed.
     apt-mark hold varnish; \

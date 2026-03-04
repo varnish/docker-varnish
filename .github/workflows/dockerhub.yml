@@ -57,8 +57,6 @@ jobs:
           echo 2
           docker run --rm --entrypoint "" varnish:${{ matrix.name }} varnishd -V
           echo 3
-          docker run --rm varnish:${{ matrix.name }} varnishd -F -f /etc/varnish/default.vcl -a :9999
-          echo 4
           docker run --rm varnish:${{ matrix.name }}
       - name: Test ${{ matrix.name }}
         run: ${{ matrix.runs.test }}
