@@ -14,7 +14,6 @@ ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-s
 ENV VARNISH_SIZE=100M
 ENV VSM_NOPID=1
 
-SHELL ["/bin/bash", "-ec"]
 RUN set -ex; \
     BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot libgetdns-dev"; \
     export DEBIAN_FRONTEND=noninteractive; \

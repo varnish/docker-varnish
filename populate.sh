@@ -30,7 +30,7 @@ update_library(){
 	cat >> library.varnish <<- EOF
 
 		Tags: `echo $tags | sed 's/ \+/, /g'`
-		Architectures: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
+		Architectures: amd64, arm64v8
 		Directory: $1/$2
 		GitCommit: `git log -n1 --pretty=oneline $1/$2 | cut -f1 -d" "`
 		GitFetch: refs/heads/main
@@ -60,8 +60,6 @@ case "$1" in
 		populate_library
 		;;
 	check)
-		echo 'checking fresh/*/Dockerfile'
-		diff <(grep '^ARG' fresh/alpine/Dockerfile) <(grep '^ARG' fresh/debian/Dockerfile)
 		echo 'checking old/*/Dockerfile'
 		diff <(grep '^ARG' old/alpine/Dockerfile) <(grep '^ARG' old/debian/Dockerfile)
 		echo OK

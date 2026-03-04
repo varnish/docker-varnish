@@ -8,7 +8,7 @@ ARG SKIP_CHECK=
 USER root
 RUN set -e; \
     apt-get update; \
-    apt-get install /pkgs/*.deb $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS clang curl jq -y; \
+    apt-get install $VMOD_DEPS $VMOD_BUILD_DEPS $VMOD_RUN_DEPS clang curl jq -y; \
     curl -sSf https://sh.rustup.rs -o /tmp/rustup.sh; \
     sh /tmp/rustup.sh -y; \
     . "$HOME/.cargo/env"; \

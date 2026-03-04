@@ -30,8 +30,10 @@ RUN set -ex;\
     \
     # varnish tarball and packaging
     git clone https://github.com/varnish/all-packager.git; \
-    cd all-packager/varnish-cache/alpine; \
+    cd all-packager; \
     git checkout $PKG_COMMIT; \
+    cd varnish-cache/alpine; \
+    ls; \
     sed -i APKBUILD \
         -e "s/pkgver=@VERSION@/pkgver=$VARNISH_VERSION/" \
 	-e 's@^source=.*@source="http://varnish-cache.org/_downloads/varnish-$pkgver.tgz"@' \
@@ -41,7 +43,6 @@ RUN set -ex;\
     chown builder -R .; \
     su builder -c "abuild -r"; \
     apk add --allow-untrusted ~builder/packages/varnish-cache/*/*.apk; \
-    echo -e 'vcl 4.1;\nbackend default none;' > /etc/varnish/default.vcl; \
     \
     git clone https://github.com/varnish/toolbox.git; \
     cd toolbox; \
@@ -70,6 +71,7 @@ WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
 COPY default.vcl /etc/varnish/
+COPY index.html /etc/varnish/
 
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
