@@ -3,6 +3,15 @@ set -ex
 
 cd "$(dirname "$0")"
 
+PUSH=
+if [ -n "$1" ]; then
+	if [ "$1" = "push" ]; then
+		PUSH=--push
+	else
+		echo "invalid argument: $1"
+	fi
+fi
+
 VARNISH_VERSION=$(grep '^ARG VARNISH_PLUS_VERSION=' Dockerfile | cut -d= -f2)
 
 TAGS=latest
@@ -21,7 +30,6 @@ done
 
 docker buildx build \
 	--platform linux/amd64,linux/arm64 \
-	--push \
+	$PUSH \
 	$TAG_ARGS \
 	.
-

@@ -28,4 +28,8 @@ jobs:
       - name: Build and push the image
         run: |
           cd enterprise/debian
-          ./build.sh
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            ./build.sh push
+          else
+            ./build.sh
+          fi
