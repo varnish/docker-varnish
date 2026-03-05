@@ -24,3 +24,4 @@ docker buildx build \
 	--push \
 	$TAG_ARGS \
 	.
+
