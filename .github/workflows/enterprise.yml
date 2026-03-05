@@ -3,6 +3,13 @@ name: Enterprise
 on:
   push:
     branches: main
+    paths:
+      - 'enterprise/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'enterprise/**'
 
 jobs:
   Enterprise:
