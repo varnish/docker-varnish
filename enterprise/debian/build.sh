@@ -2,9 +2,17 @@
 set -ex
 
 cd "$(dirname "$0")"
-docker build . -t varnish/enterprise:latest -t varnish/varnish-enterprise:latest
 
-VARNISH_VERSION=$(docker run --rm varnish/enterprise:latest varnishd -V 2>&1 | sed -En 's/^varnishd \(varnish-plus-(.*) revision .*/\1/p')
+PUSH=
+if [ -n "$1" ]; then
+	if [ "$1" = "push" ]; then
+		PUSH=--push
+	else
+		echo "invalid argument: $1"
+	fi
+fi
+
+VARNISH_VERSION=$(grep '^ARG VARNISH_PLUS_VERSION=' Dockerfile | cut -d= -f2)
 
 TAGS=latest
 while [ -n "$VARNISH_VERSION" ]; do
@@ -15,9 +23,13 @@ done
 
 echo TAGS: $TAGS
 
+TAG_ARGS=""
 for t in $TAGS; do
-	docker tag varnish/enterprise varnish/enterprise:$t
-	docker tag varnish/varnish-enterprise varnish/varnish-enterprise:$t
+	TAG_ARGS+=" -t varnish/enterprise:$t -t varnish/varnish-enterprise:$t"
 done
-docker push varnish/enterprise --all-tags
-docker push varnish/varnish-enterprise --all-tags
+
+docker buildx build \
+	--platform linux/amd64,linux/arm64 \
+	$PUSH \
+	$TAG_ARGS \
+	.
