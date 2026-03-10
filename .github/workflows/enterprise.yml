@@ -3,6 +3,8 @@ name: Enterprise
 on:
   push:
     branches: main
+    paths:
+      - 'enterprise/**'
 
 jobs:
   Enterprise:
