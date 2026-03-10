@@ -45,10 +45,10 @@ build() {
 # - querystring: https://github.com/Dridi/libvmod-querystring
 # - uuid: https://github.com/otto-de/libvmod-uuid
 # - xcounter: https://github.com/xcir/libvmod-xcounter
-build \
-	regular \
-	all_healthy \
-	https://code.uplex.de/uplex-varnish/libvmod-all_healthy/archive/e77f9df24f89ace9996703b2a4ac6b72cf0365db.tar.gz
+#build \
+#	regular \
+#	all_healthy \
+#	https://code.uplex.de/uplex-varnish/libvmod-all_healthy/archive/e77f9df24f89ace9996703b2a4ac6b72cf0365db.tar.gz
 
 build \
 	regular \
@@ -57,60 +57,60 @@ build \
 	"libmhash-dev" \
 	"libmhash2"
 
-build \
-	regular \
-	blobdigest \
-	https://code.uplex.de/uplex-varnish/libvmod-blobdigest/archive/e3e6c23b46e6cda20ad75c406d847b074ab785ab.tar.gz \
-	"" \
-	"" \
-	true
+#build \
+#	regular \
+#	blobdigest \
+#	https://code.uplex.de/uplex-varnish/libvmod-blobdigest/archive/e3e6c23b46e6cda20ad75c406d847b074ab785ab.tar.gz \
+#	"" \
+#	"" \
+#	true
 
-build \
-	regular \
-	brotli \
-	https://code.uplex.de/uplex-varnish/libvfp-brotli/archive/d5b6ad352ce546a51495d92c64f80f12d672373c.tar.gz \
-	"libbrotli-dev" \
-	"libbrotli1"
-
-build \
-	regular \
-	cfg \
-	https://github.com/carlosabalde/libvmod-cfg/archive/732bee63b507bbf1112b15eaf67ed2da5bfc19fb.tar.gz \
-	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
-	"libjemalloc2"
-
-build \
-	regular \
-	crypto \
-	https://code.uplex.de/uplex-varnish/libvmod-crypto/archive/d815920b1060ac91bbf6701deca2a3a87f97b898.tar.gz \
-	"libssl-dev"
-
-build \
-	regular \
-	geoip2 \
-	https://github.com/varnishcache-friends/libvmod-geoip2/archive/refs/heads/devel.tar.gz \
-	"libmaxminddb-dev" \
-	"libmaxminddb0" \
-	true # the tarball doesn't include the maxmind database used by the tests, so skip them
-
-build \
-	regular \
-	jq \
-	https://github.com/varnishcache-friends/libvmod-jq/archive/refs/heads/devel.tar.gz \
-	"libjq-dev" \
-	"libjq1"
-
-build \
-	regular \
-	querystring \
-	https://git.sr.ht/~dridi/vmod-querystring/refs/download/vmod-querystring-2.0.4/vmod-querystring-2.0.4.tar.gz
-
-build \
-	regular \
-	uuid \
-	https://github.com/otto-de/libvmod-uuid/archive/ae0ca345b9974092bf139409d2852fc46886c250.tar.gz \
-	"libossp-uuid-dev" \
-	"libossp-uuid16"
+#build \
+#	regular \
+#	brotli \
+#	https://code.uplex.de/uplex-varnish/libvfp-brotli/archive/d5b6ad352ce546a51495d92c64f80f12d672373c.tar.gz \
+#	"libbrotli-dev" \
+#	"libbrotli1"
+#
+#build \
+#	regular \
+#	cfg \
+#	https://github.com/carlosabalde/libvmod-cfg/archive/732bee63b507bbf1112b15eaf67ed2da5bfc19fb.tar.gz \
+#	"libcurl4-openssl-dev libjemalloc-dev libluajit-5.1-dev vim-common" \
+#	"libjemalloc2"
+#
+#build \
+#	regular \
+#	crypto \
+#	https://code.uplex.de/uplex-varnish/libvmod-crypto/archive/d815920b1060ac91bbf6701deca2a3a87f97b898.tar.gz \
+#	"libssl-dev"
+#
+#build \
+#	regular \
+#	geoip2 \
+#	https://github.com/varnishcache-friends/libvmod-geoip2/archive/refs/heads/devel.tar.gz \
+#	"libmaxminddb-dev" \
+#	"libmaxminddb0" \
+#	true # the tarball doesn't include the maxmind database used by the tests, so skip them
+#
+#build \
+#	regular \
+#	jq \
+#	https://github.com/varnishcache-friends/libvmod-jq/archive/refs/heads/devel.tar.gz \
+#	"libjq-dev" \
+#	"libjq1"
+#
+#build \
+#	regular \
+#	querystring \
+#	https://git.sr.ht/~dridi/vmod-querystring/refs/download/vmod-querystring-2.0.4/vmod-querystring-2.0.4.tar.gz
+#
+#build \
+#	regular \
+#	uuid \
+#	https://github.com/otto-de/libvmod-uuid/archive/ae0ca345b9974092bf139409d2852fc46886c250.tar.gz \
+#	"libossp-uuid-dev" \
+#	"libossp-uuid16"
 
 build \
 	regular \
@@ -139,33 +139,33 @@ build \
 # C vmod, but we need to build some dependencies from sources, so we use
 # a custom Dockerfile
 # - redis: https://github.com/carlosabalde/libvmod-redis
-build \
-	custom.redis \
-	redis \
-	https://github.com/carlosabalde/libvmod-redis/archive/refs/tags/8.0-22.0.tar.gz \
-	"libev-dev libssl-dev unzip"
+#build \
+#	custom.redis \
+#	redis \
+#	https://github.com/carlosabalde/libvmod-redis/archive/refs/tags/8.0-22.0.tar.gz \
+#	"libev-dev libssl-dev unzip"
 
 # rust vmods:
 # - fileserver: https://github.com/gquintard/vmod_fileserver
 # - reqwest: https://github.com/gquintard/vmod_reqwest
 # - rers: https://github.com/gquintard/vmod_rers
-build \
-	rust \
-	fileserver \
-	https://github.com/varnish-rs/vmod-fileserver/archive/refs/tags/v0.0.10.tar.gz \
-	"" \
-	"" \
-	true
-
-build \
-	rust \
-	reqwest \
-	https://github.com/varnish-rs/vmod-reqwest/archive/refs/tags/v0.0.16.tar.gz \
-	"libssl-dev" \
-	"" \
-	true
-
-build \
-	rust \
-	rers \
-	https://github.com/varnish-rs/vmod-rers/archive/refs/tags/v0.0.13.tar.gz
+#build \
+#	rust \
+#	fileserver \
+#	https://github.com/varnish-rs/vmod-fileserver/archive/refs/tags/v0.0.10.tar.gz \
+#	"" \
+#	"" \
+#	true
+#
+#build \
+#	rust \
+#	reqwest \
+#	https://github.com/varnish-rs/vmod-reqwest/archive/refs/tags/v0.0.16.tar.gz \
+#	"libssl-dev" \
+#	"" \
+#	true
+#
+#build \
+#	rust \
+#	rers \
+#	https://github.com/varnish-rs/vmod-rers/archive/refs/tags/v0.0.13.tar.gz

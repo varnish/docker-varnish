@@ -4,9 +4,17 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'fresh/**'
+      - 'old/**'
+      - 'stable/**'
   push:
     branches:
       - main
+    paths:
+      - 'fresh/**'
+      - 'old/**'
+      - 'stable/**'
   schedule:
     - cron: 0 0 * * 0
 

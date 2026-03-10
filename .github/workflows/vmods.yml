@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - '**'
+    paths:
+      - 'fresh/**'
+      - 'vmod-examples/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'fresh/**'
+      - 'vmod-examples/**'
   schedule:
     - cron: 0 0 * * 0
 
