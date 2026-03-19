@@ -1,9 +1,7 @@
 FROM debian:trixie-slim
 
 ARG  REPO_FINGERPRINT=694566269779DFAC975ED9BDD0525EAE838B3344
-ARG  VARNISH_VERSION_NUMBER=8.0.0-5
-ARG  VMOD_DYNAMIC_COMMIT=99f72bc4958dca3555dbfeeb43512f243b004a72
-ARG  VMOD_DYNAMIC_SHA512SUM=6f7b635c3fd9b8acfff6130e4bbe88d0bb97dc0ac178918c2288670951dace70742d9c8d7d798fe885ef908707a21ba2e6ca15c1524d531a59c80d4fdc9c5881
+ARG  VARNISH_VERSION_NUMBER=9.0.0-1
 ARG  TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx varnish-dev"
 
@@ -43,18 +41,13 @@ RUN set -ex; \
 				vmod-redis=${VARNISH_VERSION} \
 				vmod-reqwest=${VARNISH_VERSION} \
 				vmod-rers=${VARNISH_VERSION} \
-				vmod-uuid=${VARNISH_VERSION} \
-				libgetdns10t64 \
-				netbase; \
+				vmod-uuid=${VARNISH_VERSION}; \
     \
     git clone https://github.com/varnish/toolbox.git; \
     cd toolbox; \
     git checkout $TOOLBOX_COMMIT; \
     cp install-vmod/install-vmod /usr/local/bin/; \
     cp vcls/verbose_builtin/verbose_builtin.vcl vcls/hit-miss/hit-miss.vcl /etc/varnish/; \
-    \
-    # vmod-dynamic
-    SKIP_CHECK=1 install-vmod https://github.com/gquintard/libvmod-dynamic/archive/$VMOD_DYNAMIC_COMMIT.tar.gz $VMOD_DYNAMIC_SHA512SUM; \
     \
     # clean up and ensure varnish package is not removed.
     apt-mark hold varnish; \
@@ -69,7 +62,7 @@ WORKDIR /etc/varnish
 
 COPY scripts/ /usr/local/bin/
 COPY default.vcl /etc/varnish/
-COPY index.html /etc/varnish/
+COPY index.html /var/www/html/
 
 ENTRYPOINT ["/usr/local/bin/docker-varnish-entrypoint"]
 
