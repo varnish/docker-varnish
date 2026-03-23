@@ -25,7 +25,7 @@ jobs:
           FILTER="${V%.*}.*"
           echo "FILTER: $FILTER"
           git clone https://github.com/varnish/varnish.git
-          cd varnish-cache
+          cd varnish
           LATEST=$(git tag --sort=version:refname -l "$FILTER" | tail -n 1)
           if [ "$LATEST" != "$V" ]; then
             echo "We are targetting $V for ${{ matrix.version }}, but $LATEST is out"
