@@ -6,57 +6,49 @@
 
 vcl 4.1;
 
+import fileserver;
+import reqwest;
+import std;
+
 # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
 include "hit-miss.vcl";
 
-# import vmod_dynamic for better backend name resolution
-import dynamic;
-import std;
-
-# Before you configure anything, we just disable the backend to avoid
-# any mistake, but you can delete that line and uncomment the following
-# ones to define a proper backend to fetch content from
 backend default none;
 
-# we may not have ipv6 in a container, so we'll only contact backend using ipv4
-acl ipv4_only { "0.0.0.0"/0; }
-
-# create a director that can find backends on-the-fly
 sub vcl_init {
-	new dynamic_director = dynamic.director(whitelist = ipv4_only);
+    # sanity check to fail the VCL loading if VARNISH_BACKEND_HOST
+    # doesn't look right
+    if (std.getenv("VARNISH_BACKEND_HOST") &&
+        std.getenv("VARNISH_BACKEND_HOST") !~ "^https?://") {
+        return(fail("VARNISH_BACKEND_HOST is set but doesn't start with http:// or https://"));
+    }
+    new http_backend = reqwest.client(base_url = std.getenv("VARNISH_BACKEND_HOST"));
+    new file_backend = fileserver.root("/var/www/html");
 }
 
-# VCL allows you to implement a series of callback to dictate how to process
-# each request. vcl_recv is the first one being called, right after Varnish
-# receives some request headers. It's usually used to sanitize the request
 sub vcl_recv {
-	# if VARNISH_BACKEND_HOST and VARNISH_BACKEND_PORT, use them to find a backend
-	# if not, generate a synthetic response with vcl_synth
-	if (std.getenv("VARNISH_BACKEND_HOST") && std.getenv("VARNISH_BACKEND_PORT")) {
-		set req.backend_hint = dynamic_director.backend(std.getenv("VARNISH_BACKEND_HOST"), std.getenv("VARNISH_BACKEND_PORT"));
-		# tweak the host header to match the backend's info
-		if (std.getenv("VARNISH_BACKEND_PORT") == "80") {
-			set req.http.host = std.getenv("VARNISH_BACKEND_HOST");
-		} else {
-			set req.http.host = std.getenv("VARNISH_BACKEND_HOST") + ":" + std.getenv("VARNISH_BACKEND_PORT");
-		}
-	} else {
-		return(synth(200));
-	}
+    if (std.getenv("VARNISH_BACKEND_HOST")) {
+        # if VARNISH_BACKEND_HOST is set, use the HTTP backend
+        set req.backend_hint = http_backend.backend();
+    } else {
+        # otherwise, force the path to our default page and serve
+        # from disk
+        set req.backend_hint = file_backend.backend();
+        set req.url = "/index.html";
+    }
 }
 
-# build an HTML page explaining to the user what they need to do to configure
-# the backend
-sub vcl_synth {
-	set resp.http.content-type = "text/html; charset=UTF-8;";
-	synthetic(std.fileread("/etc/varnish/index.html"));
-	return (deliver);
+# if the request goes to the backend, unset the host header and let
+# vmod-reqwest set it, according to VARNISH_BACKEND_HOST (and it doesn't
+# matter for file_backend)
+sub vcl_backend_fetch {
+    unset bereq.http.host;
 }
 
-# if no synthetic response was generated, the request will go the the backend.
-# vcl_backend_response is your chance to sanitize the response and possibly to
-# set a TTL
+# vcl_backend_response is the opportunity to set/unset backend response headers
+# (beresp.http.*) before they enter the cache
 sub vcl_backend_response {
+    set beresp.http.varnish-default-vcl = "true";
 }
 
 # https://github.com/varnish/toolbox/tree/master/vcls/verbose_builtin
