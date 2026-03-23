@@ -30,8 +30,11 @@ sub vcl_recv {
     if (std.getenv("VARNISH_BACKEND_HOST")) {
         # if VARNISH_BACKEND_HOST is set, use the HTTP backend
         set req.backend_hint = http_backend.backend();
+    } else if (std.getenv("VARNISH_FILESERVER")) {
+        # if VARNISH_FILESERVER, act as a fileserver
+        set req.backend_hint = file_backend.backend();
     } else {
-        # otherwise, force the path to our default page and serve
+        # otherwise, force the path to our default page and serve it
         # from disk
         set req.backend_hint = file_backend.backend();
         set req.url = "/index.html";
