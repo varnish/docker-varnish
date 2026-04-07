@@ -49,7 +49,7 @@ populate_library() {
 			continue
 		fi
 		update_library $i debian
-		if [ "$i" != "stable" ]; then
+		if [ "$i" == "old" ]; then
 			update_library $i alpine
 		fi
 	done
