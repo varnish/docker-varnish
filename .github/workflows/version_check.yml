@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v5
       - name: Check version
         run: |
-          V=varnish-$(./populate.sh dump | jq -r .${{ matrix.version }}.version)
+          V=$(sed -n 's/ARG *VARNISH_VERSION_NUMBER=/varnish-/p' ${{ matrix.version }}/debian/Dockerfile)
           FILTER="${V%.*}.*"
           echo "FILTER: $FILTER"
           git clone https://github.com/varnish/varnish.git
