@@ -1,7 +1,7 @@
 FROM debian:trixie-slim
 
 ARG  REPO_FINGERPRINT=694566269779DFAC975ED9BDD0525EAE838B3344
-ARG  VARNISH_VERSION_NUMBER=9.0.0-1
+ARG  VARNISH_VERSION_NUMBER=9.0.1-1
 ARG  TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx varnish-dev"
 
