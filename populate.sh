@@ -2,29 +2,18 @@
 
 set -e
 
-CONFIG='
-{
-	"stable": {
-		"version": "6.0.17",
-		"tags": "6.0"
-	},
-	"old": {
-		"version": "8.0.1",
-		"tags": "8 8.0"
-	},
-	"fresh": {
-		"version": "9.0.1",
-		"tags": "9 9.0 latest"
-	}
-}'
-
 update_library(){
-	version=`echo $CONFIG | jq -r ".[\"$1\"][\"version\"]"`
-	tags=`echo $CONFIG | jq -r ".[\"$1\"][\"tags\"]"`
-	tags="$1 $version $tags"
+	tags="$1"
+	varnish_version=$(sed -n 's/ARG *VARNISH_VERSION_NUMBER=//p' "$1/$2/Dockerfile")
+	while [ -n "$varnish_version" ]; do
+		tags+=" $varnish_version"
 
+		varnish_version=$(echo $varnish_version | sed -E 's/.?[^-.]*$//')
+	done
+
+	echo $tags
 	if [ "$2" != "debian" ]; then
-		tags=`echo "$tags" | sed -e "s/\( \|$\)/-$2\1/g" -e "s/latest-$2/$2/"`
+		tags=`echo "$tags" | sed -e "s/\( \|$\)/-$2\1/g"`
 	fi
 
 	cat >> library.varnish <<- EOF
@@ -44,28 +33,15 @@ populate_library() {
 		GitRepo: https://github.com/varnish/docker-varnish.git
 	EOF
 
-	for i in `echo $CONFIG | jq -r 'keys | .[]'`; do
-		if [ "$i" = "next" ]; then
-			continue
-		fi
-		update_library $i debian
-		if [ "$i" == "old" ]; then
-			update_library $i alpine
-		fi
-	done
+	update_library fresh debian
+	update_library old debian
+	update_library old alpine
+	update_library stable debian
 }
 
 case "$1" in
 	library)
 		populate_library
-		;;
-	check)
-		echo 'checking old/*/Dockerfile'
-		diff <(grep '^ARG' old/alpine/Dockerfile) <(grep '^ARG' old/debian/Dockerfile)
-		echo OK
-		;;
-	dump)
-		echo "$CONFIG"
 		;;
 	*)
 		echo invalid choice

@@ -1,7 +1,7 @@
 FROM alpine:3.23
 
 ARG  PKG_COMMIT=eb692742c1a107cf3f896985271b35b125873bd7
-ARG  VARNISH_VERSION=8.0.1
+ARG  VARNISH_VERSION_NUMBER=8.0.1
 ARG  DIST_SHA512=6f75a135298048f4ee767ec24805e00b30b78c4011768e4828c9893c56379641a404bfb3bf597f7348ca7471833b7791a7e135de3146b6f2fd7b217cceccc971
 ARG  VARNISH_MODULES_VERSION=0.27.0
 ARG  VARNISH_MODULES_SHA512SUM=bb8a55b3d665fe6de918f784a6f4276b2053f5b1cd0628d6b6c6c78c0042fd678736a2f48375cf356daa47a987175f52569c0b468ccd2b37ab55a32c25255264
@@ -35,7 +35,7 @@ RUN set -ex;\
     cd varnish-cache/alpine; \
     ls; \
     sed -i APKBUILD \
-        -e "s/pkgver=@VERSION@/pkgver=$VARNISH_VERSION/" \
+        -e "s/pkgver=@VERSION@/pkgver=$VARNISH_VERSION_NUMBER/" \
 	-e 's@^source=.*@source="https://github.com/varnish/varnish/releases/download/varnish-$pkgver/varnish-$pkgver.tar.gz"@' \
 	-e "s/^sha512sums=.*/sha512sums=\"$DIST_SHA512  varnish-\$pkgver.tar.gz\"/"; \
     \
