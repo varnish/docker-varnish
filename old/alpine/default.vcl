@@ -49,25 +49,7 @@ sub vcl_recv {
 # the backend
 sub vcl_synth {
 	set resp.http.content-type = "text/html; charset=UTF-8;";
-	synthetic("""<!DOCTYPE html>
-			<html><body>
-				<h1>Varnish is running!</h1>
-""");
-
-	if (std.getenv("VARNISH_BACKEND_HOST") || std.getenv("VARNISH_BACKEND_PORT")) {
-		if (std.getenv("VARNISH_BACKEND_HOST")) {
-			synthetic("""<p>It appears you have set the <b>VARNISH_BACKEND_HOST</b> variable, and not <b>VARNISH_BACKEND_PORT</b>, but <b>Varnish needs both</b> to identify a backend</p>""");
-		} else {
-			synthetic("""<p>It appears you have set the <b>VARNISH_BACKEND_PORT</b> variable, and not <b>VARNISH_BACKEND_HOST</b>, but <b>Varnish needs both</b> to identify a backend</p>""");
-		}
-	} else {
-		synthetic("""<p>You now need to configure your backend. To do so, you can either:
-<ul>
-  <li>set both <b>VARNISH_BACKEND_HOST</b> and <b>VARNISH_BACKEND_PORT</b> environment variables</li>
-  <li>edit/mount <b>/etc/varnish/default.vcl</b> with your routing and caching logic</li>
-</ul>""");
-	}
-	synthetic("""</body></html>""");
+	synthetic(std.fileread("/etc/varnish/index.html"));
 	return (deliver);
 }
 

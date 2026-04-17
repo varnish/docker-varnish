@@ -5,7 +5,8 @@ on:
     branches:
       - "*"
   schedule:
-    - cron: 0 0 * * 0
+    - cron: 0 */6 * * *
+  workflow_dispatch:
 
 jobs:
   varnish_cache_check:
@@ -18,15 +19,22 @@ jobs:
     name: Varnish Cache version check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Check version
         run: |
-          V=varnish-$(./populate.sh dump | jq -r .${{ matrix.version }}.version)
-          FILTER="${V%.*}.*"
+          V=$(sed -n 's/ARG *VARNISH_VERSION_NUMBER=//p' ${{ matrix.version }}/debian/Dockerfile)
+
+          # if fresh, we want the absolute latest version, otherwise we want the latest version with the same major/minor
+          if [ "${{ matrix.version }}" = "fresh" ]; then
+            FILTER="varnish=*"
+          else
+            FILTER="varnish=${V%.*}.*"
+          fi
           echo "FILTER: $FILTER"
-          git clone https://github.com/varnishcache/varnish-cache.git
-          cd varnish-cache
-          LATEST=$(git tag --sort=version:refname -l "$FILTER" | tail -n 1)
+
+          curl -Ls https://packages.varnish-software.com/varnish/bootstrap-deb.sh | sh
+          LATEST=$(apt-cache show "$FILTER" | sed -En 's/^Version: (.*)~.*/\1/p')
+
           if [ "$LATEST" != "$V" ]; then
             echo "We are targetting $V for ${{ matrix.version }}, but $LATEST is out"
             exit 1
@@ -34,12 +42,19 @@ jobs:
             echo "We are properly targetting $LATEST"
           fi
   varnish_enterprise_check:
-    name: Varnish Enterprise version check
+    name: ${{ matrix.package.name }} version check
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - name: varnish-plus
+            var: VARNISH_PLUS_VERSION
+          - name: varnish-otel
+            var: VARNISH_OTEL_VERSION
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check version
@@ -50,13 +65,13 @@ jobs:
           USER root
           RUN set -ex; \
             apt-get update; \
-            apt-get install -y curl ca-certificates; \
+            apt-get install -y curl; \
             curl -s https://packagecloud.io/install/repositories/varnishplus/60-enterprise/script.deb.sh | bash
           EOF
           docker build -t tester .
 
-          LATEST_VERSION=$(docker run --rm tester apt-cache show varnish-plus | awk '$1 == "Version:" {print $2}' | sort -V | tail -1 | sed 's/~.*//')
-          CURRENT_VERSION=$(sed -n 's/^ARG VARNISH_PLUS_VERSION=//p' enterprise/debian/Dockerfile)
+          LATEST_VERSION=$(docker run --rm tester apt-cache show ${{ matrix.package.name }} | awk '$1 == "Version:" {print $2}' | sort -V | tail -1 | sed 's/~.*//')
+          CURRENT_VERSION=$(sed -n 's/^ARG ${{ matrix.package.var }}=//p' enterprise/debian/Dockerfile)
 
           echo $LATEST_VERSION - $CURRENT_VERSION
 
@@ -83,11 +98,11 @@ jobs:
 
           git switch main
           git switch -c $BRANCH
-          sed -i "s/VARNISH_PLUS_VERSION=${{ env.CURRENT_VERSION }}/VARNISH_PLUS_VERSION=${{ env.LATEST_VERSION }}/" enterprise/debian/Dockerfile
+          sed -i "s/${{ matrix.package.var }}=${{ env.CURRENT_VERSION }}/${{ matrix.package.var }}=${{ env.LATEST_VERSION }}/" enterprise/debian/Dockerfile
           if [ -z "$(git diff)"]; then
             echo "It looks like the Docker file is up-to-date, maybe the new image is being published right now?"
             exit 0
           fi
-          git commit enterprise/debian/Dockerfile -m "Upgrade Varnish Enterprise to ${{ env.LATEST_VERSION }}"
+          git commit enterprise/debian/Dockerfile -m "enterprise: upgrade ${{ matrix.package.name }} to ${{ env.LATEST_VERSION }}"
           git push origin $BRANCH
-          gh pr create --title "Upgrade Varnish Enterprise to ${{ env.LATEST_VERSION }}" --body "Automated PR from .github/workflows/version_check.yml" --base main --head $BRANCH
+          gh pr create --title "enterprise: upgrade ${{ matrix.package.name }} to ${{ env.LATEST_VERSION }}" --body "Automated PR from .github/workflows/version_check.yml" --base main --head $BRANCH

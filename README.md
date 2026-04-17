@@ -14,36 +14,20 @@
 
 # Official Varnish Docker image
 
-This is the source repository used to build the official [Varnish Docker image](https://hub.docker.com/_/varnish).
+This is the source repository used to build the official [Varnish Docker image](https://hub.docker.com/_/varnish) and the [Varnish Enterprise image](https://hub.docker.com/r/varnish/varnish-enterprise)
 
 Don't hesitate to open github issues if something is unclear or impractical. You can also join us on [discord](https://discord.com/invite/EuwdvbZR6d).
 
-## Versions
+# Directories
 
-This repository tracks tree Varnish versions:
+The official Varnish image tracks three different versions using distinct directories:
 
-- `fresh`: the latest release.
-- `old`: the release before `fresh`.
-- `stable`: an Long-Term Support (LTS) release that will receive bug and security fixes even though it's not the latest one.
+- `fresh/`: the latest release.
+- `old/`: the release before `fresh`.
+- `stable/`: an Long-Term Support (LTS) release that will receive bug and security fixes even though it's not the latest one.
 
 New major/minor versions are released on the 15th of March and of September, this is when the `fresh` and `stable` labels are reevaluated.
 
 In addition, if present, the `next/` directory is a copy of `fresh/` with breaking changes that must wait for the the next release to be published. This image **isn't available on the Docker hub**.
 
-## TLS
-
-If you want to connect to Varnish via *HTTPS*, you'll need to terminate the *TLS* connection elsewhere. *TLS termination* can be done on some loadbalancers or proxy servers, but the Varnish ecosystem also provides *a purpose-built TLS terminator* called [Hitch](https://hitch-tls.org/). 
-
-Hitch supports the [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) and is transparent to Varnish. The *PROXY protocol* has the ability to keep track of *the original client IP address*.
-
-> Hitch, or any other TLS terminator that supports the *PROXY protocol* will connect to Varnish on port `8443`.
-
-## Maintenance
-
-New release playbook:
-1. Update the `fresh/`, `old/`,`stable/` as needed (in case of a regular new release, `fresh/` becomes `old/, and a new `fresh/` is created)
-2. Commit and push
-3. Make sure CI passes
-4. Generate a new `library` file using `./populate.sh library`
-5. Open a PR for the library file [docker-library/official-images repository](https://github.com/docker-library/official-images/blob/master/library/varnish)
-6. Optionally, open a PR to update the documentation in the [docker-library/docs repository](https://github.com/docker-library/docs/tree/master/varnish)
+For Varnish Enterprise, we only use `enterprise/`.

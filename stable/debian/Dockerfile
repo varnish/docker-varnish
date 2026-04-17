@@ -1,35 +1,36 @@
 FROM debian:bookworm-slim
 
-ARG PKG_COMMIT=10da6a585eb7d8defe9d273a51df5b133500eb6b
-ARG VARNISH_VERSION=6.0.16
-ARG DIST_SHA512=40bccbb024b7909af606220510efe68f6d1009cd678df1950ab6c1d16a0f12fb3cdb812f658825c45d071e1c5afc2561f8b56645da4bc396f5d20e27ed8bd0e2
+ARG  REPO_FINGERPRINT=694566269779DFAC975ED9BDD0525EAE838B3344
+ARG  VARNISH_VERSION_NUMBER=6.0.17-1
 
-ENV VARNISH_SIZE 100M
+ENV VARNISH_SIZE=100M
 
-RUN set -e; \
-    BASE_PKGS="curl dpkg-dev debhelper devscripts equivs git pkg-config apt-utils fakeroot"; \
+RUN set -ex; \
+    . /etc/os-release; \
+    VARNISH_VERSION=$VARNISH_VERSION_NUMBER~$VERSION_CODENAME; \
+    BASE_PKGS="curl gpg"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
-    tmpdir="$(mktemp -d)"; \
-    cd "$tmpdir"; \
+    \
     apt-get update; \
-    apt-get install -y --no-install-recommends $BASE_PKGS; \
-    git clone https://github.com/varnishcache/pkg-varnish-cache.git; \
-    cd pkg-varnish-cache; \
-    git checkout "$PKG_COMMIT"; \
-    rm -rf .git; \
-    curl -L -f "https://varnish-cache.org/downloads/varnish-$VARNISH_VERSION.tgz" -o $tmpdir/orig.tgz; \
-    echo "$DIST_SHA512  $tmpdir/orig.tgz" | sha512sum -c -; \
-    tar xavf $tmpdir/orig.tgz --strip 1; \
-    sed -i -e "s|@VERSION@|$VARNISH_VERSION|"  "debian/changelog"; \
-    mk-build-deps --install --tool="apt-get -o Debug::pkgProblemResolver=yes --yes" debian/control; \
-    sed -i '' debian/varnish*; \
-    dpkg-buildpackage -us -uc -j"$(nproc)"; \
-    apt-get -y --no-install-recommends install ../*.deb; \
-    apt-get -y purge --auto-remove varnish-build-deps $BASE_PKGS varnish-dev; \
-    mkdir /pkgs; \
-    mv ../*dev*.deb /pkgs; \
-    rm -rf /var/lib/apt/lists/* "$tmpdir";
+    apt-get install -y curl $BASE_PKGS; \
+    mkdir -p /etc/apt/keyrings; \
+    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $REPO_FINGERPRINT; \
+    gpg --batch --export "$REPO_FINGERPRINT" > /etc/apt/keyrings/varnish.gpg; \
+    echo "deb [signed-by=/etc/apt/keyrings/varnish.gpg] https://packages.varnish-software.com/varnish/$ID $VERSION_CODENAME main" | tee -a /etc/apt/sources.list.d/varnish.list; \
+    apt-get update; \
+    # create users and groups with fixed IDs
+    adduser --uid 1000 --quiet --system --no-create-home --home /nonexistent --group varnish; \
+    adduser --uid 1001 --quiet --system --no-create-home --home /nonexistent --ingroup varnish vcache; \
+    adduser --uid 1002 --quiet --system --no-create-home --home /nonexistent --ingroup varnish varnishlog; \
+    \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+				varnish=${VARNISH_VERSION}; \
+    # clean up the temporary GPG home directory
+    rm -rf ~/.gnupg; \
+    chown varnish /var/lib/varnish; \
+    mkdir -p -m 1777 /var/lib/varnish/varnishd
 
 WORKDIR /etc/varnish
 
