@@ -11,7 +11,6 @@ update_library(){
 		varnish_version=$(echo $varnish_version | sed -E 's/.?[^-.]*$//')
 	done
 
-	echo $tags
 	if [ "$2" != "debian" ]; then
 		tags=`echo "$tags" | sed -e "s/\( \|$\)/-$2\1/g"`
 	fi
