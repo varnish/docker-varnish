@@ -17,8 +17,8 @@ VARNISH_VERSION=$(grep '^ARG VARNISH_PLUS_VERSION=' Dockerfile | cut -d= -f2)
 TAGS=latest
 while [ -n "$VARNISH_VERSION" ]; do
 	TAGS+=" $VARNISH_VERSION"
-
-	VARNISH_VERSION=$(echo $VARNISH_VERSION | sed -E 's/.?[^.]*$//')
+	[[ "$VARNISH_VERSION" != *[-r.]* ]] && break
+	VARNISH_VERSION="${VARNISH_VERSION%[-r.]*}"
 done
 
 echo TAGS: $TAGS
