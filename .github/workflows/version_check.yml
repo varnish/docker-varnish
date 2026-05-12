@@ -53,6 +53,7 @@ jobs:
             var: VARNISH_OTEL_VERSION
     env:
       GITHUB_TOKEN: ${{ github.token }}
+      GITHUB_ENTERPRISE_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v6
         with:
