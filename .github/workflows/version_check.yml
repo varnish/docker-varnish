@@ -52,7 +52,7 @@ jobs:
           - name: varnish-otel
             var: VARNISH_OTEL_VERSION
     env:
-      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v6
         with:
