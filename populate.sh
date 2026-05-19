@@ -4,6 +4,9 @@ set -e
 
 update_library(){
 	tags="$1"
+	if [ "$tags" = "fresh" ]; then
+		tags+=" latest"
+	fi
 	varnish_version=$(sed -n 's/ARG *VARNISH_VERSION_NUMBER=//p' "$1/$2/Dockerfile")
 	while [ -n "$varnish_version" ]; do
 		tags+=" $varnish_version"
