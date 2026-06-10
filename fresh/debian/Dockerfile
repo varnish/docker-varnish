@@ -6,6 +6,8 @@ ARG  TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx varnish-dev"
 
 ENV VARNISH_SIZE=100M
+
+# https://github.com/varnish/varnish/blob/main/doc/sphinx/reference/vsm.rst#vsm-and-containers
 ENV VSM_NOPID=1
 
 RUN set -ex; \

@@ -8,7 +8,10 @@ ARG VARNISH_OTEL_VERSION=2.5.0-1
 ARG TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 
 ENV VARNISH_SIZE=
+
+# https://github.com/varnish/varnish/blob/main/doc/sphinx/reference/vsm.rst#vsm-and-containers
 ENV VSM_NOPID=1
+
 ENV VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx"
 ENV MSE4_CONFIG="/etc/varnish/mse4.conf"
 ENV VARNISH_STORAGE_BACKEND="malloc"
