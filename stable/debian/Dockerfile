@@ -2,12 +2,14 @@ FROM debian:bookworm-slim
 
 ARG  REPO_FINGERPRINT=694566269779DFAC975ED9BDD0525EAE838B3344
 ARG  VARNISH_VERSION_NUMBER=6.0.18-1
+ARG  VARNISH_OTEL_VERSION_NUMBER=2.5.0-1
 
 ENV VARNISH_SIZE=100M
 
 RUN set -ex; \
     . /etc/os-release; \
     VARNISH_VERSION=$VARNISH_VERSION_NUMBER~$VERSION_CODENAME; \
+    VARNISH_OTEL_VERSION=$VARNISH_OTEL_VERSION_NUMBER~$VERSION_CODENAME; \
     BASE_PKGS="curl gpg"; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
@@ -27,6 +29,10 @@ RUN set -ex; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
 				varnish=${VARNISH_VERSION}; \
+    # Install varnish-otel with force due to version parsing problem:
+    apt-get download varnish-otel=$VARNISH_OTEL_VERSION;  \
+    dpkg --force-depends -i varnish-otel_$VARNISH_OTEL_VERSION_*.deb; \
+    rm -f varnish-otel_$VARNISH_OTEL_VERSION_*.deb; \
     # clean up the temporary GPG home directory
     rm -rf ~/.gnupg; \
     chown varnish /var/lib/varnish; \
