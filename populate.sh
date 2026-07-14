@@ -15,12 +15,12 @@ update_library(){
 	done
 
 	if [ "$2" != "debian" ]; then
-		tags=`echo "$tags" | sed -e "s/\( \|$\)/-$2\1/g"`
+		tags=`echo "$tags" | sed -E "s/( |$)/-$2\1/g"`
 	fi
 
 	cat >> library.varnish <<- EOF
 
-		Tags: `echo $tags | sed 's/ \+/, /g'`
+		Tags: `echo $tags | sed -E 's/ +/, /g'`
 		Architectures: amd64, arm64v8
 		Directory: $1/$2
 		GitCommit: `git log -n1 --pretty=oneline $1/$2 | cut -f1 -d" "`
