@@ -1,7 +1,7 @@
 FROM debian:trixie-slim
 
 ARG  REPO_FINGERPRINT=694566269779DFAC975ED9BDD0525EAE838B3344
-ARG  VARNISH_VERSION_NUMBER=9.0.3-1
+ARG  VARNISH_VERSION_NUMBER=9.0.3-3
 ARG  TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 ENV  VMOD_DEPS="autoconf-archive automake curl libtool make pkg-config python3-sphinx varnish-dev"
 
@@ -38,6 +38,7 @@ RUN set -ex; \
 				vmod-digest=${VARNISH_VERSION} \
 				vmod-fileserver=${VARNISH_VERSION} \
 				vmod-geoip2=${VARNISH_VERSION} \
+				vmod-k8s-endpoint=${VARNISH_VERSION} \
 				vmod-jq=${VARNISH_VERSION} \
 				vmod-querystring=${VARNISH_VERSION} \
 				vmod-redis=${VARNISH_VERSION} \
