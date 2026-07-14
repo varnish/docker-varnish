@@ -1,6 +1,6 @@
 # New release playbook
 
-1. Update the `fresh/`, `old/`,`stable/` as needed (in case of a regular new release, `fresh/` becomes `old/, and a new `fresh/` is created)
+1. Update the `fresh/`, `old/`,`stable/` as needed (in case of a regular new release, `fresh/` becomes `old/`, and a new `fresh/` is created)
 2. Commit and push
 3. Make sure CI passes
 4. Generate a new `library` file using `./populate.sh library`
