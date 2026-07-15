@@ -1,9 +1,4 @@
-# One-time setup (already done, kept here for reference):
-#   1. Fork docker-library/official-images into the varnish org.
-#   2. Create a fine-grained PAT scoped to that fork with
-#      Contents: Read and write, Pull requests: Read and write.
-#   3. Store it as the OFFICIAL_IMAGES_PAT repo secret.
-name: Publish stackbrew library PR
+name: Publish docker-library/official-images library PR
 
 on:
   workflow_dispatch:
@@ -12,13 +7,21 @@ jobs:
   publish-library-pr:
     runs-on: ubuntu-latest
     if: github.repository == 'varnish/docker-varnish'
-    env:
-      GH_TOKEN: ${{ secrets.OFFICIAL_IMAGES_PAT }}
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Generate library file
         run: ./populate.sh library
+      - name: Mint GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.VARNISH_OFFICIAL_IMAGES_PUBLISHER_APPID }}
+          private-key: ${{ secrets.VARNISH_OFFICIAL_IMAGES_PUBLISHER_KEY }}
+          owner: varnish
+          repositories: official-images
       - name: Open/update PR against docker-library/official-images
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: ./open-library-pr.sh
