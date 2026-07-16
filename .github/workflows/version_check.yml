@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Check version
         run: |
           V=$(sed -n 's/ARG *VARNISH_VERSION_NUMBER=//p' ${{ matrix.version }}/debian/Dockerfile)
@@ -35,12 +37,41 @@ jobs:
           curl -Ls https://packages.varnish-software.com/varnish/bootstrap-deb.sh | sh
           LATEST=$(apt-cache show "$FILTER" | sed -En 's/^Version: (.*)~.*/\1/p')
 
+          echo "V=$V" >> "$GITHUB_ENV"
+          echo "LATEST=$LATEST" >> "$GITHUB_ENV"
+
           if [ "$LATEST" != "$V" ]; then
             echo "We are targetting $V for ${{ matrix.version }}, but $LATEST is out"
             exit 1
           else
             echo "We are properly targetting $LATEST"
           fi
+      - name: Create PR to update the Dockerfile
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -ex
+          BRANCH=auto-pr-${{ matrix.version }}-${{ env.LATEST }}
+
+          if gh pr list --state open --head "$BRANCH" --json number --jq length | grep -qv '^0$'; then
+            echo "A PR for $BRANCH already exists, bailing out"
+            exit 0
+          fi
+
+          git config --global user.email "none"
+          git config --global user.name "Github Actions"
+
+          git switch main
+          git switch -c $BRANCH
+          sed -i "s/VARNISH_VERSION_NUMBER=${{ env.V }}/VARNISH_VERSION_NUMBER=${{ env.LATEST }}/" ${{ matrix.version }}/debian/Dockerfile
+          if [ -z "$(git diff)" ]; then
+            echo "It looks like the Dockerfile is up-to-date, maybe the new version is being published right now?"
+            exit 0
+          fi
+          git commit ${{ matrix.version }}/debian/Dockerfile -m "${{ matrix.version }}: upgrade Varnish to ${{ env.LATEST }}"
+          git push origin $BRANCH
+          gh pr create --title "${{ matrix.version }}: upgrade Varnish to ${{ env.LATEST }}" --body "Automated PR from .github/workflows/version_check.yml" --base main --head $BRANCH
   varnish_enterprise_check:
     name: ${{ matrix.package.name }} version check
     runs-on: ubuntu-latest
