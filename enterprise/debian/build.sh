@@ -28,8 +28,31 @@ for t in $TAGS; do
 	TAG_ARGS+=" -t varnish/enterprise:$t -t varnish/varnish-enterprise:$t"
 done
 
-docker buildx build \
-	--platform linux/amd64,linux/arm64 \
-	$PUSH \
-	$TAG_ARGS \
-	.
+for t in "regular" "sledge" "all"; do
+	case "$t" in
+		regular)
+			EXTRA=
+			ext=
+			;;
+		sledge)
+			EXTRA="--build-arg EXTRA_PKGS=sledge"
+			ext=-sledge
+			;;
+		all)
+			EXTRA='--build-arg EXTRA_PKGS=all'
+			ext=-sledge-tools
+			;;
+	esac
+
+	TAG_ARGS=
+	for t in $TAGS; do
+		TAG_ARGS+=" -t varnish/enterprise$ext:$t -t varnish/varnish-enterprise$ext:$t"
+	done
+
+	docker buildx build \
+		--platform linux/amd64,linux/arm64 \
+		$PUSH \
+		$TAG_ARGS \
+		$EXTRA \
+		.
+done
