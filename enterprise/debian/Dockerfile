@@ -47,7 +47,7 @@ RUN set -ex; \
     export DEBIAN_FRONTEND=noninteractive; \
     export DEBCONF_NONINTERACTIVE_SEEN=true; \
     apt-get update; \
-    test "$EXTRA_PKGS" = "vmod" && apt-get install -y libvmod-sledge; \
+    test "$EXTRA_PKGS" = "sledge" && apt-get install -y libvmod-sledge; \
     test "$EXTRA_PKGS" = "all" && apt-get install -y libvmod-sledge sledge-tools; \
     rm -rf /var/lib/apt/lists/*
 
