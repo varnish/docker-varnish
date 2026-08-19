@@ -2,6 +2,7 @@ ARG DEBIAN_VERSION=trixie
 
 FROM debian:$DEBIAN_VERSION-slim
 
+ARG EXTRA_PKGS=
 ARG DEBIAN_VERSION=trixie
 ARG VARNISH_PLUS_VERSION=6.0.18r3-1
 ARG VARNISH_OTEL_VERSION=3.0.0-1
@@ -38,8 +39,17 @@ RUN set -ex; \
     \
     # clean up and ensure varnish package is not removed.
     apt-mark hold varnish; \
-    apt-get purge -y git; \
+    apt-get purge -y git --auto-remove; \
     rm -rf /var/lib/apt/lists/* /tmp/toolbox
+
+RUN set -ex; \
+    test -z "$EXTRA_PKGS" && exit 0; \
+    export DEBIAN_FRONTEND=noninteractive; \
+    export DEBCONF_NONINTERACTIVE_SEEN=true; \
+    apt-get update; \
+    test "$EXTRA_PKGS" = "vmod" && apt-get install -y libvmod-sledge; \
+    test "$EXTRA_PKGS" = "all" && apt-get install -y libvmod-sledge sledge-tools; \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /etc/varnish
 
