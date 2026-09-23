@@ -18,6 +18,18 @@ update_library(){
 		tags=`echo "$tags" | sed -E "s/( |$)/-$2\1/g"`
 	fi
 
+	# fresh and old can share a major (9.1 vs 9.0), and a tag may only be declared
+	# once in the library file, so the variant generated first keeps the shared one
+	deduped=
+	for tag in $tags; do
+		case "$seen_tags" in
+			*" $tag "*) continue ;;
+		esac
+		seen_tags+="$tag "
+		deduped+=" $tag"
+	done
+	tags="${deduped# }"
+
 	cat >> library.varnish <<- EOF
 
 		Tags: `echo $tags | sed -E 's/ +/, /g'`
@@ -29,6 +41,7 @@ update_library(){
 }
 
 populate_library() {
+	seen_tags=" "
 	cat > library.varnish <<- EOF
 		# this file was generated using https://github.com/varnish/docker-varnish/blob/`git rev-parse HEAD`/populate.sh
 		Maintainers: Guillaume Quintard <guillaume.quintard@gmail.com> (@gquintard)
@@ -37,7 +50,6 @@ populate_library() {
 
 	update_library fresh debian
 	update_library old debian
-	update_library old alpine
 	update_library stable debian
 }
 
