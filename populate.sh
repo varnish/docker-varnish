@@ -37,7 +37,6 @@ populate_library() {
 
 	update_library fresh debian
 	update_library old debian
-	update_library old alpine
 	update_library stable debian
 }
 
