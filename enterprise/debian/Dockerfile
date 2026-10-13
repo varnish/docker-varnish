@@ -6,6 +6,8 @@ ARG EXTRA_PKGS=
 ARG DEBIAN_VERSION=trixie
 ARG VARNISH_PLUS_VERSION=6.0.18r6-1
 ARG VARNISH_OTEL_VERSION=3.0.0-1
+ARG VARNISH_BROADCASTER_VERSION=1.6.4-1
+ARG VARNISH_DISCOVERY_VERSION=1.6.4-1
 ARG TOOLBOX_COMMIT=da1c5ce23d2ad81032bb45627d10a8dcb2c6f1d9
 
 ENV VARNISH_SIZE=
@@ -28,7 +30,12 @@ RUN set -ex; \
     apt-get update; \
     apt-get install -y ca-certificates git; \
     apt-get update; \
-    apt-get install -y varnish-plus=$VARNISH_PLUS_VERSION~$DEBIAN_VERSION varnish-otel=$VARNISH_OTEL_VERSION~$DEBIAN_VERSION; \
+    apt-get install -y \
+	varnish-broadcaster=$VARNISH_BROADCASTER_VERSION~$DEBIAN_VERSION \
+	varnish-otel=$VARNISH_OTEL_VERSION~$DEBIAN_VERSION \
+	varnish-plus=$VARNISH_PLUS_VERSION~$DEBIAN_VERSION \
+	varnish-plus-discovery=$VARNISH_DISCOVERY_VERSION~$DEBIAN_VERSION \
+	; \
     chown varnish /var/lib/varnish; \
     \
     git clone https://github.com/varnish/toolbox.git /tmp/toolbox; \
