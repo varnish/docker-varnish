@@ -31,9 +31,11 @@ RUN set -ex; \
     apt-get install -y ca-certificates git; \
     apt-get update; \
     apt-get install -y \
-	varnish-broadcaster=$VARNISH_BROADCASTER_VERSION~$DEBIAN_VERSION \
 	varnish-otel=$VARNISH_OTEL_VERSION~$DEBIAN_VERSION \
 	varnish-plus=$VARNISH_PLUS_VERSION~$DEBIAN_VERSION \
+	; \
+    apt-get install -y \
+	varnish-broadcaster=$VARNISH_BROADCASTER_VERSION~$DEBIAN_VERSION \
 	varnish-plus-discovery=$VARNISH_DISCOVERY_VERSION~$DEBIAN_VERSION \
 	; \
     chown varnish /var/lib/varnish; \
