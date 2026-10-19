@@ -31,3 +31,15 @@ New major/minor versions are released on the 15th of March and of September, thi
 In addition, if present, the `next/` directory is a copy of `fresh/` with breaking changes that must wait for the the next release to be published. This image **isn't available on the Docker hub**.
 
 For Varnish Enterprise, we only use `enterprise/`.
+
+# Tests
+
+`tests/` holds image tests, grouped in suites (one directory per image family):
+
+``` shell
+docker build -t enterprise-test enterprise/debian
+tests/run.sh enterprise-test enterprise          # whole suite
+tests/run.sh enterprise-test enterprise uids     # single test
+```
+
+A test is an executable `tests/SUITE/NAME.sh` receiving the image name as `$1` (also exported as `IMAGE`) and failing with a non-zero exit status. Source `tests/lib.sh` for helpers (`in_image`, `assert_file_eq`, `fail`), and keep expected data next to the test (e.g. `tests/enterprise/uids.expected`).

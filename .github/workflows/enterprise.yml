@@ -5,14 +5,39 @@ on:
     branches: main
     paths:
       - 'enterprise/**'
+      - 'tests/**'
+      - '.github/workflows/enterprise.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'enterprise/**'
+      - 'tests/**'
+      - '.github/workflows/enterprise.yml'
 
 jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [regular, sledge, all]
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+    name: Test ${{ matrix.variant }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build the image
+        run: |
+          EXTRA_PKGS=
+          if [ "${{ matrix.variant }}" != "regular" ]; then
+            EXTRA_PKGS="${{ matrix.variant }}"
+          fi
+          docker build -t enterprise-test --build-arg EXTRA_PKGS="$EXTRA_PKGS" enterprise/debian
+      - name: Run the tests
+        run: tests/run.sh enterprise-test enterprise
+
   Enterprise:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
