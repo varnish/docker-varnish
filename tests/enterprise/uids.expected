@@ -1,0 +1,6 @@
+passwd:varnish:100:102
+passwd:vcache:101:102
+passwd:varnishlog:102:102
+passwd:vbcast:103:103
+group:varnish:102
+group:vbcast:103
