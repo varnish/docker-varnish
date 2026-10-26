@@ -1,0 +1,23 @@
+## defaults
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## extra flags are appended
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M] [-p] [default_ttl=10] [-n] [/tmp/foo]
+## non-flag command runs as-is
+hello world
+## variables
+varnishd [-F] [-f] [/etc/varnish/other.vcl] [-a] [http=:8080,HTTP] [-a] [proxy=:8081,PROXY] [-p] [feature=+http2] [-s] [malloc,2G]
+## empty VARNISH_SIZE means unlimited malloc
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,]
+## no word splitting in VARNISH_SIZE
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,1G -p default_ttl=5]
+## no word splitting in other variables
+varnishd [-F] [-f] [/etc/varnish/a.vcl -p vcc_allow_inline_c=on] [-a] [http=:80 -a :6081,HTTP] [-a] [proxy=:8443 -a :6082,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## no globbing
+varnishd [-F] [-f] [/etc/*] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## VARNISH_STORAGE_BACKEND=malloc
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,1G]
+## empty VARNISH_STORAGE_BACKEND defaults to malloc
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## invalid VARNISH_STORAGE_BACKEND
+WARNING: VARNISH_STORAGE_BACKEND=mse4 is not supported by this image, using malloc
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
