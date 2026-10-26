@@ -1,0 +1,31 @@
+name: Cache
+
+on:
+  push:
+    branches: main
+    paths:
+      - 'fresh/**'
+      - 'tests/**'
+      - '.github/workflows/cache.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'fresh/**'
+      - 'tests/**'
+      - '.github/workflows/cache.yml'
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [fresh]
+    name: Test ${{ matrix.variant }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build the image
+        run: docker build -t cache-test ${{ matrix.variant }}/debian
+      - name: Run the tests
+        run: tests/run.sh cache-test cache

@@ -1,0 +1,43 @@
+## defaults
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## extra flags are appended
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M] [-p] [default_ttl=10] [-n] [/tmp/foo]
+## non-flag command runs as-is
+hello world
+## variables
+varnishd [-F] [-f] [/etc/varnish/other.vcl] [-a] [http=:8080,HTTP] [-a] [proxy=:8081,PROXY] [-p] [feature=+http2] [-s] [malloc,2G]
+## no word splitting in VARNISH_SIZE
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,1G -p default_ttl=5]
+## no word splitting in other variables
+varnishd [-F] [-f] [/etc/varnish/a.vcl -p vcc_allow_inline_c=on] [-a] [http=:80 -a :6081,HTTP] [-a] [proxy=:8443 -a :6082,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## no globbing
+varnishd [-F] [-f] [/etc/*] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## VARNISH_STORAGE_BACKEND=malloc
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,1G]
+## empty VARNISH_STORAGE_BACKEND defaults to malloc
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [malloc,100M]
+## VARNISH_STORAGE_BACKEND=mse4
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [mse4]
+## VARNISH_STORAGE_BACKEND=mse4 with VARNISH_SIZE
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [mse4] [-p] [memory_target=1G]
+## mse4 VARNISH_SIZE not split
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [mse4] [-p] [memory_target=1G -p default_ttl=5]
+## MSE4_CONFIG file present
+Creating and initializing Massive Storage Engine 4 data files and stores
+mkfs.mse4 [-f] [-c] [/etc/varnish/mse4.conf] [configure]
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [mse4,/etc/varnish/mse4.conf]
+## MSE4_CONFIG file present wins over malloc
+Creating and initializing Massive Storage Engine 4 data files and stores
+mkfs.mse4 [-f] [-c] [/etc/varnish/mse4.conf] [configure]
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [mse4,/etc/varnish/mse4.conf] [-p] [memory_target=1G]
+## custom MSE4_CONFIG
+Creating and initializing Massive Storage Engine 4 data files and stores
+mkfs.mse4 [-f] [-c] [/tmp/my.conf] [configure]
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [mse4,/tmp/my.conf]
+## MSE4_CACHE_FORCE_PRESERVE=1
+Creating and initializing Massive Storage Engine 4 data files and stores
+mkfs.mse4 [-c] [/etc/varnish/mse4.conf] [configure]
+varnishd [-F] [-f] [/etc/varnish/default.vcl] [-a] [http=:80,HTTP] [-a] [proxy=:8443,PROXY] [-p] [feature=+http2] [-s] [mse4,/etc/varnish/mse4.conf]
+## invalid VARNISH_STORAGE_BACKEND
+Invalid VARNISH_STORAGE_BACKEND: file
+exit status: 1
