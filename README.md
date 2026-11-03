@@ -24,7 +24,7 @@ The official Varnish image tracks three different versions using distinct direct
 
 - `fresh/`: the latest release.
 - `old/`: the release before `fresh`.
-- `stable/`: an Long-Term Support (LTS) release that will receive bug and security fixes even though it's not the latest one.
+- `stable/`: an Long-Term Support (LTS) release that will receive bug and security fixes even though it's not the latest one. Right after an LTS release, `stable/` and `fresh/` are identical.
 
 New major/minor versions are released on the 15th of March and of September, this is when the `fresh` and `stable` labels are reevaluated.
 

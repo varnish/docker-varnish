@@ -18,8 +18,9 @@ update_library(){
 		tags=`echo "$tags" | sed -E "s/( |$)/-$2\1/g"`
 	fi
 
-	# fresh and old can share a major (9.1 vs 9.0), and a tag may only be declared
-	# once in the library file, so the variant generated first keeps the shared one
+	# fresh and old can share a major (9.1 vs 9.0), and stable can be the same release
+	# as fresh. A tag may only be declared once in the library file, so the variant
+	# generated first keeps the shared one
 	deduped=
 	for tag in $tags; do
 		case "$seen_tags" in
