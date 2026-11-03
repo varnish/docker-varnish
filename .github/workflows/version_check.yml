@@ -37,8 +37,8 @@ jobs:
           echo "FILTER: $FILTER, BASE: $BASE"
 
           # query the repository from the image's base, not from the runner: the runner's
-          # distribution may not have the same packages (no 6.0 on Ubuntu 26.04), and
-          # its apt may use architecture variants (amd64v3) the repository doesn't list
+          # distribution may not have the same packages, and its apt may use
+          # architecture variants (amd64v3) the repository doesn't list
           LATEST=$(docker run --rm -e DEBIAN_FRONTEND=noninteractive "$BASE" sh -c '
             set -e
             apt-get update -qq >/dev/null
