@@ -24,7 +24,9 @@ jobs:
           fetch-depth: 0
       - name: Check version
         run: |
-          V=$(sed -n 's/ARG *VARNISH_VERSION_NUMBER=//p' ${{ matrix.version }}/debian/Dockerfile)
+          DOCKERFILE=${{ matrix.version }}/debian/Dockerfile
+          V=$(sed -n 's/ARG *VARNISH_VERSION_NUMBER=//p' $DOCKERFILE)
+          BASE=$(sed -n 's/^FROM *//p' $DOCKERFILE | head -1)
 
           # if fresh, we want the absolute latest version, otherwise we want the latest version with the same major/minor
           if [ "${{ matrix.version }}" = "fresh" ]; then
@@ -32,10 +34,23 @@ jobs:
           else
             FILTER="varnish=${V%.*}.*"
           fi
-          echo "FILTER: $FILTER"
+          echo "FILTER: $FILTER, BASE: $BASE"
 
-          curl -Ls https://packages.varnish-software.com/varnish/bootstrap-deb.sh | sh
-          LATEST=$(apt-cache show "$FILTER" | sed -En 's/^Version: (.*)~.*/\1/p')
+          # query the repository from the image's base, not from the runner: the runner's
+          # distribution may not have the same packages (no 6.0 on Ubuntu 26.04), and
+          # its apt may use architecture variants (amd64v3) the repository doesn't list
+          LATEST=$(docker run --rm -e DEBIAN_FRONTEND=noninteractive "$BASE" sh -c '
+            set -e
+            apt-get update -qq >/dev/null
+            apt-get install -y -qq curl >/dev/null
+            curl -fsSL https://packages.varnish-software.com/varnish/bootstrap-deb.sh | sh >/dev/null
+            apt-cache show "$1"
+          ' sh "$FILTER" | sed -En 's/^Version: (.*)~.*/\1/p' | sort -uV | tail -1)
+
+          if [ -z "$LATEST" ]; then
+            echo "::error::Couldn't find any Varnish package matching $FILTER in the Varnish repository"
+            exit 1
+          fi
 
           echo "V=$V" >> "$GITHUB_ENV"
           echo "LATEST=$LATEST" >> "$GITHUB_ENV"
@@ -47,7 +62,7 @@ jobs:
             echo "We are properly targetting $LATEST"
           fi
       - name: Create PR to update the Dockerfile
-        if: failure()
+        if: failure() && env.LATEST != ''
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -105,6 +120,11 @@ jobs:
           LATEST_VERSION=$(docker run --rm tester apt-cache show ${{ matrix.package.name }} | awk '$1 == "Version:" {print $2}' | sort -V | tail -1 | sed 's/~.*//')
           CURRENT_VERSION=$(sed -n 's/^ARG ${{ matrix.package.var }}=//p' enterprise/debian/Dockerfile)
 
+          if [ -z "$LATEST_VERSION" ] || [ -z "$CURRENT_VERSION" ]; then
+            echo "::error::Couldn't determine versions (latest: '$LATEST_VERSION', current: '$CURRENT_VERSION')"
+            exit 1
+          fi
+
           echo $LATEST_VERSION - $CURRENT_VERSION
 
           echo "LATEST_VERSION=$LATEST_VERSION" >> "$GITHUB_ENV"
@@ -115,14 +135,14 @@ jobs:
             exit 1
           fi
       - name: Create PR to update the Enterprise Dockerfile
-        if: failure()
+        if: failure() && env.LATEST_VERSION != ''
         run: |
           set -ex
           echo ${{ env.CURRENT_VERSION }} - ${{ env.LATEST_VERSION }}
           BRANCH=auto-pr-enterprise-${{ env.LATEST_VERSION }}
           
-          if [ -n "$(git branch --list $BRANCH)" ]; then
-            echo "Branch $BRANCH already exist, bailing out"
+          if [ -n "$(git ls-remote --heads origin "$BRANCH")" ]; then
+            echo "Branch $BRANCH already exists on origin, bailing out"
             exit 0
           fi
           git config --global user.email "none"
